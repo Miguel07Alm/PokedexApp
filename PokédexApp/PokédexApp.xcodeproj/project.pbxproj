@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		35D11A732CE3C3FA008F78EB /* PokemonAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 35D11A722CE3C3FA008F78EB /* PokemonAPI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		35B94EA22CE3B330006A8805 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -72,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35D11A732CE3C3FA008F78EB /* PokemonAPI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,9 +138,14 @@
 			);
 			fileSystemSynchronizedGroups = (
 				35B94E932CE3B32E006A8805 /* PokédexApp */,
+				35B94EEE2CE3B6F9006A8805 /* Animations */,
+				35B94F102CE3B71A006A8805 /* Models */,
+				35B94F1D2CE3B71D006A8805 /* Views */,
+				35B94F292CE3B720006A8805 /* ViewModels */,
 			);
 			name = "PokédexApp";
 			packageProductDependencies = (
+				35D11A722CE3C3FA008F78EB /* PokemonAPI */,
 			);
 			productName = "PokédexApp";
 			productReference = 35B94E912CE3B32E006A8805 /* PokédexApp.app */;
@@ -179,10 +189,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				35B94EAE2CE3B330006A8805 /* PokédexAppUITests */,
-				35B94EEE2CE3B6F9006A8805 /* Animations */,
-				35B94F102CE3B71A006A8805 /* Models */,
-				35B94F1D2CE3B71D006A8805 /* Views */,
-				35B94F292CE3B720006A8805 /* ViewModels */,
 			);
 			name = "PokédexAppUITests";
 			packageProductDependencies = (
@@ -223,6 +229,9 @@
 			);
 			mainGroup = 35B94E882CE3B32E006A8805;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				35D11A712CE3C3FA008F78EB /* XCRemoteSwiftPackageReference "PokemonAPI" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 35B94E922CE3B32E006A8805 /* Products */;
 			projectDirPath = "";
@@ -580,6 +589,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		35D11A712CE3C3FA008F78EB /* XCRemoteSwiftPackageReference "PokemonAPI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kinkofer/PokemonAPI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		35D11A722CE3C3FA008F78EB /* PokemonAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 35D11A712CE3C3FA008F78EB /* XCRemoteSwiftPackageReference "PokemonAPI" */;
+			productName = PokemonAPI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 35B94E892CE3B32E006A8805 /* Project object */;
 }
