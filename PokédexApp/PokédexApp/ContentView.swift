@@ -9,15 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        // Ejemplo de uso del gradiente con los tipos "Fuego" y "Agua"
+        PokemonType.getGradient(for: ["Fuego"])
+            .edgesIgnoringSafeArea(.all)
     }
 }
+
 
 #Preview {
     ContentView()
