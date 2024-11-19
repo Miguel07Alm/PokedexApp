@@ -8,15 +8,13 @@
 import SwiftUI
 
 struct PokedexView: View {
+    @Binding var showFilterView: Bool;
     var body: some View {
         VStack(spacing: -117) {
-            HeaderView()
-            ListaPokedexView().cornerRadius(48)
+            HeaderView(showFilterView: $showFilterView)
+            ListaPokedexView(showFilterView: $showFilterView).cornerRadius(48) 
+
             FooterView()
         }
     }
-}
-
-#Preview {
-    PokedexView()
 }

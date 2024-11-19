@@ -2,6 +2,7 @@ import SwiftUI
 
 
 struct HeaderView: View {
+    @Binding var showFilterView: Bool;
     var body: some View{
         VStack() {
             // Search bar
@@ -10,10 +11,17 @@ struct HeaderView: View {
                     .frame(height: 210)
                     .foregroundColor(.white)
                 HStack {
-                    Image("OrdenacionUltraFino")
-                        .resizable()
-                        .frame(width: 24, height: 14)
-                        .foregroundColor(Color(red: 0.7215686274509804, green: 0.7215686274509804, blue: 0.7215686274509804))
+                    Button(action: {
+                        withAnimation {
+                            showFilterView = !showFilterView
+                        }
+                    }) {
+                        Image("OrdenacionUltraFino")
+                            .resizable()
+                            .frame(width: 24, height: 14)
+                            .foregroundColor(Color(red: 0.7215686274509804, green: 0.7215686274509804, blue: 0.7215686274509804))
+                    }
+                    
                     
                     TextField("   Buscar", text: .constant(""))
                         .scrollContentBackground(.hidden)
@@ -41,8 +49,5 @@ struct HeaderView: View {
   
 }
 
-#Preview{
-    HeaderView()
-}
-               
+    
 

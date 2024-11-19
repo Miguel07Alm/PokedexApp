@@ -21,27 +21,35 @@ struct ListaPokedexView: View {
         (name: "Vaporeon", number: "0157", image: "vaporeon", color: Color.blue),
         (name: "Hydreigon", number: "0643", image: "hydreigon", color: Color.purple)
     ]
+    @Binding var showFilterView: Bool;
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Contenido principal
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 16) {
-                    ForEach(pokemons, id: \.name) { pokemon in
-                        EntradaPokedexView(
-                            name: pokemon.name,
-                            number: pokemon.number,
-                            image: pokemon.image,
-                            backgroundColor: pokemon.color
-                        )
+        ZStack {
+            VStack(spacing: 0) {
+                // Contenido principal
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 16) {
+                        ForEach(pokemons, id: \.name) { pokemon in
+                            EntradaPokedexView(
+                                name: pokemon.name,
+                                number: pokemon.number,
+                                image: pokemon.image,
+                                backgroundColor: pokemon.color
+                            )
+                        }
                     }
-                }
-                .padding()
+                    .padding()
+                } .edgesIgnoringSafeArea(.bottom)// Desenfoque en el contenido principal
+                .background(Color(.systemGray6))
+
+                
+                // TabBar
             }
-            .background(Color(.systemGray6))
-            
-            // TabBar
+
+            if showFilterView {
+                PokemonSortFilterView(isPresented: $showFilterView)
+                    .transition(.move(edge: .bottom))  // Transición para que aparezca desde abajo
+            }
         }
-        .edgesIgnoringSafeArea(.bottom)
     }
 }

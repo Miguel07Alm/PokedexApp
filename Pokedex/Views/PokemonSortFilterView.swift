@@ -16,16 +16,17 @@ struct FilterChip: Identifiable {
 struct PokemonSortFilterView: View {
     @State private var selectedFilters: Set<UUID> = []
     @State private var selectedSort: String = "alfabeticamente"
+    @State private var isAscending: Bool = true  // Estado para controlar la dirección de la flecha
     
     let sortOptions: [SortOption] = [
-        SortOption(icon: "textformat", title: "ALFABETICAMENTE"),
-        SortOption(icon: "number", title: "N° POKEDEX"),
-        SortOption(icon: "bolt.fill", title: "ATAQUE"),
-        SortOption(icon: "sparkles", title: "ATAQUE ESPECIAL"),
-        SortOption(icon: "heart.fill", title: "VIDA"),
-        SortOption(icon: "shield.fill", title: "DEFENSA"),
-        SortOption(icon: "shield.lefthalf.filled", title: "DEFENSA ESPECIAL"),
-        SortOption(icon: "bolt.horizontal.fill", title: "VELOCIDAD")
+        SortOption(icon: "alfabeticamente-ordenacion", title: "ALFABETICAMENTE"),
+        SortOption(icon: "n_pokedex-ordenacion", title: "N° POKEDEX"),
+        SortOption(icon: "ataque-ordenacion", title: "ATAQUE"),
+        SortOption(icon: "ataque-especial-ordenacion", title: "ATAQUE ESPECIAL"),
+        SortOption(icon: "vida-ordenacion", title: "VIDA"),
+        SortOption(icon: "defensa-ordenacion", title: "DEFENSA"),
+        SortOption(icon: "defensa-especial-ordenacion", title: "DEFENSA ESPECIAL"),
+        SortOption(icon: "velocidad-ordenacion", title: "VELOCIDAD")
     ]
     
     @State private var filterChips: [FilterChip] = [
@@ -34,76 +35,81 @@ struct PokemonSortFilterView: View {
         FilterChip(title: "favoritos", color: .yellow)
     ]
     
+    @Binding var isPresented: Bool  // Para controlar la presentación
+    
     var body: some View {
-        VStack(spacing: 0) {
-            // Filter Chips
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach($filterChips) { $chip in
-                        Button(action: {
-                            chip.isSelected.toggle()
-                            if chip.isSelected {
-                                selectedFilters.insert(chip.id)
-                            } else {
-                                selectedFilters.remove(chip.id)
-                            }
-                        }) {
-                            Text(chip.title)
-                                .font(.subheadline)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(chip.isSelected ? chip.color : chip.color.opacity(0.2))
-                                .foregroundColor(.white)
-                                .clipShape(Capsule())
-                        }
-                    }
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 8)
-            }
+        ZStack {
             
-            // Sort Options
-            ScrollView {
-                VStack(spacing: 16) {
-                    ForEach(sortOptions) { option in
-                        Button(action: {
-                            selectedSort = option.title.lowercased()
-                        }) {
-                            HStack(spacing: 12) {
-                                Image(systemName: option.icon)
-                                    .frame(width: 28, height: 28)
-                                    .background(Circle().fill(Color.gray.opacity(0.2)))
-                                    .foregroundColor(.primary)
-                                
-                                Text(option.title)
-                                    .font(.system(.body, design: .rounded))
-                                
-                                Spacer()
-                                
+            // Contenido del filtro
+            VStack(spacing: 0) {
+                // Sort Options
+                ScrollView {
+                    VStack(spacing: 16) {
+                        ForEach(sortOptions) { option in
+                            Button(action: {
                                 if selectedSort == option.title.lowercased() {
-                                    Image(systemName: "checkmark")
-                                        .foregroundColor(.blue)
+                                    // Si se selecciona el mismo filtro, invertir la dirección
+                                    isAscending.toggle()
+                                } else {
+                                    // Si se selecciona un nuevo filtro, establecerlo y reiniciar a ascendente
+                                    selectedSort = option.title.lowercased()
+                                    isAscending = true
+                                }
+                            }) {
+                                ZStack(alignment: .leading) {
+                                    HStack(spacing: 12) {
+                                        Image(option.icon)
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 28, height: 28)
+                                            .background(Circle().fill(Color.gray.opacity(0.2)))
+                                            .foregroundColor(.primary)
+
+                                        Text(option.title)
+                                            .font(.system(.body, design: .rounded))
+                                        
+                                        Spacer()
+                                    }
+                                    .padding(.horizontal, 16)
+
+                                    // Flecha sobrepuesta, no ocupa espacio extra
+                                    if selectedSort == option.title.lowercased() {
+                                        Image(systemName: isAscending ? "arrow.down" : "arrow.up")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 16, height: 16)
+                                            .foregroundColor(.black)
+                                            .offset(x: -2)  // Ajusta la posición a la izquierda
+                                    }
                                 }
                             }
-                            .padding(.horizontal, 16)
+                            .foregroundColor(.primary)
                         }
-                        .foregroundColor(.primary)
                     }
+                    .padding(.vertical, 16)
                 }
-                .padding(.vertical, 16)
             }
+            .background(.white).opacity(0.75)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .padding()
         }
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .animation(.smooth, value: isPresented)
+    }
+}
+
+struct ContentView: View {
+    @State private var showFilterView = false
+    
+    var body: some View {
+            // Contenido principal de la pantalla
+            PokedexView(showFilterView: $showFilterView)
+         
+            // Mostrar vista de filtros superpuesta
+            
+        
     }
 }
 
 #Preview {
-    ZStack {
-        Color.gray.opacity(0.3)
-            .ignoresSafeArea()
-        
-        PokemonSortFilterView()
-            .padding()
-    }
+    ContentView()
 }
