@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct SignUpView: View {
+struct LoginView: View {
     var body: some View {
         ZStack {
             // Fondo de color
@@ -72,9 +72,9 @@ struct SignUpView: View {
     }
 }
 
-struct SignUpView_Previews: PreviewProvider {
+struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        SignUpView()
+        LoginView()
     }
 }
 
