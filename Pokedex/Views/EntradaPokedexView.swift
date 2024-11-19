@@ -17,8 +17,6 @@ struct EntradaPokedexView: View {
         VStack {
             Image(image)
                 .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 100, height: 100)
             
             Text(name)
                 .font(.system(size: 16, weight: .semibold))
@@ -31,8 +29,11 @@ struct EntradaPokedexView: View {
         .padding()
         .background(backgroundColor.opacity(0.2))
         .cornerRadius(12)
+        .frame(width: 150, height: 150)
     }
 }
+
+
 
 
 

@@ -9,9 +9,9 @@ import SwiftUI
 
 struct PokedexView: View {
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: -117) {
             HeaderView()
-            ListaPokedexView()
+            ListaPokedexView().cornerRadius(48)
             FooterView()
         }
     }

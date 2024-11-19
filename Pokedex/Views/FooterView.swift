@@ -6,40 +6,40 @@ struct FooterView: View {
     
     var body: some View {
         VStack {
-            //Spacer() // Pushes the TabBar to bottom
-            HStack(spacing: 20) {
-                Spacer()
-                
-                // Pokeball Tab
-                VStack {
-                    Image(systemName: "circle.fill")
-                        .font(.system(size: 24))
-                        .foregroundColor(.white)
-                        .frame(width: 45, height: 45)
-                        .background(Color.orange.opacity(0.8))
-                        .cornerRadius(12)
-                }
-                .onTapGesture {
-                    selectedTab = 0
-                }
-                
-                // Profile Tab
-                VStack {
-                    Image(systemName: "person.fill")
-                        .font(.system(size: 24))
-                        .foregroundColor(.white)
-                        .frame(width: 45, height: 45)
-                        .background(Color.black.opacity(0.8))
-                        .cornerRadius(12)
-                }
-                .onTapGesture {
-                    selectedTab = 1
-                }
-                
-                Spacer()
+            ZStack{
+                Image("FooterRojo").resizable().frame(height: 210)
+                HStack(spacing: 70) {
+                    Spacer()
+                    // Pokeball Tab
+                    VStack {
+                        Image("PokedexIcon")
+                            .resizable()
+                            .foregroundColor(.white)
+                            .frame(width: 75, height: 75)
+                            .background(Color.orange.opacity(0.8))
+                            .cornerRadius(12)
+                    }
+                    .onTapGesture {
+                        selectedTab = 0
+                    }
+                    
+                    // Profile Tab
+                    VStack {
+                        Image("PerfilIcon")
+                            .resizable()
+                            .foregroundColor(.white)
+                            .frame(width: 75, height: 75)
+                            .background(Color.black.opacity(0.8))
+                            .cornerRadius(12)
+
+                    }
+                    .onTapGesture {
+                        selectedTab = 1
+                    }
+                    
+                    Spacer()
+                }.offset(CGSize(width: 0, height: 40))
             }
-            .frame(height: 60)
-            .background(Color.pink.opacity(0.7))
         }
     }
 }
