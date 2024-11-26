@@ -4,6 +4,12 @@ struct RegisterView: View {
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var reenterPassword: String = ""
+    @EnvironmentObject var viewModel: ViewModel
+    
+    @State private var errorMessage: String? = nil
+    
+    @Environment(\.presentationMode) var presentationMode  // Agregar el Environment para acceder a la presentación de la vista.
+
 
     var body: some View {
         ZStack {
@@ -54,7 +60,43 @@ struct RegisterView: View {
                     )
                     .padding(.horizontal, 40)
 
-                Spacer()
+   
+
+                // Botón de Registro
+                Button(action: {
+                    // Verificar si las contraseñas coinciden
+                    if password != reenterPassword {
+                        errorMessage = "Las contraseñas no coinciden"
+                        return
+                    }
+
+                    // Crear nuevo usuario
+                   
+                   
+                    if !(viewModel.createUser(username: username, password: password)) {
+                        errorMessage = "Repita el registro"
+                    }
+                    
+
+                    // Limpia los campos después del registro
+                    username = ""
+                    password = ""
+                    reenterPassword = ""
+
+                    errorMessage = nil
+                    
+                    // Regresar a LoginView
+                    self.presentationMode.wrappedValue.dismiss()
+                }) {
+                    Text("Registrarse")
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.pink)
+                        .cornerRadius(25)
+                }
+                .padding(.horizontal, 40)
             }
             .background(Color(red: 0.84, green: 0.93, blue: 0.93))
             .edgesIgnoringSafeArea(.all)
