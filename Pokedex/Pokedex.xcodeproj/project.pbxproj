@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3516493C2CF6233B0083E7F6 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3516493B2CF6233B0083E7F6 /* SDWebImageSwiftUI */; };
+		359713FA2CF649BA007DA78D /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 359713F92CF649BA007DA78D /* SDWebImageSwiftUI */; };
 		35A9D5482CF61D1D00D7B680 /* PokeballAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C3D5662CECEB300022495F /* PokeballAnimationView.swift */; };
 		35A9D5492CF61D1D00D7B680 /* MainMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C3D5722CECEB3C0022495F /* MainMenuView.swift */; };
 		35A9D54A2CF61D1D00D7B680 /* Pokemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C3D5872CECEB480022495F /* Pokemon.swift */; };
@@ -75,7 +76,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Assets.xcassets,
-				PokedexApp.swift,
 				"Preview Content/Preview Assets.xcassets",
 			);
 			target = 35A9D5462CF61D1D00D7B680 /* Version2 */;
@@ -108,6 +108,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				359713FA2CF649BA007DA78D /* SDWebImageSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,6 +213,7 @@
 			);
 			name = Version2;
 			packageProductDependencies = (
+				359713F92CF649BA007DA78D /* SDWebImageSwiftUI */,
 			);
 			productName = Pokedex;
 			productReference = 35A9D55E2CF61D1D00D7B680 /* Version2.app */;
@@ -371,6 +373,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = es.ual.Pokedex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = v2;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -399,6 +402,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = es.ual.Pokedex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = v2;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -546,6 +550,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = es.ual.Pokedex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = v1;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -574,6 +579,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = es.ual.Pokedex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = v1;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -621,6 +627,10 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		3516493B2CF6233B0083E7F6 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SDWebImageSwiftUI;
+		};
+		359713F92CF649BA007DA78D /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SDWebImageSwiftUI;
 		};

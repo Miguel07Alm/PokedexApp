@@ -2,7 +2,9 @@ import SwiftUI
 
 
 struct HeaderView: View {
+    @Binding var showSortFilterView: Bool;
     @Binding var showFilterView: Bool;
+
     var body: some View{
         VStack() {
             // Search bar
@@ -13,7 +15,10 @@ struct HeaderView: View {
                 HStack {
                     Button(action: {
                         withAnimation {
-                            showFilterView = !showFilterView
+                            showSortFilterView = !showSortFilterView
+                            if (showFilterView) {
+                                showFilterView = false;
+                            }
                         }
                     }) {
                         Image("OrdenacionUltraFino")
@@ -30,10 +35,19 @@ struct HeaderView: View {
                     
                     Image(systemName: "magnifyingglass")
                         .foregroundColor(Color(red: 0.7215686274509804, green: 0.7215686274509804, blue: 0.7215686274509804))
-                    
-                    Image(systemName: "slider.horizontal.3")
-                        .foregroundColor(Color(red: 0.7215686274509804, green: 0.7215686274509804, blue: 0.7215686274509804))
-                }
+                    Button(action: {
+                        withAnimation {
+                            showFilterView = !showFilterView
+                            if (showSortFilterView) {
+                                showSortFilterView = false;
+                            }
+                        }
+                    }) {
+                        Image(systemName: "slider.horizontal.3")
+                            .foregroundColor(Color(red: 0.7215686274509804, green: 0.7215686274509804, blue: 0.7215686274509804))
+                        
+                    }
+                    }
                 .padding(.horizontal).offset(CGSize(width: 0, height: -20))
                 
                 // Filter chips

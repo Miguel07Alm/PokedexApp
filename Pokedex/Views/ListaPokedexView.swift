@@ -21,8 +21,9 @@ struct ListaPokedexView: View {
         (name: "Vaporeon", number: "0157", image: "vaporeon", color: Color.blue),
         (name: "Hydreigon", number: "0643", image: "hydreigon", color: Color.purple)
     ]
+    @Binding var showSortFilterView: Bool;
     @Binding var showFilterView: Bool;
-    
+
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -46,10 +47,11 @@ struct ListaPokedexView: View {
                 // TabBar
             }
 
-            if showFilterView {
-                PokemonSortFilterView(isPresented: $showFilterView)
+            if (showSortFilterView || showFilterView) {
+                PokemonSortFilterView(isPresented: true, isFilterShow: $showFilterView, isSortFilterShow: $showSortFilterView)
                     .transition(.move(edge: .bottom))  // Transición para que aparezca desde abajo
             }
+
         }
     }
 }

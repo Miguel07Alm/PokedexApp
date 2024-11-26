@@ -23,8 +23,31 @@ struct PokemonType {
         "dragon": "dragon_icon",
         "dark": "dark_icon",
         "steel": "steel_icon",
-        "fairy": "fairy_icon"
+        "fairy": "fairy_icon",
+        "normal": "normal_icon"
     ]
+    static let typesToSpanish: [String: String] = [
+        "fire": "Fuego",
+        "water": "Agua",
+        "grass": "Planta",
+        "electric": "Eléctrico",
+        "ice": "Hielo",
+        "fighting": "Lucha",
+        "poison": "Veneno",
+        "ground": "Tierra",
+        "flying": "Volador",
+        "psychic": "Psíquico",
+        "bug": "Bicho",
+        "rock": "Roca",
+        "ghost": "Fantasma",
+        "dragon": "Dragón",
+        "dark": "Siniestro",
+        "steel": "Acero",
+        "fairy": "Hada",
+        "normal": "Normal"
+    ]
+
+    
 
 
     
@@ -46,7 +69,28 @@ struct PokemonType {
         "steel": "#4C91B2",
         "grass": "#63BB5B",
         "ice": "#74CEC0",
-        "fairy": "#EC8FE6"
+        "fairy": "#EC8FE6",
+        "normal": "#919AA2"
+    ]
+    static let typesToIconColor: [String: String] = [
+        "fire": "#FF9741",
+        "dragon": "#006FC9",
+        "water": "#3692DC",
+        "electric": "#FBD100",
+        "dark": "#5B5466",
+        "fighting": "#E0306A",
+        "poison": "#B567CE",
+        "ground": "#E87236",
+        "flying": "#89AAE3",
+        "psychic": "#FF6675",
+        "bug": "#83C300",
+        "rock": "#C8B686",
+        "ghost": "#4C6AB2",
+        "steel": "#5A8EA2",
+        "grass": "#38BF4B",
+        "ice": "#4CD1C0",
+        "fairy": "#FB89EB",
+        "normal": "#919AA2"
     ]
 
 
