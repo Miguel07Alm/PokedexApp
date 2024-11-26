@@ -7,42 +7,27 @@ struct FooterView: View {
     var body: some View {
         VStack {
             ZStack{
-                Image("FooterRojo").resizable().frame(height: 175)
-                HStack(spacing: 70) {
-                    Spacer()
-                    // Pokeball Tab
-                    ZStack {
-                        Rectangle()
-                            .cornerRadius(12)
-                            .frame(width: 75, height: 75)
-                            .foregroundColor(Color(red: 0.8823529411764706, green: 0.4117647058823529, blue: 0.17254901960784313))
-                            
-                        Image("PokedexIcon")
-                            .resizable()
-                            .frame(width: 55, height: 55)
-                            .opacity(0.6)
-                    }
-                    .onTapGesture {
-                        selectedTab = 0
-                    }
-                    
-                    // Profile Tab
-                    ZStack {
-                        Rectangle()
-                            .cornerRadius(12)
-                            .frame(width: 75, height: 75)
-                            .foregroundColor(Color(red: 0.228, green: 0.053, blue: 0.053))
+                Image("FooterRojo").resizable().frame(height: 200)
+                #if !v2
+                    HStack(spacing: 120) {
+                        Button("", action: {print("hello")})
+                        .buttonStyle(BotonPokedex())
                         
-                        Image("PerfilIcon")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .opacity(0.55)
-                    }
-                    .onTapGesture {
-                        selectedTab = 1
-                    }
-                    Spacer()
-                }.offset(CGSize(width: 0, height: 35))
+                        Button("", action: {print("hello")})
+                        .buttonStyle(BotonPerfil())
+                    }.offset(CGSize(width: 0, height: 35))
+                #else
+                    HStack(spacing: 83) {
+                        Button("", action: {print("hello")})
+                        .buttonStyle(BotonPokedex())
+                        
+                        Button("", action: {print("hello")})
+                        .buttonStyle(BotonPerfilGrande())
+                        
+                        Button("", action: {print("hello")})
+                        .buttonStyle(BotonCombate())
+                    }.offset(CGSize(width: 0, height: 35))
+                #endif
             }
         }.ignoresSafeArea()
     }
