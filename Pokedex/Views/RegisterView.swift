@@ -5,11 +5,10 @@ struct RegisterView: View {
     @State private var password: String = ""
     @State private var reenterPassword: String = ""
     @EnvironmentObject var viewModel: ViewModel
-    
-    @State private var errorMessage: String? = nil
-    
-    @Environment(\.presentationMode) var presentationMode  // Agregar el Environment para acceder a la presentación de la vista.
 
+    @State private var errorMessage: String? = nil
+
+    @Environment(\.presentationMode) var presentationMode  // Agregar el Environment para acceder a la presentación de la vista.
 
     var body: some View {
         ZStack {
@@ -60,7 +59,12 @@ struct RegisterView: View {
                     )
                     .padding(.horizontal, 40)
 
-   
+                if let error = errorMessage {
+                    Text(error)
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
+                }
 
                 // Botón de Registro
                 Button(action: {
@@ -70,23 +74,32 @@ struct RegisterView: View {
                         return
                     }
 
-                    // Crear nuevo usuario
-                   
-                   
-                    if !(viewModel.createUser(username: username, password: password)) {
-                        errorMessage = "Repita el registro"
+                    switch viewModel.createUser(
+                        username: username, password: password)
+                    {
+                    case -1:
+                        errorMessage =
+                            "Los campos de nombre de usuario y contraseña no pueden estar vacíos."
+                        return
+
+                    case -2:
+                        errorMessage = "El usuario \(username) ya existe."
+                        return
+                    case 0:
+                        // Limpia los campos después del registro
+                        username = ""
+                        password = ""
+                        reenterPassword = ""
+
+                        errorMessage = nil
+
+                        // Regresar a LoginView
+                        self.presentationMode.wrappedValue.dismiss()
+                    default:
+                        errorMessage = nil
+                        return
                     }
-                    
 
-                    // Limpia los campos después del registro
-                    username = ""
-                    password = ""
-                    reenterPassword = ""
-
-                    errorMessage = nil
-                    
-                    // Regresar a LoginView
-                    self.presentationMode.wrappedValue.dismiss()
                 }) {
                     Text("Registrarse")
                         .fontWeight(.bold)
