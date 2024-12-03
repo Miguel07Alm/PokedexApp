@@ -9,6 +9,7 @@ struct LoginView: View {
     @State private var errorMessage: String? = nil
 
     @State var selectedTab = 0
+    @State private var isNavigationActive = false
 
     var body: some View {
         NavigationView {
@@ -35,7 +36,7 @@ struct LoginView: View {
 
                         // Subtítulo "Sign Up"
                         Text("Sign Up")
-                            .font(.system(size: geometry.size.width * 0.1)) // Fuente proporcional al ancho
+                            .font(.system(size: geometry.size.width * 0.1))  // Fuente proporcional al ancho
                             .foregroundColor(.pink)
                             .fontWeight(.semibold)
 
@@ -50,7 +51,7 @@ struct LoginView: View {
                                     RoundedRectangle(cornerRadius: 20)
                                         .stroke(Color.pink, lineWidth: 1)
                                 )
-                                .frame(width: geometry.size.width * 0.8) // 80% del ancho de la pantalla
+                                .frame(width: geometry.size.width * 0.8)  // 80% del ancho de la pantalla
 
                             // Campo de Password
                             SecureField("Password", text: $password)
@@ -61,7 +62,7 @@ struct LoginView: View {
                                     RoundedRectangle(cornerRadius: 20)
                                         .stroke(Color.pink, lineWidth: 1)
                                 )
-                                .frame(width: geometry.size.width * 0.8) // 80% del ancho de la pantalla
+                                .frame(width: geometry.size.width * 0.8)  // 80% del ancho de la pantalla
                         }
                         .padding(.horizontal)
 
@@ -88,7 +89,7 @@ struct LoginView: View {
                                 .padding(.top, geometry.size.height * 0.02)
                         }
 
-                        Spacer() // Espacio para empujar el contenido hacia arriba
+                        Spacer()  // Espacio para empujar el contenido hacia arriba
                     }
                     .padding(.top, geometry.size.height * 0.05)
 
@@ -109,6 +110,7 @@ struct LoginView: View {
                                     print(
                                         "Usuario autenticado: \(authenticatedUser.name ?? "Desconocido")"
                                     )
+                                    isNavigationActive = true
                                 } else {
                                     // Si no se encuentra el usuario
                                     errorMessage =
@@ -117,7 +119,14 @@ struct LoginView: View {
                                 }
                             }
                         )
-                        .padding(.bottom, geometry.size.height * -0.0435) // Ajustar el padding según el tamaño de la pantalla
+                        .padding(.bottom, geometry.size.height * -0.0435)  // Ajustar el padding según el tamaño de la pantalla
+
+                        NavigationLink(
+                            destination: ProfileView().environmentObject(viewModel),  // Reemplaza `NextView()` con la vista a la que quieres navegar
+                            isActive: $isNavigationActive
+                        ) {
+                            EmptyView()  // NavigationLink sin un botón visible
+                        }
                     }
                 }
             }
@@ -130,4 +139,3 @@ struct LoginView_Previews: PreviewProvider {
         LoginView().environmentObject(ViewModel())
     }
 }
-

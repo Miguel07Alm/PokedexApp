@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @EnvironmentObject var viewModel: ViewModel
+
     @State private var isEditingUsername: Bool = false
     @State private var isEditingPassword: Bool = false
     @State private var username: String = "[username]"
