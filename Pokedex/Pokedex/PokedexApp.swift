@@ -13,7 +13,7 @@ struct PokedexApp: App {
 
     var body: some Scene {
         WindowGroup {
-            PokemonDetailView()
+            LoginView().environmentObject(ViewModel())
 
         }
     }
