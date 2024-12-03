@@ -4,6 +4,11 @@ struct RegisterView: View {
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var reenterPassword: String = ""
+    @EnvironmentObject var viewModel: ViewModel
+
+    @State private var errorMessage: String? = nil
+
+    @Environment(\.presentationMode) var presentationMode  // Agregar el Environment para acceder a la presentación de la vista.
 
     var body: some View {
         ZStack {
@@ -54,7 +59,57 @@ struct RegisterView: View {
                     )
                     .padding(.horizontal, 40)
 
-                Spacer()
+                if let error = errorMessage {
+                    Text(error)
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
+                }
+
+                // Botón de Registro
+                Button(action: {
+                    // Verificar si las contraseñas coinciden
+                    if password != reenterPassword {
+                        errorMessage = "Las contraseñas no coinciden"
+                        return
+                    }
+
+                    switch viewModel.createUser(
+                        username: username, password: password)
+                    {
+                    case -1:
+                        errorMessage =
+                            "Los campos de nombre de usuario y contraseña no pueden estar vacíos."
+                        return
+
+                    case -2:
+                        errorMessage = "El usuario \(username) ya existe."
+                        return
+                    case 0:
+                        // Limpia los campos después del registro
+                        username = ""
+                        password = ""
+                        reenterPassword = ""
+
+                        errorMessage = nil
+
+                        // Regresar a LoginView
+                        self.presentationMode.wrappedValue.dismiss()
+                    default:
+                        errorMessage = nil
+                        return
+                    }
+
+                }) {
+                    Text("Registrarse")
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.pink)
+                        .cornerRadius(25)
+                }
+                .padding(.horizontal, 40)
             }
             .background(Color(red: 0.84, green: 0.93, blue: 0.93))
             .edgesIgnoringSafeArea(.all)
