@@ -118,7 +118,7 @@ struct RegisterView: View {
                             }
 
                             switch viewModel.createUser(
-                                username: username, password: password)
+                                username: username, password: password, profileImage: imageGeneral)
                             {
                             case -1:
                                 errorMessage =

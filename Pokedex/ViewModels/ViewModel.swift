@@ -1,4 +1,5 @@
 import CoreData
+import UIKit
 import Foundation
 
 class ViewModel: ObservableObject {
@@ -25,7 +26,7 @@ class ViewModel: ObservableObject {
 
     // Crear un nuevo usuario
     func createUser(
-        username: String, password: String, profileImage: Data? = nil
+        username: String, password: String, profileImage: UIImage? = nil
     )-> Int {
         guard !username.isEmpty, !password.isEmpty else {
             print(
@@ -42,7 +43,7 @@ class ViewModel: ObservableObject {
         let newUser = UserEntity(context: gestorCoreData.contexto)
         newUser.name = username
         newUser.password = password
-        newUser.profileImage = profileImage
+        newUser.profileImage = profileImage?.pngData()
 
         saveChanges()
         return 0
