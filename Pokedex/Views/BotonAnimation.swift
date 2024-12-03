@@ -86,6 +86,34 @@ struct BotonPerfil: ButtonStyle {
     }
 }
 
+struct BotonCombate: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+        .padding()
+        .background(
+            ZStack {
+                Rectangle()
+                    .foregroundColor(Color(red: 0.4235294117647059, green: 0.12941176470588237, blue: 0.12941176470588237))
+                    .cornerRadius(16)
+                    .offset(y:configuration.isPressed ? 0 : 5)
+                    .offset(x:configuration.isPressed ? 0 : 4)
+                
+                Rectangle()
+                    .foregroundColor(Color(red: 0.6392156862745098, green: 0.1568627450980392, blue: 0.1568627450980392))
+                    .cornerRadius(16)
+                
+                Image("CombateIcon")
+                    .resizable()
+                    .opacity(0.55)
+                    .frame(width: 50, height: 50)
+                
+            }.frame(width: 75, height: 75)
+        )
+        .offset(y:configuration.isPressed ? 5 : 0)
+        .offset(x:configuration.isPressed ? 4 : 0)
+    }
+}
+
 struct BotonPerfilGrande: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
     configuration.label
@@ -114,7 +142,8 @@ struct BotonPerfilGrande: ButtonStyle {
     }
 }
 
-struct BotonCombate: ButtonStyle {
+
+struct BotonCombateGrande: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
     configuration.label
         .padding()
@@ -130,17 +159,42 @@ struct BotonCombate: ButtonStyle {
                     .foregroundColor(Color(red: 0.6392156862745098, green: 0.1568627450980392, blue: 0.1568627450980392))
                     .cornerRadius(16)
                 
-                Image("PerfilIcon")
+                Image("CombateIcon")
                     .resizable()
                     .opacity(0.55)
-                    .frame(width: 50, height: 50)
+                    .frame(width: 60, height: 60)
                 
-            }.frame(width: 75, height: 75)
+            }.frame(width: 90, height: 90)
         )
         .offset(y:configuration.isPressed ? 5 : 0)
         .offset(x:configuration.isPressed ? 4 : 0)
     }
 }
 
-
+struct BotonRegistroGrande: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+        .padding()
+        .background(
+            ZStack {
+                Rectangle()
+                    .foregroundColor(Color(red: 0.4235294117647059, green: 0.12941176470588237, blue: 0.12941176470588237))
+                    .cornerRadius(16)
+                    .offset(y:configuration.isPressed ? 0 : 5)
+                    .offset(x:configuration.isPressed ? 0 : 4)
+                
+                Rectangle()
+                    .foregroundColor(Color(red: 0.6392156862745098, green: 0.1568627450980392, blue: 0.1568627450980392))
+                    .cornerRadius(16)
+                
+                Image("aceptar")
+                    .resizable()
+                    .frame(width: 80, height: 80)
+                
+            }.frame(width: 90, height: 90)
+        )
+        .offset(y:configuration.isPressed ? 5 : 0)
+        .offset(x:configuration.isPressed ? 4 : 0)
+    }
+}
 
