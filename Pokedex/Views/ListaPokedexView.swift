@@ -14,12 +14,12 @@ struct ListaPokedexView: View {
     ]
     
     let pokemons = [
-        (name: "Charmander", number: "0004", image: "charmander", color: Color.orange),
-        (name: "Charmeleon", number: "0005", image: "charmeleon", color: Color.orange),
-        (name: "Charizard", number: "0006", image: "charizard", color: Color.orange),
-        (name: "Pikachu", number: "0025", image: "pikachu", color: Color.yellow),
-        (name: "Vaporeon", number: "0157", image: "vaporeon", color: Color.blue),
-        (name: "Hydreigon", number: "0643", image: "hydreigon", color: Color.purple)
+        (name: "Charmander", number: 0004, image: "charmander", color: Color.orange),
+        (name: "Charmeleon", number: 0005, image: "charmeleon", color: Color.orange),
+        (name: "Charizard", number: 0006, image: "charizard", color: Color.orange),
+        (name: "Pikachu", number: 0025, image: "pikachu", color: Color.yellow),
+        (name: "Vaporeon", number: 0157, image: "vaporeon", color: Color.blue),
+        (name: "Hydreigon", number: 0643, image: "hydreigon", color: Color.purple)
     ]
     @Binding var showSortFilterView: Bool;
     @Binding var showFilterView: Bool;
@@ -41,7 +41,7 @@ struct ListaPokedexView: View {
                     }
                     .padding()
                 } .edgesIgnoringSafeArea(.bottom)// Desenfoque en el contenido principal
-                .background(Color(.systemGray6))
+                    .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
 
                 
                 // TabBar
@@ -54,4 +54,9 @@ struct ListaPokedexView: View {
 
         }
     }
+}
+#Preview{
+    @State var showSortFilterView: Bool = false;
+    @State var showFilterView: Bool = false;
+    ListaPokedexView(showSortFilterView: $showSortFilterView, showFilterView: $showFilterView)
 }
