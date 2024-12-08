@@ -16,7 +16,7 @@ struct EntradaPokedexView: View {
     var body: some View {
         ZStack {
             ImagenPokemon(img: $image)
-            CombinedShape(name: $name, num: $number).foregroundColor(backgroundColor.opacity(0.95))
+            CombinedShape(name: $name, num: $number).foregroundColor(backgroundColor.opacity(0.85))
         }
     }
 }
@@ -29,6 +29,13 @@ struct ImagenPokemon: View {
         }
         .frame(width: 150, height: 150)
         .background(Color(red: 0.9333333333333333, green: 0.9333333333333333, blue: 0.9333333333333333))
+        .clipShape(
+            .rect(
+                topLeadingRadius: 25,
+                bottomLeadingRadius: 25,
+                bottomTrailingRadius: 25
+            )
+        )
     }
 }
 
@@ -38,9 +45,9 @@ struct VerticalLine: View {
     var body: some View {
         Path { path in
             path.move(to: CGPoint(x: 0, y: 15))     // Empezamos después del corte
-            path.addLine(to: CGPoint(x: 12, y: 0))   // Diagonal superior
-            path.addLine(to: CGPoint(x: 12, y: 100)) // Línea vertical derecha
-            path.addLine(to: CGPoint(x: 0, y: 100))  // Línea inferior
+            path.addLine(to: CGPoint(x: 10, y: 0))   // Diagonal superior
+            path.addLine(to: CGPoint(x: 10, y: 110)) // Línea vertical derecha
+            path.addLine(to: CGPoint(x: 0, y: 110))  // Línea inferior
             path.addLine(to: CGPoint(x: 0, y: 15))   // Cerramos el path
         }
     }
@@ -74,7 +81,7 @@ struct CurvedBottom: View {
     var body: some View {
         ZStack {
             BottomRoundedRectangle()
-                .frame(width: 150, height: 50)
+                .frame(width: 150, height: 40)
             
             Text(name)
                 .font(.system(size: 23, weight: .medium))
@@ -124,13 +131,13 @@ struct CombinedShape: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             CurvedBottom(name: $name)
-                .offset(y: 100)
+                .offset(y: 110)
             
             SmallRectangle(num: $num)
-                .offset(x: 80, y: 70)
+                .offset(x: 80, y: 80)
             
             VerticalLine()
-                .offset(x: 138, y: 0)
+                .offset(x: 140, y: 0)
         }
         .frame(width: 150, height: 150)
     }
@@ -138,9 +145,7 @@ struct CombinedShape: View {
 
 
 #Preview {
-
-        EntradaPokedexView(name: "Crabominable", number: 0740, image: "PerfilIcon", backgroundColor: Color.red)
-
+    EntradaPokedexView(name: "Crabominable", number: 0740, image: "PerfilIcon", backgroundColor: Color.red)
 }
 
 

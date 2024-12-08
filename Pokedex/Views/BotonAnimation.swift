@@ -198,3 +198,30 @@ struct BotonRegistroGrande: ButtonStyle {
     }
 }
 
+struct BotonConfirmarGrande: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+        .padding()
+        .background(
+            ZStack {
+                Rectangle()
+                    .foregroundColor(Color(red: 0.10980392156862745, green: 0.5215686274509804, blue: 0.13725490196078433))   
+                    .cornerRadius(16)
+                    .offset(y:configuration.isPressed ? 0 : 5)
+                    .offset(x:configuration.isPressed ? 0 : 4)
+                
+                Rectangle()
+                    .foregroundColor(Color(red: 0.06274509803921569, green: 0.3176470588235294, blue: 0.10196078431372549))
+                    .cornerRadius(16)
+                
+                Image("PokedexIcon")
+                    .resizable()
+                    .opacity(0.55)
+                    .frame(width: 80, height: 80)
+                
+            }.frame(width: 90, height: 90)
+        )
+        .offset(y:configuration.isPressed ? 5 : 0)
+        .offset(x:configuration.isPressed ? 4 : 0)
+    }
+}
