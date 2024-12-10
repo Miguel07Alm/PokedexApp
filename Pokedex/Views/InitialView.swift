@@ -1,4 +1,3 @@
-
 //
 //  InitialView.swift
 //  PokédexApp
@@ -9,37 +8,37 @@
 import SwiftUI
 
 struct InitialView: View {
-    @State private var rotationAngle = 0.0
+    @State private var rotationAngle: Double = 0
+    @State private var verticalOffset: CGFloat = -300
     var body: some View {
         ZStack {
-            LinearGradient(
-                gradient: Gradient(colors: [
-                    Color(red: 1.0, green: 0.8, blue: 0.6),
-                    Color(red: 1.0, green: 0.85, blue: 0.7)
-                ]),
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .edgesIgnoringSafeArea(.all)
-            
-            Image("rotom")
+            Color(red: 1.0, green: 0.8, blue: 0.6)
+                .edgesIgnoringSafeArea(.all)
+            Image("rotomv3")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 270, height: 250)
+                .frame(width: 150, height: 110)
+                .offset(y: verticalOffset)
+                .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 5)
                 .rotation3DEffect(
                     Angle(degrees: rotationAngle),
-                    axis: (x: 0.0, y: 1.0, z: 0.0)//,
-                    //perspective: 0.005
+                    axis: (x: 0.0, y: 1.0, z: 0.0)
                 )
-                .scaleEffect(1.0 - abs(sin(rotationAngle * .pi / 180)) * 0.1)
-                .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
                 .animation(
-                    Animation.easeInOut(duration: 2.7)
-                        .repeatForever(autoreverses: false),
+                    Animation.easeInOut(duration: 4)
+                        .speed(2)
+                        .repeatForever(autoreverses: true),
                     value: rotationAngle
+                )
+                .animation(
+                    Animation.easeInOut(duration: 3)
+                        .speed(5)
+                        .repeatForever(autoreverses: true),
+                    value: verticalOffset
                 )
                 .onAppear {
                     rotationAngle = 360
+                    verticalOffset = 3000
                 }
         }
     }
