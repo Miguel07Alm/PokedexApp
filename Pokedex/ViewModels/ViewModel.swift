@@ -1,9 +1,11 @@
 import CoreData
-import UIKit
 import Foundation
+import UIKit
 
 class ViewModel: ObservableObject {
     let gestorCoreData = CoreDataManager.instance
+
+    @Published var authenticatedUser: UserEntity?
 
     @Published var usersArray: [UserEntity] = []
     @Published var pokemonsArray: [PokemonEntity] = []
@@ -27,7 +29,7 @@ class ViewModel: ObservableObject {
     // Crear un nuevo usuario
     func createUser(
         username: String, password: String, profileImage: UIImage? = nil
-    )-> Int {
+    ) -> Int {
         guard !username.isEmpty, !password.isEmpty else {
             print(
                 "Los campos de nombre de usuario y contraseña no pueden estar vacíos."
@@ -71,11 +73,30 @@ class ViewModel: ObservableObject {
 
         do {
             let result = try gestorCoreData.contexto.fetch(fetchRequest)
-            return result.first
+            let user = result.first
+            authenticatedUser = user
+            return user
         } catch {
             print("Error al autenticar usuario: \(error)")
             return nil
         }
+    }
+
+    func updateUsername(newUsername: String) {
+        guard let user = authenticatedUser else { return }
+        user.name = newUsername
+        saveChanges()
+    }
+
+    func updatePassword(newPassword: String) {
+        guard let user = authenticatedUser else { return }
+        user.password = newPassword
+        saveChanges()
+    }
+    
+    func updateProfileImage(newImage: UIImage) {
+        guard let user = authenticatedUser else { return }
+        user.profileImage = newImage.pngData()
     }
 
     // Guardar cambios en el contexto
@@ -88,4 +109,5 @@ class ViewModel: ObservableObject {
             print("Error al guardar cambios: \(error)")
         }
     }
+
 }

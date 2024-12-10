@@ -12,7 +12,7 @@ struct LoginView: View {
     @State private var isNavigationActive = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             GeometryReader { geometry in
                 ZStack {
                     // Fondo de color
@@ -110,7 +110,6 @@ struct LoginView: View {
                                     print(
                                         "Usuario autenticado: \(authenticatedUser.name ?? "Desconocido")"
                                     )
-                                    isNavigationActive = true
                                 } else {
                                     // Si no se encuentra el usuario
                                     errorMessage =
@@ -119,13 +118,9 @@ struct LoginView: View {
                                 }
                             }
                         )
-                        .padding(.bottom, geometry.size.height * -0.0435)  // Ajustar el padding según el tamaño de la pantalla
-
-                        NavigationLink(
-                            destination: ProfileView().environmentObject(viewModel),  // Reemplaza `NextView()` con la vista a la que quieres navegar
-                            isActive: $isNavigationActive
-                        ) {
-                            EmptyView()  // NavigationLink sin un botón visible
+                        .padding(.bottom, geometry.size.height * -0.0435)
+                        .navigationDestination(isPresented: $isAuthenticated) {
+                            ProfileView().environmentObject(viewModel)
                         }
                     }
                 }
