@@ -13,7 +13,7 @@ struct PokemonDetailView: View {
         VStack (spacing: -100){
             CabeceraConNombre()
             ZStack {
-                Rectangle().cornerRadius(48).foregroundColor(Color(uiColor: PokemonType.getColor(for: "electric")!))
+                Rectangle().cornerRadius(48).foregroundColor( PokemonType.getColor(for: "electric"))
                 VStack {
                     //Imagen Carrusel
                     AutoScroller(imageNames: ["https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/25.png", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/female/25.png", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/female/25.png", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/female/25.gif"]).cornerRadius(48).frame(height: 100)

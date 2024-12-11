@@ -1,27 +1,861 @@
 import Foundation
-import UIKit
-import SwiftUI
-struct Pokemon: Identifiable {
-    let id = UUID()
+
+// MARK: - Welcome
+struct AbilityData: Codable {
+    let effectChanges: [EffectChange]
+    let effectEntries: [WelcomeEffectEntry]
+    let flavorTextEntries: [AbilityFlavorTextEntry]
+    let generation: Generation
+    let id: Int
+    let isMainSeries: Bool
     let name: String
-    let pokedexNumber: Int
-    let imageName: String
-    let types: [PokemonType]
-    let stats: PokemonStats
-    let description: String
-    let evolutions: [String]
-    
-    var typeColor: LinearGradient {
-            let typeNames = types.map { $0.name } // Extraemos los nombres de los tipos
-        return PokemonType.getGradient(for: typeNames) // Pasamos los nombres de tipo a la función
-        }
+    let names: [AbilityName]
+    let pokemon: [AbilityPokemon]
+
+    enum CodingKeys: String, CodingKey {
+        case effectChanges = "effect_changes"
+        case effectEntries = "effect_entries"
+        case flavorTextEntries = "flavor_text_entries"
+        case generation, id
+        case isMainSeries = "is_main_series"
+        case name, names, pokemon
+    }
 }
 
-struct PokemonStats {
-    let hp: Int
-    let attack: Int
-    let defense: Int
-    let specialAttack: Int
-    let specialDefense: Int
-    let speed: Int
+// MARK: - EffectChange
+struct EffectChange: Codable {
+    let effectEntries: [EffectChangeEffectEntry]
+    let versionGroup: Generation
+
+    enum CodingKeys: String, CodingKey {
+        case effectEntries = "effect_entries"
+        case versionGroup = "version_group"
+    }
+}
+
+// MARK: - EffectChangeEffectEntry
+struct EffectChangeEffectEntry: Codable {
+    let effect: String
+    let language: Generation
+}
+
+// MARK: - Generation
+struct Generation: Codable {
+    let name: String
+    let url: String
+}
+
+// MARK: - WelcomeEffectEntry
+struct WelcomeEffectEntry: Codable {
+    let effect: String
+    let language: Generation
+    let shortEffect: String
+
+    enum CodingKeys: String, CodingKey {
+        case effect, language
+        case shortEffect = "short_effect"
+    }
+}
+
+// MARK: - FlavorTextEntry
+struct AbilityFlavorTextEntry: Codable {
+    let flavorText: String
+    let language, versionGroup: Generation
+
+    enum CodingKeys: String, CodingKey {
+        case flavorText = "flavor_text"
+        case language
+        case versionGroup = "version_group"
+    }
+}
+
+// MARK: - Name
+struct AbilityName: Codable {
+    let language: Generation
+    let name: String
+}
+
+// MARK: - Pokemon
+struct AbilityPokemon: Codable {
+    let isHidden: Bool
+    let pokemon: Generation
+    let slot: Int
+
+    enum CodingKeys: String, CodingKey {
+        case isHidden = "is_hidden"
+        case pokemon, slot
+    }
+}
+
+// MARK: - Welcome
+struct PokemonEvolutionChain: Codable {
+    let babyTriggerItem: JSONNull?
+    let chain: Chain
+    let id: Int
+
+    enum CodingKeys: String, CodingKey {
+        case babyTriggerItem = "baby_trigger_item"
+        case chain, id
+    }
+}
+
+// MARK: - Chain
+struct Chain: Codable {
+    let evolutionDetails: [EvolutionDetail]
+    let evolvesTo: [Chain]
+    let isBaby: Bool
+    let species: Species
+
+    enum CodingKeys: String, CodingKey {
+        case evolutionDetails = "evolution_details"
+        case evolvesTo = "evolves_to"
+        case isBaby = "is_baby"
+        case species
+    }
+}
+
+// MARK: - EvolutionDetail
+struct EvolutionDetail: Codable {
+    let gender, heldItem: JSONNull?
+    let item: Species?
+    let knownMove, knownMoveType, location, minAffection: JSONNull?
+    let minBeauty: JSONNull?
+    let minHappiness: Int?
+    let minLevel: JSONNull?
+    let needsOverworldRain: Bool
+    let partySpecies, partyType, relativePhysicalStats: JSONNull?
+    let timeOfDay: String
+    let tradeSpecies: JSONNull?
+    let trigger: Species
+    let turnUpsideDown: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case gender
+        case heldItem = "held_item"
+        case item
+        case knownMove = "known_move"
+        case knownMoveType = "known_move_type"
+        case location
+        case minAffection = "min_affection"
+        case minBeauty = "min_beauty"
+        case minHappiness = "min_happiness"
+        case minLevel = "min_level"
+        case needsOverworldRain = "needs_overworld_rain"
+        case partySpecies = "party_species"
+        case partyType = "party_type"
+        case relativePhysicalStats = "relative_physical_stats"
+        case timeOfDay = "time_of_day"
+        case tradeSpecies = "trade_species"
+        case trigger
+        case turnUpsideDown = "turn_upside_down"
+    }
+}
+
+
+// MARK: - Welcome
+struct PokemonSpecies: Codable {
+    let baseHappiness, captureRate: Int
+    let color: PokemonColor
+    let eggGroups: [PokemonColor]
+    let evolutionChain: EvolutionChain
+    let evolvesFromSpecies: PokemonColor
+    let flavorTextEntries: [FlavorTextEntry]
+    let formDescriptions: [JSONAny]
+    let formsSwitchable: Bool
+    let genderRate: Int
+    let genera: [Genus]
+    let generation, growthRate, habitat: PokemonColor
+    let hasGenderDifferences: Bool
+    let hatchCounter, id: Int
+    let isBaby, isLegendary, isMythical: Bool
+    let name: String
+    let names: [Name]
+    let order: Int
+    let palParkEncounters: [PalParkEncounter]
+    let pokedexNumbers: [PokedexNumber]
+    let shape: PokemonColor
+    let varieties: [Variety]
+
+    enum CodingKeys: String, CodingKey {
+        case baseHappiness = "base_happiness"
+        case captureRate = "capture_rate"
+        case color
+        case eggGroups = "egg_groups"
+        case evolutionChain = "evolution_chain"
+        case evolvesFromSpecies = "evolves_from_species"
+        case flavorTextEntries = "flavor_text_entries"
+        case formDescriptions = "form_descriptions"
+        case formsSwitchable = "forms_switchable"
+        case genderRate = "gender_rate"
+        case genera, generation
+        case growthRate = "growth_rate"
+        case habitat
+        case hasGenderDifferences = "has_gender_differences"
+        case hatchCounter = "hatch_counter"
+        case id
+        case isBaby = "is_baby"
+        case isLegendary = "is_legendary"
+        case isMythical = "is_mythical"
+        case name, names, order
+        case palParkEncounters = "pal_park_encounters"
+        case pokedexNumbers = "pokedex_numbers"
+        case shape, varieties
+    }
+}
+
+// MARK: - Color
+struct PokemonColor: Codable {
+    let name: String
+    let url: String
+}
+
+// MARK: - EvolutionChain
+struct EvolutionChain: Codable {
+    let url: String
+}
+
+// MARK: - FlavorTextEntry
+struct FlavorTextEntry: Codable {
+    let flavorText: String
+    let language, version: PokemonColor
+
+    enum CodingKeys: String, CodingKey {
+        case flavorText = "flavor_text"
+        case language, version
+    }
+}
+
+// MARK: - Genus
+struct Genus: Codable {
+    let genus: String
+    let language: PokemonColor
+}
+
+// MARK: - Name
+struct Name: Codable {
+    let language: PokemonColor
+    let name: String
+}
+
+// MARK: - PalParkEncounter
+struct PalParkEncounter: Codable {
+    let area: PokemonColor
+    let baseScore, rate: Int
+
+    enum CodingKeys: String, CodingKey {
+        case area
+        case baseScore = "base_score"
+        case rate
+    }
+}
+
+// MARK: - PokedexNumber
+struct PokedexNumber: Codable {
+    let entryNumber: Int
+    let pokedex: PokemonColor
+
+    enum CodingKeys: String, CodingKey {
+        case entryNumber = "entry_number"
+        case pokedex
+    }
+}
+
+// MARK: - Variety
+struct Variety: Codable {
+    let isDefault: Bool
+    let pokemon: PokemonColor
+
+    enum CodingKeys: String, CodingKey {
+        case isDefault = "is_default"
+        case pokemon
+    }
+}
+
+struct Pokemon: Identifiable, Codable {
+    let abilities: [Ability]
+    let baseExperience: Int
+    let cries: Cries
+    let forms: [Species]
+    let gameIndices: [GameIndex]
+    let height: Int
+    let heldItems: [HeldItem]
+    let id: Int
+    let isDefault: Bool
+    let locationAreaEncounters: String
+    let moves: [Move]
+    let name: String
+    let order: Int
+    let pastAbilities, pastTypes: [JSONAny]
+    let species: Species
+    let sprites: Sprites
+    let stats: [Stat]
+    let types: [TypeElement]
+    let weight: Int
+
+    enum CodingKeys: String, CodingKey {
+        case abilities
+        case baseExperience = "base_experience"
+        case cries, forms
+        case gameIndices = "game_indices"
+        case height
+        case heldItems = "held_items"
+        case id
+        case isDefault = "is_default"
+        case locationAreaEncounters = "location_area_encounters"
+        case moves, name, order
+        case pastAbilities = "past_abilities"
+        case pastTypes = "past_types"
+        case species, sprites, stats, types, weight
+    }
+}
+
+// MARK: - Ability
+struct Ability: Codable {
+    let ability: Species
+    let isHidden: Bool
+    let slot: Int
+
+    enum CodingKeys: String, CodingKey {
+        case ability
+        case isHidden = "is_hidden"
+        case slot
+    }
+}
+
+// MARK: - Species
+struct Species: Codable {
+    let name: String
+    let url: String
+}
+
+// MARK: - Cries
+struct Cries: Codable {
+    let latest, legacy: String
+}
+
+// MARK: - GameIndex
+struct GameIndex: Codable {
+    let gameIndex: Int
+    let version: Species
+
+    enum CodingKeys: String, CodingKey {
+        case gameIndex = "game_index"
+        case version
+    }
+}
+
+// MARK: - HeldItem
+struct HeldItem: Codable {
+    let item: Species
+    let versionDetails: [VersionDetail]
+
+    enum CodingKeys: String, CodingKey {
+        case item
+        case versionDetails = "version_details"
+    }
+}
+
+// MARK: - VersionDetail
+struct VersionDetail: Codable {
+    let rarity: Int
+    let version: Species
+}
+
+// MARK: - Move
+struct Move: Codable {
+    let move: Species
+    let versionGroupDetails: [VersionGroupDetail]
+
+    enum CodingKeys: String, CodingKey {
+        case move
+        case versionGroupDetails = "version_group_details"
+    }
+}
+
+// MARK: - VersionGroupDetail
+struct VersionGroupDetail: Codable {
+    let levelLearnedAt: Int
+    let moveLearnMethod, versionGroup: Species
+
+    enum CodingKeys: String, CodingKey {
+        case levelLearnedAt = "level_learned_at"
+        case moveLearnMethod = "move_learn_method"
+        case versionGroup = "version_group"
+    }
+}
+
+// MARK: - GenerationV
+struct GenerationV: Codable {
+    let blackWhite: Sprites
+
+    enum CodingKeys: String, CodingKey {
+        case blackWhite = "black-white"
+    }
+}
+
+// MARK: - GenerationIv
+struct GenerationIv: Codable {
+    let diamondPearl, heartgoldSoulsilver, platinum: Sprites
+
+    enum CodingKeys: String, CodingKey {
+        case diamondPearl = "diamond-pearl"
+        case heartgoldSoulsilver = "heartgold-soulsilver"
+        case platinum
+    }
+}
+
+// MARK: - Versions
+struct Versions: Codable {
+    let generationI: GenerationI
+    let generationIi: GenerationIi
+    let generationIii: GenerationIii
+    let generationIv: GenerationIv
+    let generationV: GenerationV
+    let generationVi: [String: Home]
+    let generationVii: GenerationVii
+    let generationViii: GenerationViii
+
+    enum CodingKeys: String, CodingKey {
+        case generationI = "generation-i"
+        case generationIi = "generation-ii"
+        case generationIii = "generation-iii"
+        case generationIv = "generation-iv"
+        case generationV = "generation-v"
+        case generationVi = "generation-vi"
+        case generationVii = "generation-vii"
+        case generationViii = "generation-viii"
+    }
+}
+
+// MARK: - Other
+struct Other: Codable {
+    let dreamWorld: DreamWorld
+    let home: Home
+    let officialArtwork: OfficialArtwork
+    let showdown: Sprites
+
+    enum CodingKeys: String, CodingKey {
+        case dreamWorld = "dream_world"
+        case home
+        case officialArtwork = "official-artwork"
+        case showdown
+    }
+}
+
+// MARK: - Sprites
+class Sprites: Codable {
+    let backDefault, backFemale, backShiny: String
+    let backShinyFemale: String?
+    let frontDefault, frontFemale, frontShiny, frontShinyFemale: String
+    let other: Other?
+    let versions: Versions?
+    let animated: Sprites?
+
+    enum CodingKeys: String, CodingKey {
+        case backDefault = "back_default"
+        case backFemale = "back_female"
+        case backShiny = "back_shiny"
+        case backShinyFemale = "back_shiny_female"
+        case frontDefault = "front_default"
+        case frontFemale = "front_female"
+        case frontShiny = "front_shiny"
+        case frontShinyFemale = "front_shiny_female"
+        case other, versions, animated
+    }
+
+    init(backDefault: String, backFemale: String, backShiny: String, backShinyFemale: String?, frontDefault: String, frontFemale: String, frontShiny: String, frontShinyFemale: String, other: Other?, versions: Versions?, animated: Sprites?) {
+        self.backDefault = backDefault
+        self.backFemale = backFemale
+        self.backShiny = backShiny
+        self.backShinyFemale = backShinyFemale
+        self.frontDefault = frontDefault
+        self.frontFemale = frontFemale
+        self.frontShiny = frontShiny
+        self.frontShinyFemale = frontShinyFemale
+        self.other = other
+        self.versions = versions
+        self.animated = animated
+    }
+}
+
+// MARK: - GenerationI
+struct GenerationI: Codable {
+    let redBlue, yellow: RedBlue
+
+    enum CodingKeys: String, CodingKey {
+        case redBlue = "red-blue"
+        case yellow
+    }
+}
+
+// MARK: - RedBlue
+struct RedBlue: Codable {
+    let backDefault, backGray, backTransparent, frontDefault: String
+    let frontGray, frontTransparent: String
+
+    enum CodingKeys: String, CodingKey {
+        case backDefault = "back_default"
+        case backGray = "back_gray"
+        case backTransparent = "back_transparent"
+        case frontDefault = "front_default"
+        case frontGray = "front_gray"
+        case frontTransparent = "front_transparent"
+    }
+}
+
+// MARK: - GenerationIi
+struct GenerationIi: Codable {
+    let crystal: Crystal
+    let gold, silver: Gold
+}
+
+// MARK: - Crystal
+struct Crystal: Codable {
+    let backDefault, backShiny, backShinyTransparent, backTransparent: String
+    let frontDefault, frontShiny, frontShinyTransparent, frontTransparent: String
+
+    enum CodingKeys: String, CodingKey {
+        case backDefault = "back_default"
+        case backShiny = "back_shiny"
+        case backShinyTransparent = "back_shiny_transparent"
+        case backTransparent = "back_transparent"
+        case frontDefault = "front_default"
+        case frontShiny = "front_shiny"
+        case frontShinyTransparent = "front_shiny_transparent"
+        case frontTransparent = "front_transparent"
+    }
+}
+
+// MARK: - Gold
+struct Gold: Codable {
+    let backDefault, backShiny, frontDefault, frontShiny: String
+    let frontTransparent: String?
+
+    enum CodingKeys: String, CodingKey {
+        case backDefault = "back_default"
+        case backShiny = "back_shiny"
+        case frontDefault = "front_default"
+        case frontShiny = "front_shiny"
+        case frontTransparent = "front_transparent"
+    }
+}
+
+// MARK: - GenerationIii
+struct GenerationIii: Codable {
+    let emerald: OfficialArtwork
+    let fireredLeafgreen, rubySapphire: Gold
+
+    enum CodingKeys: String, CodingKey {
+        case emerald
+        case fireredLeafgreen = "firered-leafgreen"
+        case rubySapphire = "ruby-sapphire"
+    }
+}
+
+// MARK: - OfficialArtwork
+struct OfficialArtwork: Codable {
+    let frontDefault, frontShiny: String
+
+    enum CodingKeys: String, CodingKey {
+        case frontDefault = "front_default"
+        case frontShiny = "front_shiny"
+    }
+}
+
+// MARK: - Home
+struct Home: Codable {
+    let frontDefault, frontFemale, frontShiny, frontShinyFemale: String
+
+    enum CodingKeys: String, CodingKey {
+        case frontDefault = "front_default"
+        case frontFemale = "front_female"
+        case frontShiny = "front_shiny"
+        case frontShinyFemale = "front_shiny_female"
+    }
+}
+
+// MARK: - GenerationVii
+struct GenerationVii: Codable {
+    let icons: DreamWorld
+    let ultraSunUltraMoon: Home
+
+    enum CodingKeys: String, CodingKey {
+        case icons
+        case ultraSunUltraMoon = "ultra-sun-ultra-moon"
+    }
+}
+
+// MARK: - DreamWorld
+struct DreamWorld: Codable {
+    let frontDefault: String
+    let frontFemale: String?
+
+    enum CodingKeys: String, CodingKey {
+        case frontDefault = "front_default"
+        case frontFemale = "front_female"
+    }
+}
+
+// MARK: - GenerationViii
+struct GenerationViii: Codable {
+    let icons: DreamWorld
+}
+
+// MARK: - Stat
+struct Stat: Codable {
+    let baseStat, effort: Int
+    let stat: Species
+
+    enum CodingKeys: String, CodingKey {
+        case baseStat = "base_stat"
+        case effort, stat
+    }
+}
+
+// MARK: - TypeElement
+struct TypeElement: Codable {
+    let slot: Int
+    let type: Species
+}
+
+// MARK: - Encode/decode helpers
+
+class JSONNull: Codable, Hashable {
+
+    public static func == (lhs: JSONNull, rhs: JSONNull) -> Bool {
+            return true
+    }
+
+    public var hashValue: Int {
+            return 0
+    }
+
+    public init() {}
+
+    public required init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            if !container.decodeNil() {
+                    throw DecodingError.typeMismatch(JSONNull.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for JSONNull"))
+            }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+            var container = encoder.singleValueContainer()
+            try container.encodeNil()
+    }
+}
+
+class JSONCodingKey: CodingKey {
+    let key: String
+
+    required init?(intValue: Int) {
+            return nil
+    }
+
+    required init?(stringValue: String) {
+            key = stringValue
+    }
+
+    var intValue: Int? {
+            return nil
+    }
+
+    var stringValue: String {
+            return key
+    }
+}
+
+class JSONAny: Codable {
+
+    let value: Any
+
+    static func decodingError(forCodingPath codingPath: [CodingKey]) -> DecodingError {
+            let context = DecodingError.Context(codingPath: codingPath, debugDescription: "Cannot decode JSONAny")
+            return DecodingError.typeMismatch(JSONAny.self, context)
+    }
+
+    static func encodingError(forValue value: Any, codingPath: [CodingKey]) -> EncodingError {
+            let context = EncodingError.Context(codingPath: codingPath, debugDescription: "Cannot encode JSONAny")
+            return EncodingError.invalidValue(value, context)
+    }
+
+    static func decode(from container: SingleValueDecodingContainer) throws -> Any {
+            if let value = try? container.decode(Bool.self) {
+                    return value
+            }
+            if let value = try? container.decode(Int64.self) {
+                    return value
+            }
+            if let value = try? container.decode(Double.self) {
+                    return value
+            }
+            if let value = try? container.decode(String.self) {
+                    return value
+            }
+            if container.decodeNil() {
+                    return JSONNull()
+            }
+            throw decodingError(forCodingPath: container.codingPath)
+    }
+
+    static func decode(from container: inout UnkeyedDecodingContainer) throws -> Any {
+            if let value = try? container.decode(Bool.self) {
+                    return value
+            }
+            if let value = try? container.decode(Int64.self) {
+                    return value
+            }
+            if let value = try? container.decode(Double.self) {
+                    return value
+            }
+            if let value = try? container.decode(String.self) {
+                    return value
+            }
+            if let value = try? container.decodeNil() {
+                    if value {
+                            return JSONNull()
+                    }
+            }
+            if var container = try? container.nestedUnkeyedContainer() {
+                    return try decodeArray(from: &container)
+            }
+            if var container = try? container.nestedContainer(keyedBy: JSONCodingKey.self) {
+                    return try decodeDictionary(from: &container)
+            }
+            throw decodingError(forCodingPath: container.codingPath)
+    }
+
+    static func decode(from container: inout KeyedDecodingContainer<JSONCodingKey>, forKey key: JSONCodingKey) throws -> Any {
+            if let value = try? container.decode(Bool.self, forKey: key) {
+                    return value
+            }
+            if let value = try? container.decode(Int64.self, forKey: key) {
+                    return value
+            }
+            if let value = try? container.decode(Double.self, forKey: key) {
+                    return value
+            }
+            if let value = try? container.decode(String.self, forKey: key) {
+                    return value
+            }
+            if let value = try? container.decodeNil(forKey: key) {
+                    if value {
+                            return JSONNull()
+                    }
+            }
+            if var container = try? container.nestedUnkeyedContainer(forKey: key) {
+                    return try decodeArray(from: &container)
+            }
+            if var container = try? container.nestedContainer(keyedBy: JSONCodingKey.self, forKey: key) {
+                    return try decodeDictionary(from: &container)
+            }
+            throw decodingError(forCodingPath: container.codingPath)
+    }
+
+    static func decodeArray(from container: inout UnkeyedDecodingContainer) throws -> [Any] {
+            var arr: [Any] = []
+            while !container.isAtEnd {
+                    let value = try decode(from: &container)
+                    arr.append(value)
+            }
+            return arr
+    }
+
+    static func decodeDictionary(from container: inout KeyedDecodingContainer<JSONCodingKey>) throws -> [String: Any] {
+            var dict = [String: Any]()
+            for key in container.allKeys {
+                    let value = try decode(from: &container, forKey: key)
+                    dict[key.stringValue] = value
+            }
+            return dict
+    }
+
+    static func encode(to container: inout UnkeyedEncodingContainer, array: [Any]) throws {
+            for value in array {
+                    if let value = value as? Bool {
+                            try container.encode(value)
+                    } else if let value = value as? Int64 {
+                            try container.encode(value)
+                    } else if let value = value as? Double {
+                            try container.encode(value)
+                    } else if let value = value as? String {
+                            try container.encode(value)
+                    } else if value is JSONNull {
+                            try container.encodeNil()
+                    } else if let value = value as? [Any] {
+                            var container = container.nestedUnkeyedContainer()
+                            try encode(to: &container, array: value)
+                    } else if let value = value as? [String: Any] {
+                            var container = container.nestedContainer(keyedBy: JSONCodingKey.self)
+                            try encode(to: &container, dictionary: value)
+                    } else {
+                            throw encodingError(forValue: value, codingPath: container.codingPath)
+                    }
+            }
+    }
+
+    static func encode(to container: inout KeyedEncodingContainer<JSONCodingKey>, dictionary: [String: Any]) throws {
+            for (key, value) in dictionary {
+                    let key = JSONCodingKey(stringValue: key)!
+                    if let value = value as? Bool {
+                            try container.encode(value, forKey: key)
+                    } else if let value = value as? Int64 {
+                            try container.encode(value, forKey: key)
+                    } else if let value = value as? Double {
+                            try container.encode(value, forKey: key)
+                    } else if let value = value as? String {
+                            try container.encode(value, forKey: key)
+                    } else if value is JSONNull {
+                            try container.encodeNil(forKey: key)
+                    } else if let value = value as? [Any] {
+                            var container = container.nestedUnkeyedContainer(forKey: key)
+                            try encode(to: &container, array: value)
+                    } else if let value = value as? [String: Any] {
+                            var container = container.nestedContainer(keyedBy: JSONCodingKey.self, forKey: key)
+                            try encode(to: &container, dictionary: value)
+                    } else {
+                            throw encodingError(forValue: value, codingPath: container.codingPath)
+                    }
+            }
+    }
+
+    static func encode(to container: inout SingleValueEncodingContainer, value: Any) throws {
+            if let value = value as? Bool {
+                    try container.encode(value)
+            } else if let value = value as? Int64 {
+                    try container.encode(value)
+            } else if let value = value as? Double {
+                    try container.encode(value)
+            } else if let value = value as? String {
+                    try container.encode(value)
+            } else if value is JSONNull {
+                    try container.encodeNil()
+            } else {
+                    throw encodingError(forValue: value, codingPath: container.codingPath)
+            }
+    }
+
+    public required init(from decoder: Decoder) throws {
+            if var arrayContainer = try? decoder.unkeyedContainer() {
+                    self.value = try JSONAny.decodeArray(from: &arrayContainer)
+            } else if var container = try? decoder.container(keyedBy: JSONCodingKey.self) {
+                    self.value = try JSONAny.decodeDictionary(from: &container)
+            } else {
+                    let container = try decoder.singleValueContainer()
+                    self.value = try JSONAny.decode(from: container)
+            }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+            if let arr = self.value as? [Any] {
+                    var container = encoder.unkeyedContainer()
+                    try JSONAny.encode(to: &container, array: arr)
+            } else if let dict = self.value as? [String: Any] {
+                    var container = encoder.container(keyedBy: JSONCodingKey.self)
+                    try JSONAny.encode(to: &container, dictionary: dict)
+            } else {
+                    var container = encoder.singleValueContainer()
+                    try JSONAny.encode(to: &container, value: self.value)
+            }
+    }
 }

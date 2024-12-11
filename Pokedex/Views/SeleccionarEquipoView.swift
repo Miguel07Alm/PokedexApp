@@ -61,17 +61,18 @@ struct ImagenPokemonNoSeleccionado: View {
     }
 }
 
-struct Cum: View {
+struct SeleccionarEquipo: View {
     @Binding var showSortFilterView: Bool
     @Binding var showFilterView: Bool
     @Binding var image: String
+    @Binding var pokemons: [Pokemon];
     var body: some View {
         VStack(spacing: -50) {
             HeaderView(
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView)
             SeleccionarEquipoView(image: $image).cornerRadius(48)
-            ListaPokedexView(
+            ListaPokedexView(pokemons: $pokemons,
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView
             )
@@ -83,7 +84,8 @@ struct Cum: View {
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
     @State var image: String = "aceptar"
-    Cum(showSortFilterView: $showSortFilterView, showFilterView: $showFilterView, image: $image)
+    @State var pokemons: [Pokemon] = [];
+    SeleccionarEquipo(showSortFilterView: $showSortFilterView, showFilterView: $showFilterView, image: $image, pokemons: $pokemons)
 }
     
 
