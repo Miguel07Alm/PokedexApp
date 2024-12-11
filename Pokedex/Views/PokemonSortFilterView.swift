@@ -48,7 +48,49 @@ struct PokemonSortFilterView: View {
     @State var isPresented: Bool  // Para controlar la presentación
     @Binding var isFilterShow: Bool
     @Binding var isSortFilterShow: Bool
-    
+    @Binding var pokemons: [Pokemon]
+
+    private func filterPokemon() -> [Pokemon] {
+          var filteredPokemon = pokemons
+
+          // Filtro por tipo
+          let selectedTypes = filterChips.filter { $0.isSelected }.map { $0.title.lowercased() }
+          if !selectedTypes.isEmpty {
+              filteredPokemon = filteredPokemon.filter { pokemon in
+                  pokemon.types.contains { typeElement in
+                      selectedTypes.contains(typeElement.type.name)
+                  }
+              }
+          }
+           
+          // Otros filtros (Favoritos, legendarios, singulares)
+          // ... (implementa lógica para otros filtros)
+
+          return filteredPokemon
+      }
+      
+      private func sortPokemon(pokemon: [Pokemon]) -> [Pokemon] {
+          switch selectedSort {
+          case "alfabeticamente":
+              return pokemon.sorted { (p1, p2) in
+                  isAscending ? p1.name < p2.name : p1.name > p2.name
+              }
+          case "n_pokedex":
+              return pokemon.sorted { (p1, p2) in
+                  isAscending ? p1.id < p2.id : p1.id > p2.id
+              }
+          // Ordena por estadísticas (ataque, defensa, etc.)
+          case "ataque", "ataque especial", "vida", "defensa", "defensa especial", "velocidad":
+              let statName = selectedSort.replacingOccurrences(of: " ", with: "_").lowercased() // Convertir a formato de la API
+              return pokemon.sorted { (p1, p2) in
+                  let stat1 = p1.stats.first(where: { $0.stat.name == statName })?.baseStat ?? 0
+                  let stat2 = p2.stats.first(where: { $0.stat.name == statName })?.baseStat ?? 0
+                  return isAscending ? stat1 < stat2 : stat1 > stat2
+              }
+          default:
+              return pokemon
+          }
+      }
     var body: some View {
         ZStack {
             // Contenido del filtro
@@ -201,6 +243,7 @@ struct PokemonSortFilterView: View {
 struct ContentView: View {
     @State private var showFilterView = false
     @State private var showSortFilterView = false
+   
 
     var body: some View {
             // Contenido principal de la pantalla

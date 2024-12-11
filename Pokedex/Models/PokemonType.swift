@@ -1,11 +1,15 @@
 import Foundation
-import UIKit
 import SwiftUI
 
-struct PokemonType {
-    let name: String
+struct PokemonType: Codable, Identifiable {
+    let id = UUID()
+    let type: PokemonTypeDetails
     
-    // Diccionario que asocia el nombre del tipo con la imagen correspondiente
+    struct PokemonTypeDetails: Codable {
+        let name: String
+    }
+    
+    // Existing dictionaries
     static let typesToIcon: [String: String] = [
         "fire": "fire_icon",
         "water": "water_icon",
@@ -26,6 +30,7 @@ struct PokemonType {
         "fairy": "fairy_icon",
         "normal": "normal_icon"
     ]
+    
     static let typesToSpanish: [String: String] = [
         "fire": "Fuego",
         "water": "Agua",
@@ -46,117 +51,85 @@ struct PokemonType {
         "fairy": "Hada",
         "normal": "Normal"
     ]
-
     
-
-
-    
-    // Diccionario que asocia el nombre del tipo con su color correspondiente
-    static let typesToColor: [String: String] = [
-        "fire": "#FF9C54",
-        "dragon": "#4F7BE9",
-        "water": "#4FC1E9",
-        "electric": "#FFD95D",
-        "dark": "#595761",
-        "fighting": "#EB6B76",
-        "poison": "#9B59B6",
-        "ground": "#D4B887",
-        "flying": "#99C2E9",
-        "psychic": "#FF79C6",
-        "bug": "#9BCD50",
-        "rock": "#C5B78C",
-        "ghost": "#7C62A3",
-        "steel": "#4C91B2",
-        "grass": "#63BB5B",
-        "ice": "#74CEC0",
-        "fairy": "#EC8FE6",
-        "normal": "#919AA2"
+    static let typesToColor: [String: Color] = [
+        "fire": Color(hex: "#FF9C54"),
+        "dragon": Color(hex: "#4F7BE9"),
+        "water": Color(hex: "#4FC1E9"),
+        "electric": Color(hex: "#FFD95D"),
+        "dark": Color(hex: "#595761"),
+        "fighting": Color(hex: "#EB6B76"),
+        "poison": Color(hex: "#9B59B6"),
+        "ground": Color(hex: "#D4B887"),
+        "flying": Color(hex: "#99C2E9"),
+        "psychic": Color(hex: "#FF79C6"),
+        "bug": Color(hex: "#9BCD50"),
+        "rock": Color(hex: "#C5B78C"),
+        "ghost": Color(hex: "#7C62A3"),
+        "steel": Color(hex: "#4C91B2"),
+        "grass": Color(hex: "#63BB5B"),
+        "ice": Color(hex: "#74CEC0"),
+        "fairy": Color(hex: "#EC8FE6"),
+        "normal": Color(hex: "#919AA2")
     ]
-    static let typesToIconColor: [String: String] = [
-        "fire": "#FF9741",
-        "dragon": "#006FC9",
-        "water": "#3692DC",
-        "electric": "#FBD100",
-        "dark": "#5B5466",
-        "fighting": "#E0306A",
-        "poison": "#B567CE",
-        "ground": "#E87236",
-        "flying": "#89AAE3",
-        "psychic": "#FF6675",
-        "bug": "#83C300",
-        "rock": "#C8B686",
-        "ghost": "#4C6AB2",
-        "steel": "#5A8EA2",
-        "grass": "#38BF4B",
-        "ice": "#4CD1C0",
-        "fairy": "#FB89EB",
-        "normal": "#919AA2"
-    ]
-
-
     
-    // Método para obtener el color asociado a un tipo
-    static func getColor(for type: String) -> UIColor? {
-        if let hex = typesToColor[type] {
-            return UIColor(hex: hex)
-        }
-        return nil
+    static let typesToIconColor: [String: Color] = [
+        "fire": Color(hex: "#FF9741"),
+        "dragon": Color(hex: "#006FC9"),
+        "water": Color(hex: "#3692DC"),
+        "electric": Color(hex: "#FBD100"),
+        "dark": Color(hex: "#5B5466"),
+        "fighting": Color(hex: "#E0306A"),
+        "poison": Color(hex: "#B567CE"),
+        "ground": Color(hex: "#E87236"),
+        "flying": Color(hex: "#89AAE3"),
+        "psychic": Color(hex: "#FF6675"),
+        "bug": Color(hex: "#83C300"),
+        "rock": Color(hex: "#C8B686"),
+        "ghost": Color(hex: "#4C6AB2"),
+        "steel": Color(hex: "#5A8EA2"),
+        "grass": Color(hex: "#38BF4B"),
+        "ice": Color(hex: "#4CD1C0"),
+        "fairy": Color(hex: "#FB89EB"),
+        "normal": Color(hex: "#919AA2")
+    ]
+    
+    // Updated method to get color for a type
+    static func getColor(for type: String) -> Color {
+        return typesToColor[type.lowercased()] ?? .gray
     }
-
-    // Método para obtener el gradiente lineal entre los colores de dos tipos
+    
+    // Updated method to get gradient for types
     static func getGradient(for types: [String]) -> LinearGradient {
-        guard types.count >= 2,
-              let firstType = types.first,
-              let secondType = types.last,
-              let firstColor = PokemonType.getColor(for: firstType),
-              let secondColor = PokemonType.getColor(for: secondType) else {
-            if let firstType = types.first, let firstColor = PokemonType.getColor(for: firstType) {
-                return LinearGradient(gradient: Gradient(colors: [Color(firstColor)]), startPoint: .top, endPoint: .bottom)
-            }
-            return LinearGradient(gradient: Gradient(colors: [.gray]), startPoint: .top, endPoint: .bottom) // Fallback color if no valid type is found
+        let colors = types.map { getColor(for: $0) }
+        return LinearGradient(gradient: Gradient(colors: colors), startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
+}
+
+// Extension for Color to support hex initialization in SwiftUI
+extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let a, r, g, b: UInt64
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (1, 1, 1, 0)
         }
-        
-        let interpolatedColor = PokemonType.interpolateColors(from: firstColor, to: secondColor, ratio: 0.5)
-        return LinearGradient(gradient: Gradient(colors: [Color(firstColor), Color(interpolatedColor), Color(secondColor)]), startPoint: .top, endPoint: .bottom)
-    }
-    
-    // Función para interpolar entre dos colores
-    static func interpolateColors(from startColor: UIColor, to endColor: UIColor, ratio: CGFloat) -> UIColor {
-        var startRed: CGFloat = 0
-        var startGreen: CGFloat = 0
-        var startBlue: CGFloat = 0
-        var startAlpha: CGFloat = 0
-        
-        var endRed: CGFloat = 0
-        var endGreen: CGFloat = 0
-        var endBlue: CGFloat = 0
-        var endAlpha: CGFloat = 0
-        
-        startColor.getRed(&startRed, green: &startGreen, blue: &startBlue, alpha: &startAlpha)
-        endColor.getRed(&endRed, green: &endGreen, blue: &endBlue, alpha: &endAlpha)
-        
-        let red = startRed + (endRed - startRed) * ratio
-        let green = startGreen + (endGreen - startGreen) * ratio
-        let blue = startBlue + (endBlue - startBlue) * ratio
-        let alpha = startAlpha + (endAlpha - startAlpha) * ratio
-        
-        return UIColor(red: red, green: green, blue: blue, alpha: alpha)
+
+        self.init(
+            .sRGB,
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue:  Double(b) / 255,
+            opacity: Double(a) / 255
+        )
     }
 }
-
-// Extensión para convertir colores hexadecimales a UIColor
-extension UIColor {
-    convenience init(hex: String) {
-        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
-        hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
-        
-        var rgb: UInt64 = 0
-        Scanner(string: hexSanitized).scanHexInt64(&rgb)
-        
-        let red = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
-        let green = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
-        let blue = CGFloat(rgb & 0x0000FF) / 255.0
-        self.init(red: red, green: green, blue: blue, alpha: 1.0)
-    }
-}
-
