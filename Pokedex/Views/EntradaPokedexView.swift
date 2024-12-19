@@ -11,12 +11,18 @@ struct EntradaPokedexView: View {
     @State var name: String
     @State var number: String
     @State var image: String
-    @State var backgroundColor: Color
+    @State var backgroundColor: [TypeElement];
+    var BgColorName : [String]
     
     var body: some View {
         ZStack {
             ImagenPokemon(img: $image)
-            CombinedShape(name: $name, num: $number).foregroundColor(backgroundColor.opacity(0.85))
+           // CombinedShape(name: $name, num: $number).foregroundColor(getGradient(for: ))
+        }.onAppear {
+            BgColorName[0] = backgroundColor[0].type.name
+            if(backgroundColor.count != 1){
+                BgColorName[1] = backgroundColor[1].type.name
+            }
         }
     }
 }
@@ -160,9 +166,34 @@ struct CombinedShape: View {
     }
 }
 
+extension Color {
+    static func forType(_ type: String) -> Color {
+        switch type {
+        case "fire": return Color(hex: "#FF9741")
+        case "water": return Color(hex: "#3692DC")
+        case "grass": return Color(hex: "#38BF4B")
+        case "electric": return Color(hex: "#FBD100")
+        case "bug": return Color(hex: "#83C300")
+        case "dark": return Color(hex: "#5B5466")
+        case "ghost": return Color(hex: "#4C6AB2")
+        case "dragon": return Color(hex: "#006FC9")
+        case "fairy": return Color(hex: "#FB89EB")
+        case "fighting": return Color(hex: "#E0306A")
+        case "flying": return Color(hex: "#89AAE3")
+        case "ground": return Color(hex: "#E87236")
+        case "rock": return Color(hex: "#C8B686")
+        case "ice": return Color(hex: "#4CD1C0")
+        case "normal": return Color(hex: "#919AA2")
+        case "poison": return Color(hex: "#B567CE")
+        case "psychic": return Color(hex: "#FF6675")
+        case "steel": return Color(hex: "#5A8EA2")
+        default: return .black
+        }
+    }
+}
 
 #Preview {
-    EntradaPokedexView(name: "Crabominable", number: "0740", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/132.png", backgroundColor: Color.red)
+    EntradaPokedexView(name: "Crabominable", number: "0740", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/132.png", backgroundColor: [])
 }
 
 
