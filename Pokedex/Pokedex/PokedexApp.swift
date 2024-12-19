@@ -9,11 +9,14 @@ import SwiftUI
 
 @main
 struct PokedexApp: App {
-    @State private var showFilterView = false
+    @State var showSortFilterView: Bool = false
+    @State var showFilterView: Bool = false
 
     var body: some Scene {
         WindowGroup {
-            LoginView().environmentObject(ViewModel())
+            ListaPokedexView(
+                showSortFilterView: $showSortFilterView,
+                showFilterView: $showFilterView).environmentObject(ViewModel())
         }
     }
 }

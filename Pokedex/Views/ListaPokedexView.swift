@@ -1,30 +1,25 @@
 import SwiftUI
 
 struct ListaPokedexView: View {
-    @ObservedObject var pokemonViewModel = PokemonViewModel()
-
+    @StateObject var pokemonViewModel = PokemonViewModel()
     @Binding var showSortFilterView: Bool
     @Binding var showFilterView: Bool
-
-    @State private var selectedPokemon: Pokemon? // Estado para almacenar el Pokémon seleccionado
-
+    @State private var pokemones: [Pokemon] = []
+    @State private var isLoading = false
+    @State private var errorMessage: String?
+    
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                // Contenido principal
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-                        if let pokemon = selectedPokemon {
+                        ForEach(pokemones, id: \.id) { pokemon in
                             EntradaPokedexView(
                                 name: pokemon.name.capitalizedFirstLetter(),
                                 number: String(format: "%04d", pokemon.id),
-                                image: pokemon.sprites.other?.officialArtwork.frontDefault ?? "",
-                                backgroundColor: getColorForType(pokemon.types[0].type.name) // Usa el método para determinar el color
+                                image: pokemon.sprites.other?.officialArtwork?.frontDefault ?? "",
+                                backgroundColor: Color.forType(pokemon.types[0].type.name)
                             )
-                        } else {
-                            Text("Cargando datos del Pokémon...")
-                                .foregroundColor(.gray)
-                                .padding()
                         }
                     }
                     .padding()
@@ -32,8 +27,17 @@ struct ListaPokedexView: View {
                 .edgesIgnoringSafeArea(.bottom)
                 .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
             }
+            
+            if isLoading {
+                ProgressView()
+            }
+            
+            if let errorMessage = errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .padding()
+            }
 
-            // Mostrar la vista de filtros si está activa
             if showSortFilterView || showFilterView {
                 PokemonSortFilterView(
                     isPresented: true,
@@ -44,23 +48,47 @@ struct ListaPokedexView: View {
                 .transition(.move(edge: .bottom))
             }
         }
-        .onAppear {
-            // Realiza la consulta al aparecer la vista
-            pokemonViewModel.fetchPokemonDetails(id: 25) { result in
+        .onAppear(perform: loadPokemon)
+    }
+    
+    private func loadPokemon() {
+        isLoading = true
+        errorMessage = nil
+        
+        let group = DispatchGroup()
+        
+        for i in 1...20 { // Fetch first 20 Pokemon
+            group.enter()
+            pokemonViewModel.fetchPokemonDetails(id: i) { result in
+                defer { group.leave() }
                 switch result {
                 case .success(let details):
                     DispatchQueue.main.async {
-                        self.selectedPokemon = details // Actualiza el estado
+                        self.pokemones.append(details)
                     }
                 case .failure(let error):
-                    print("Error fetching details: \(error)")
+                    print("Error al obtener detalles: \(error)")
+                    DispatchQueue.main.async {
+                        self.errorMessage = "Failed to load some Pokemon"
+                    }
                 }
             }
         }
+        
+        group.notify(queue: .main) {
+            self.isLoading = false
+        }
     }
+}
 
-    /// Método para obtener un color basado en el tipo de Pokémon
-    func getColorForType(_ type: String) -> Color {
+extension String {
+    func capitalizedFirstLetter() -> String {
+        return prefix(1).uppercased() + dropFirst()
+    }
+}
+
+extension Color {
+    static func forType(_ type: String) -> Color {
         switch type {
         case "fire": return Color(hex: "#FF9741")
         case "water": return Color(hex: "#3692DC")
@@ -80,14 +108,8 @@ struct ListaPokedexView: View {
         case "poison": return Color(hex: "#B567CE")
         case "psychic": return Color(hex: "#FF6675")
         case "steel": return Color(hex: "#5A8EA2")
-        default: return Color.black
+        default: return .black
         }
-    }
-}
-
-extension String {
-    func capitalizedFirstLetter() -> String {
-        return prefix(1).uppercased() + dropFirst()
     }
 }
 
@@ -99,3 +121,4 @@ extension String {
         showFilterView: $showFilterView
     )
 }
+
