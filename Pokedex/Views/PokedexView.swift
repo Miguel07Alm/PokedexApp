@@ -17,7 +17,7 @@ struct PokedexView: View {
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView)
             ListaPokedexView(
-                pokemons: $pokemon,
+                //pokemons: $pokemon,
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView
             ).cornerRadius(48)

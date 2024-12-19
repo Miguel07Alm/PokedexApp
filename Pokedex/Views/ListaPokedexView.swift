@@ -1,115 +1,101 @@
-//
-//  VistaListaPokedex.swift
-//  PokédexApp
-//
-//  Created by Aula03 on 12/11/24.
-//
-
 import SwiftUI
 
 struct ListaPokedexView: View {
-    let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
     @ObservedObject var pokemonViewModel = PokemonViewModel()
-    
-    
-    let pokemonsMock = [
-        (name: "Charmander", number: 0004, image: "charmander", color: Color.orange),
-        (name: "Charmeleon", number: 0005, image: "charmeleon", color: Color.orange),
-        (name: "Charizard", number: 0006, image: "charizard", color: Color.orange),
-        (name: "Pikachu", number: 0025, image: "pikachu", color: Color.yellow),
-        (name: "Vaporeon", number: 0157, image: "vaporeon", color: Color.blue),
-        (name: "Hydreigon", number: 0643, image: "hydreigon", color: Color.purple)
-    ]
-    @Binding var pokemons: [Pokemon];
-    @Binding var showSortFilterView: Bool;
-    @Binding var showFilterView: Bool;
+
+    @Binding var showSortFilterView: Bool
+    @Binding var showFilterView: Bool
+
+    @State private var selectedPokemon: Pokemon? // Estado para almacenar el Pokémon seleccionado
 
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 // Contenido principal
                 ScrollView {
-                    LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(pokemonsMock, id: \.name) { pokemon in
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                        if let pokemon = selectedPokemon {
                             EntradaPokedexView(
-                                name: pokemon.name,
-                                number: pokemon.number,
-                                image: pokemon.image,
-                                backgroundColor: pokemon.color
-                            ).onAppear{
-                                pokemonViewModel.fetchPokemonDetails(id: 25) { result in
-                                    switch result {
-                                    case .success(let pokemon):
-                                        print("Pokemon name: \(pokemon.name)")
-                                        print("Height: \(pokemon.height)")
-                                        print("Weight: \(pokemon.weight)")
-                                        print("Abilities: \(pokemon.abilities.map { $0.ability.name }.joined(separator: ", "))")
-                                        print("Types: \(pokemon.types.map { $0.type.name }.joined(separator: ", "))")
-                                        print("Sprites: \(pokemon.sprites.frontDefault)")
-                                    case .failure(let error):
-                                        print("Error fetching Pokémon details: \(error)")
-                                    }
-                                }
-                                pokemonViewModel.fetchPokemonSpecies(id: 25, completion: { result in
-                                    switch result {
-                                    case .success(let evolution):
-                                        print("name: \(evolution.name)")
-                                        print("Evolution chain url: \(evolution.evolutionChain.url)")
-                                        pokemonViewModel.fetchPokemonEvolutionChain(id:10, completion: { result in
-                                            switch result {
-                                            case .success(let evolutionChain):
-                                                print("Evoluciona a: \(evolutionChain.chain.evolvesTo)")
-                                                
-                                            case .failure(let error):
-                                                print("Error fetching Pokémon evolution chain: \(error)")
-                                            }
-                                        })
-                                        
-                                    case .failure(let error):
-                                        print("Error fetching Pokémon species: \(error)")
-                                    }
-                                })
-                                pokemonViewModel.fetchAbilityInfo(name: "stench", completion: { result in
-                                    switch result {
-                                    case .success(let ability):
-                                        print("Ability name: \(ability.name)")
-                                        print("Cuantos pokemons tienen la habilidad: : \(ability.pokemon.count)")
-                                    case .failure(let error):
-                                        print("Error fetching Pokémon ability info: \(error)")
-                                    }
-                                });
-                                                            
-                                
-                                
-                                
-
-                                print("Aparece el pokemon")
-                            }
+                                name: pokemon.name.capitalizedFirstLetter(),
+                                number: String(format: "%04d", pokemon.id),
+                                image: pokemon.sprites.other?.officialArtwork.frontDefault ?? "",
+                                backgroundColor: getColorForType(pokemon.types[0].type.name) // Usa el método para determinar el color
+                            )
+                        } else {
+                            Text("Cargando datos del Pokémon...")
+                                .foregroundColor(.gray)
+                                .padding()
                         }
                     }
                     .padding()
-                } .edgesIgnoringSafeArea(.bottom)// Desenfoque en el contenido principal
-                    .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
-
-                
-                // TabBar
+                }
+                .edgesIgnoringSafeArea(.bottom)
+                .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
             }
 
-            if (showSortFilterView || showFilterView) {
-                PokemonSortFilterView( isPresented: true, isFilterShow: $showFilterView, isSortFilterShow: $showSortFilterView,
-                    pokemons: $pokemons)
-                    .transition(.move(edge: .bottom))  // Transición para que aparezca desde abajo
+            // Mostrar la vista de filtros si está activa
+            if showSortFilterView || showFilterView {
+                PokemonSortFilterView(
+                    isPresented: true,
+                    isFilterShow: $showFilterView,
+                    isSortFilterShow: $showSortFilterView,
+                    pokemons: .constant([])
+                )
+                .transition(.move(edge: .bottom))
             }
+        }
+        .onAppear {
+            // Realiza la consulta al aparecer la vista
+            pokemonViewModel.fetchPokemonDetails(id: 25) { result in
+                switch result {
+                case .success(let details):
+                    DispatchQueue.main.async {
+                        self.selectedPokemon = details // Actualiza el estado
+                    }
+                case .failure(let error):
+                    print("Error fetching details: \(error)")
+                }
+            }
+        }
+    }
 
+    /// Método para obtener un color basado en el tipo de Pokémon
+    func getColorForType(_ type: String) -> Color {
+        switch type {
+        case "fire": return Color(hex: "#FF9741")
+        case "water": return Color(hex: "#3692DC")
+        case "grass": return Color(hex: "#38BF4B")
+        case "electric": return Color(hex: "#FBD100")
+        case "bug": return Color(hex: "#83C300")
+        case "dark": return Color(hex: "#5B5466")
+        case "ghost": return Color(hex: "#4C6AB2")
+        case "dragon": return Color(hex: "#006FC9")
+        case "fairy": return Color(hex: "#FB89EB")
+        case "fighting": return Color(hex: "#E0306A")
+        case "flying": return Color(hex: "#89AAE3")
+        case "ground": return Color(hex: "#E87236")
+        case "rock": return Color(hex: "#C8B686")
+        case "ice": return Color(hex: "#4CD1C0")
+        case "normal": return Color(hex: "#919AA2")
+        case "poison": return Color(hex: "#B567CE")
+        case "psychic": return Color(hex: "#FF6675")
+        case "steel": return Color(hex: "#5A8EA2")
+        default: return Color.black
         }
     }
 }
-#Preview{
-    @State var showSortFilterView: Bool = false;
-    @State var showFilterView: Bool = false;
-    @State var pokemon: [Pokemon] = [] // Tu array de Pokémon
-    ListaPokedexView(pokemons: $pokemon, showSortFilterView: $showSortFilterView, showFilterView: $showFilterView)
+
+extension String {
+    func capitalizedFirstLetter() -> String {
+        return prefix(1).uppercased() + dropFirst()
+    }
+}
+
+#Preview {
+    @State var showSortFilterView: Bool = false
+    @State var showFilterView: Bool = false
+    ListaPokedexView(
+        showSortFilterView: $showSortFilterView,
+        showFilterView: $showFilterView
+    )
 }

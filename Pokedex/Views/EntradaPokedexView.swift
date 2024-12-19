@@ -9,7 +9,7 @@ import SwiftUI
 
 struct EntradaPokedexView: View {
     @State var name: String
-    @State var number: Int
+    @State var number: String
     @State var image: String
     @State var backgroundColor: Color
     
@@ -23,10 +23,27 @@ struct EntradaPokedexView: View {
 struct ImagenPokemon: View {
     @Binding var img: String
     var body: some View {
-        VStack {
-            Image(img)
-                .resizable()
-        }
+        AsyncImage(url: URL(string: img)) { phase in
+                    switch phase {
+                    case .empty:
+                        // Mientras la imagen se carga
+                        ProgressView()
+                    case .success(let image):
+                        // Cuando la imagen se cargó correctamente
+                        image
+                            .resizable()
+                            .scaledToFit()
+                    case .failure:
+                        // Si hay un error al cargar la imagen
+                        Image(systemName: "photo")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(.gray)
+                    @unknown default:
+                        // Fallback para futuros casos
+                        EmptyView()
+                    }
+                }
         .frame(width: 150, height: 150)
         .background(Color(red: 0.9333333333333333, green: 0.9333333333333333, blue: 0.9333333333333333))
         .clipShape(
@@ -55,7 +72,7 @@ struct VerticalLine: View {
 
 // Rectángulo pequeño con corte diagonal
 struct SmallRectangle: View {
-    @Binding var num: Int
+    @Binding var num: String
     var body: some View {
         ZStack {
             Path { path in
@@ -67,7 +84,7 @@ struct SmallRectangle: View {
                 path.addLine(to: CGPoint(x: 15, y: 0))  // Diagonal para el corte
             }
             
-            Text("#0\(num)")
+            Text("#\(num)")
                 .font(.system(size: 16, weight: .medium))
                 .foregroundColor(Color(red: 0.9215686274509803, green: 0.9215686274509803, blue: 0.9215686274509803))
                 .offset(x:-40,y:-58)
@@ -127,7 +144,7 @@ struct BottomRoundedRectangle: Shape {
 // Forma completa combinada
 struct CombinedShape: View {
     @Binding var name: String
-    @Binding var num: Int
+    @Binding var num: String
     var body: some View {
         ZStack(alignment: .topLeading) {
             CurvedBottom(name: $name)
@@ -145,7 +162,7 @@ struct CombinedShape: View {
 
 
 #Preview {
-    EntradaPokedexView(name: "Crabominable", number: 0740, image: "PerfilIcon", backgroundColor: Color.red)
+    EntradaPokedexView(name: "Crabominable", number: "0740", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/132.png", backgroundColor: Color.red)
 }
 
 

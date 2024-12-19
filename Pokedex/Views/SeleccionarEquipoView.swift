@@ -72,7 +72,7 @@ struct SeleccionarEquipo: View {
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView)
             SeleccionarEquipoView(image: $image).cornerRadius(48)
-            ListaPokedexView(pokemons: $pokemons,
+            ListaPokedexView(//pokemons: $pokemons,
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView
             )
