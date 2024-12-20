@@ -37,26 +37,24 @@ struct RegisterView: View {
                             // Mostrar la imagen seleccionada
                             Image(uiImage: imageGeneral)
                                 .resizable()
-                                .scaledToFit()
-                                .frame(width: 90, height: 90)
-                                .shadow(color: .gray, radius: 9)
-                                .padding(.vertical)
-                                .onTapGesture {
-                                    mostrarImagePicker.toggle()  // Abre el picker al tocar la imagen
-                                }
+                                .scaledToFill()
+                                .frame(width: 140, height: 140)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.pink, lineWidth: 3))
+                                .shadow(radius: 5)
                         } else {
                             // Mostrar el icono de la cámara como imagen si no hay imagen seleccionada
                             Image(systemName: "camera.circle")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 90, height: 90)
-                                .foregroundColor(.gray)
-                                .shadow(color: .gray, radius: 9)
-                                .padding(.vertical)
-                                .onTapGesture {
-                                    mostrarImagePicker.toggle()  // Abre el picker al tocar el icono de la cámara
-                                }
+                                .frame(width: 130, height: 130)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.pink, lineWidth: 3))
+                                .shadow(radius: 5)
+                                .foregroundColor(.white)
                         }
+                    }.onTapGesture {
+                        mostrarImagePicker.toggle()
                     }
                     .sheet(isPresented: $mostrarImagePicker) {
                         ImagePicker(sourceType: .photoLibrary) {
@@ -118,7 +116,8 @@ struct RegisterView: View {
                             }
 
                             switch viewModel.createUser(
-                                username: username, password: password, profileImage: imageGeneral)
+                                username: username, password: password,
+                                profileImage: imageGeneral)
                             {
                             case -1:
                                 errorMessage =
