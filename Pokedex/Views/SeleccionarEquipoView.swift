@@ -67,9 +67,10 @@ struct ImagenPokemonNoSeleccionado: View {
 
 //Prwwiew
 struct SeleccionarEquipo: View {
-    @Binding var showSortFilterView: Bool
-    @Binding var showFilterView: Bool
-    @Binding var pokemons: [Pokemon];
+    @State var showSortFilterView: Bool
+    @State var showFilterView: Bool
+    @State var pokemons: [Pokemon];
+    @State var isTeamBuilding: Bool;
     var body: some View {
         VStack(spacing: -50) {
             HeaderView(
@@ -78,7 +79,8 @@ struct SeleccionarEquipo: View {
             SeleccionarEquipoView(pokemonTeam: pokemons).cornerRadius(48)
             ListaPokedexView(
                 showSortFilterView: $showSortFilterView,
-                showFilterView: $showFilterView
+                showFilterView: $showFilterView,
+                isTeamBuilding: isTeamBuilding
             )
         }.ignoresSafeArea()
     }
@@ -88,7 +90,8 @@ struct SeleccionarEquipo: View {
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
     @State var pokemons: [Pokemon] = [];
-    SeleccionarEquipo(showSortFilterView: $showSortFilterView, showFilterView: $showFilterView, pokemons: $pokemons)
+    @State var isTeamBuilding: Bool = false
+    SeleccionarEquipo(showSortFilterView: showSortFilterView, showFilterView: showFilterView, pokemons: pokemons, isTeamBuilding: isTeamBuilding)
 }
     
 

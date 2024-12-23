@@ -10,12 +10,15 @@ import SwiftUI
 struct PokedexConFooter: View {
     @Binding var showSortFilterView: Bool
     @Binding var showFilterView: Bool
+    @State var isTeamBuilding = false
     @Binding var selectedTab : Int
+    
     var body: some View {
         VStack(spacing: -100) {
             PokedexView(
                 showSortFilterView: $showSortFilterView,
-                showFilterView: $showFilterView)
+                showFilterView: $showFilterView,
+                isTeamBuilding: isTeamBuilding)
             FooterView(selectedTab: $selectedTab)
         }.ignoresSafeArea()
     }
@@ -24,6 +27,7 @@ struct PokedexConFooter: View {
 #Preview {
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
+    @State var isTeamBuilding: Bool = false
     @State var selectedTab : Int = 1
     
     PokedexConFooter(showSortFilterView: $showSortFilterView, showFilterView: $showFilterView, selectedTab: $selectedTab)

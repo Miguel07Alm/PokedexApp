@@ -205,22 +205,22 @@
 		35C3D5782CECEB3C0022495F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				35A9D5602CF61E6900D7B680 /* PokemonDetailView.swift */,
+				3561B3092CFF612C0000B9A6 /* BotonAnimation.swift */,
 				35C3D56B2CECEB3C0022495F /* EditProfileView.swift */,
 				35C3D56C2CECEB3C0022495F /* EntradaPokedexView.swift */,
 				35C3D56D2CECEB3C0022495F /* FooterView.swift */,
 				35C3D56E2CECEB3C0022495F /* HeaderView.swift */,
+				3597CB952CFF7AB700D6B6A4 /* ImagePicker.swift */,
 				35C3D56F2CECEB3C0022495F /* InitialView.swift */,
 				35C3D5702CECEB3C0022495F /* ListaPokedexView.swift */,
 				35C3D5712CECEB3C0022495F /* LoginView.swift */,
+				3543DFA32D197BD200C0F3CA /* PokedexConFooter.swift */,
 				35C3D5732CECEB3C0022495F /* PokedexView.swift */,
+				35A9D5602CF61E6900D7B680 /* PokemonDetailView.swift */,
 				35C3D5752CECEB3C0022495F /* PokemonSortFilterView.swift */,
 				35C3D5762CECEB3C0022495F /* ProfileView.swift */,
 				35C3D5772CECEB3C0022495F /* RegisterView.swift */,
-				3561B3092CFF612C0000B9A6 /* BotonAnimation.swift */,
-				3597CB952CFF7AB700D6B6A4 /* ImagePicker.swift */,
 				3574C31D2D089CB20041EE41 /* SeleccionarEquipoView.swift */,
-				3543DFA32D197BD200C0F3CA /* PokedexConFooter.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

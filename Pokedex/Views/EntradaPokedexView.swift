@@ -9,6 +9,7 @@ import SwiftUI
 
 struct EntradaPokedexView: View {
     @State private var pokemon: Pokemon
+    @State private var isTeamBuilding: Bool
         
         // Variables de estado derivadas
         @State private var name: String
@@ -16,9 +17,11 @@ struct EntradaPokedexView: View {
         @State private var image: String
     @State private var backgroundColor: [String]
         
-        init(pokemon: Pokemon) {
+        init(pokemon: Pokemon, isTeamBuilding: Bool) {
             // Inicializa el objeto completo
             _pokemon = State(initialValue: pokemon)
+            
+            _isTeamBuilding = State(initialValue: isTeamBuilding)
             
             // Inicializa las variables de estado derivadas
             _name = State(initialValue: pokemon.name.capitalizedFirstLetter())
@@ -31,7 +34,11 @@ struct EntradaPokedexView: View {
     var body: some View {
         ZStack {
             ImagenPokemon(img: $image).onTapGesture {
-                //PokemonDetailView()
+                if isTeamBuilding{
+                    SeleccionarEquipo(showSortFilterView: false, showFilterView: false, pokemons: [pokemon], isTeamBuilding: true)
+                }else{
+                    //PokemonDetailView()
+                }
             }
             CombinedShape(name: $name, num: $number, backgroundColor: $backgroundColor).opacity(0.9)
         }
@@ -210,8 +217,9 @@ extension Color {
 #Preview {
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
+    @State var isTeamBuilding: Bool = false
     ListaPokedexView(
         showSortFilterView: $showSortFilterView,
-        showFilterView: $showFilterView
+        showFilterView: $showFilterView, isTeamBuilding: isTeamBuilding
     )
 }

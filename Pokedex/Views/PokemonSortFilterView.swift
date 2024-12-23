@@ -243,11 +243,14 @@ struct PokemonSortFilterView: View {
 struct ContentView: View {
     @State private var showFilterView = false
     @State private var showSortFilterView = false
-   
+    @State private var isTeamBuilding = false
+
 
     var body: some View {
             // Contenido principal de la pantalla
-        PokedexView(showSortFilterView: $showSortFilterView, showFilterView: $showFilterView)
+        PokedexView(showSortFilterView: $showSortFilterView, showFilterView: $showFilterView,
+            isTeamBuilding: isTeamBuilding
+        )
          
             // Mostrar vista de filtros superpuesta
             

@@ -4,19 +4,20 @@ struct ListaPokedexView: View {
     @StateObject var pokemonViewModel = PokemonViewModel()
     @Binding var showSortFilterView: Bool
     @Binding var showFilterView: Bool
+    @State var isTeamBuilding: Bool
     @State private var pokemones: [Pokemon] = []
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var currentPage = 1
     @State private var hasMorePokemon = true
-    
+
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                         ForEach(pokemones.sorted(by: { $0.id < $1.id }), id: \.id) { pokemon in
-                            EntradaPokedexView(pokemon: pokemon)
+                            EntradaPokedexView(pokemon: pokemon, isTeamBuilding: isTeamBuilding)
                             .onAppear {
                                 if self.pokemones.last?.id == pokemon.id && hasMorePokemon {
                                     loadMorePokemon()
@@ -109,9 +110,10 @@ extension String {
 #Preview {
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
+    @State var isTeamBuilding: Bool = false
     ListaPokedexView(
         showSortFilterView: $showSortFilterView,
-        showFilterView: $showFilterView
+        showFilterView: $showFilterView, isTeamBuilding: isTeamBuilding
     )
 }
 
