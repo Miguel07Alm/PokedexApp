@@ -30,7 +30,9 @@ struct EntradaPokedexView: View {
     
     var body: some View {
         ZStack {
-            ImagenPokemon(img: $image)
+            ImagenPokemon(img: $image).onTapGesture {
+                //PokemonDetailView()
+            }
             CombinedShape(name: $name, num: $number, backgroundColor: $backgroundColor).opacity(0.9)
         }
     }
