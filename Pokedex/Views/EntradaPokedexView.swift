@@ -215,11 +215,7 @@ extension Color {
 }
 
 #Preview {
-    @State var showSortFilterView: Bool = false
-    @State var showFilterView: Bool = false
     @State var isTeamBuilding: Bool = false
-    ListaPokedexView(
-        showSortFilterView: $showSortFilterView,
-        showFilterView: $showFilterView, isTeamBuilding: isTeamBuilding
-    )
+    @State var pokemon : Pokemon = PokemonType.getAveraged()
+    EntradaPokedexView(pokemon: pokemon, isTeamBuilding: isTeamBuilding)
 }

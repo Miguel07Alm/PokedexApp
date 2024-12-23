@@ -126,6 +126,42 @@ struct PokemonType: Codable, Identifiable {
             endPoint: UnitPoint(x: 1 / proportion, y: 1 / proportion)
         )
     }
+    
+    static func getAveraged() -> Pokemon{
+        return  Pokemon(
+            abilities: [
+                Ability(ability: Species(name: "overgrow", url: ""), isHidden: false, slot: 1),
+                Ability(ability: Species(name: "chlorophyll", url: ""), isHidden: true, slot: 3)
+            ],
+            baseExperience: 64,
+            cries: Cries(latest: "bulbasaur_cry", legacy: ""),
+            forms: [Species(name: "bulbasaur", url: "")],
+            gameIndices: [GameIndex(gameIndex: 1, version: Species(name: "red", url: ""))],
+            height: 7,
+            heldItems: [],
+            id: 1,
+            isDefault: true,
+            locationAreaEncounters: "",
+            moves: [Move(move: Species(name: "tackle", url: ""), versionGroupDetails: [])],
+            name: "bulbasaur",
+            order: 1,
+            pastAbilities: [],
+            pastTypes: [],
+            species: Species(name: "bulbasaur", url: ""),
+            sprites: Sprites(backDefault: "", backFemale: "", backShiny: "", backShinyFemale: "", frontDefault: "", frontFemale: "", frontShiny: "", frontShinyFemale: "", other: Other(dreamWorld: DreamWorld(frontDefault: "", frontFemale: ""), home: Home(frontDefault: "", frontFemale: "", frontShiny: "", frontShinyFemale: ""), officialArtwork: OfficialArtwork(frontDefault: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png", frontShiny: ""))
+                            ),
+            stats: [
+                Stat(baseStat: 45, effort: 0, stat: Species(name: "hp", url: "")),
+                Stat(baseStat: 49, effort: 0, stat: Species(name: "attack", url: "")),
+                Stat(baseStat: 49, effort: 0, stat: Species(name: "defense", url: ""))
+            ],
+            types: [
+                TypeElement(slot: 1, type: Species(name: "grass", url: "")),
+                TypeElement(slot: 2, type: Species(name: "poison", url: ""))
+            ],
+            weight: 69
+        )
+    }
 }
 
 // Extension for Color to support hex initialization in SwiftUI

@@ -11,12 +11,15 @@ struct PokedexView: View {
     @Binding var showSortFilterView: Bool
     @Binding var showFilterView: Bool
     @State var isTeamBuilding: Bool
+    @State var pokemonTeam: [Pokemon];
     var body: some View {
         VStack(spacing: -50) {
             HeaderView(
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView)
-           // SeleccionarEquipoView(pokemonTeam: pokemons).cornerRadius(48)
+            if(isTeamBuilding){
+                SeleccionarEquipoView(pokemonTeam: pokemonTeam).cornerRadius(48)
+            }
             ListaPokedexView(
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView,
@@ -35,11 +38,13 @@ struct PokedexView_Previews: PreviewProvider {
         @State var showSortFilterView = false
         @State var showFilterView = false
         @State var isTeamBuilding = true
+        @State var pokemonTeam: [Pokemon] = [PokemonType.getAveraged()];
         var body: some View {
             PokedexView(
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView,
-                isTeamBuilding: isTeamBuilding
+                isTeamBuilding: isTeamBuilding,
+                pokemonTeam: pokemonTeam
             )
         }
     }

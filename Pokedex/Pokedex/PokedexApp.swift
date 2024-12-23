@@ -12,6 +12,7 @@ struct PokedexApp: App {
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
     @State var isTeamBuilding: Bool = false
+    
 
     var body: some Scene {
         WindowGroup {

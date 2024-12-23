@@ -28,11 +28,28 @@ struct SeleccionarEquipoView: View {
 struct ImagenPokemonSeleccionado: View {
     @State var img: String
     var body: some View {
-        VStack {
-            Image(img)
-                .resizable()
-                .background(Color(red: 0.9333333333333333, green: 0.9333333333333333, blue: 0.9333333333333333))
+        AsyncImage(url: URL(string: img)) { phase in
+            switch phase {
+            case .empty:
+                // Mientras la imagen se carga
+                ProgressView()
+            case .success(let image):
+                // Cuando la imagen se cargó correctamente
+                image
+                    .resizable()
+                    .scaledToFit()
+            case .failure:
+                // Si hay un error al cargar la imagen
+                Image(systemName: "photo")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundColor(.gray)
+            @unknown default:
+                // Fallback para futuros casos
+                EmptyView()
+            }
         }
+        .background(Color(red: 0.9333333333333333, green: 0.9333333333333333, blue: 0.9333333333333333))
         .frame(width: 90, height: 90)
         .clipShape(
             .rect(
@@ -89,7 +106,7 @@ struct SeleccionarEquipo: View {
 #Preview{
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
-    @State var pokemons: [Pokemon] = [];
+    @State var pokemons: [Pokemon] = [PokemonType.getAveraged()];
     @State var isTeamBuilding: Bool = false
     SeleccionarEquipo(showSortFilterView: showSortFilterView, showFilterView: showFilterView, pokemons: pokemons, isTeamBuilding: isTeamBuilding)
 }
