@@ -31,7 +31,7 @@ struct EntradaPokedexView: View {
     var body: some View {
         ZStack {
             ImagenPokemon(img: $image)
-            CombinedShape(name: $name, num: $number).foregroundStyle(PokemonType.getGradient(for: backgroundColor))
+            CombinedShape(name: $name, num: $number, backgroundColor: $backgroundColor).opacity(0.9)
         }
     }
 }
@@ -160,16 +160,20 @@ struct BottomRoundedRectangle: Shape {
 struct CombinedShape: View {
     @Binding var name: String
     @Binding var num: String
+    @Binding var backgroundColor: [String]
     var body: some View {
         ZStack(alignment: .topLeading) {
             CurvedBottom(name: $name)
                 .offset(y: 110)
+                .foregroundStyle(PokemonType.getGradient(for: backgroundColor,firstColorProportion: 1))
             
             SmallRectangle(num: $num)
                 .offset(x: 80, y: 80)
+                .foregroundStyle(PokemonType.getGradient(for: backgroundColor,firstColorProportion: 4))
             
             VerticalLine()
                 .offset(x: 140, y: 0)
+                .foregroundStyle(PokemonType.getGradient(for: backgroundColor,firstColorProportion: 100))
         }
         .frame(width: 150, height: 150)
     }

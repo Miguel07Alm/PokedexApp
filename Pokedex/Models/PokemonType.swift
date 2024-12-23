@@ -99,10 +99,27 @@ struct PokemonType: Codable, Identifiable {
         return typesToColor[type.lowercased()] ?? .gray
     }
     
-    // Updated method to get gradient for types
-    static func getGradient(for types: [String]) -> LinearGradient {
+    static func getGradient(for types: [String], firstColorProportion: Double = 0.1) -> LinearGradient {
+        guard types.count == 2 else {
+            // Si no hay exactamente dos tipos, devolvemos un gradiente predeterminado
+            return LinearGradient(gradient: Gradient(colors: [.gray, .white]), startPoint: .topLeading, endPoint: .bottomTrailing)
+        }
+        
         let colors = types.map { getColor(for: $0) }
-        return LinearGradient(gradient: Gradient(colors: colors), startPoint: .topLeading, endPoint: .bottomTrailing)
+        
+        // Aseguramos que firstColorProportion esté entre 0 y 1
+        let proportion = firstColorProportion
+        
+        return LinearGradient(
+            gradient: Gradient(
+                stops: [
+                    .init(color: colors[0], location: 0),
+                    .init(color: colors[1], location: 1)
+                ]
+            ),
+            startPoint: UnitPoint(x: 0, y: 0),
+            endPoint: UnitPoint(x: 1 / proportion, y: 1 / proportion)
+        )
     }
 }
 
