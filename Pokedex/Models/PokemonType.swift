@@ -99,13 +99,18 @@ struct PokemonType: Codable, Identifiable {
         return typesToColor[type.lowercased()] ?? .gray
     }
     
+    // Updated method to get color for a type
+    static func getColorIcon(for type: String) -> Color {
+        return typesToIconColor[type.lowercased()] ?? .gray
+    }
+    
     static func getGradient(for types: [String], firstColorProportion: Double = 0.1) -> LinearGradient {
         guard types.count == 2 else {
             // Si no hay exactamente dos tipos, devolvemos un gradiente predeterminado
             return LinearGradient(gradient: Gradient(colors: [.gray, .white]), startPoint: .topLeading, endPoint: .bottomTrailing)
         }
         
-        let colors = types.map { getColor(for: $0) }
+        let colors = types.map { getColorIcon(for: $0) }
         
         // Aseguramos que firstColorProportion esté entre 0 y 1
         let proportion = firstColorProportion

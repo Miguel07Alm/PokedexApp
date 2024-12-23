@@ -2,19 +2,22 @@ import SwiftUI
 
 
 struct SeleccionarEquipoView: View {
-    @Binding var image: String
+    @State var pokemonTeam : [Pokemon]
     var body: some View{
         VStack() {
-            // Search bar
             ZStack{
                 Rectangle()
                     .frame(height: 175)
                     .foregroundColor(Color(red: 0.5764705882352941, green: 0.7372549019607844, blue: 0.7372549019607844))
 
                 HStack(spacing: 25){
-                        ImagenPokemonSeleccionado(img: $image)
-                        ImagenPokemonNoSeleccionado()
-                        ImagenPokemonNoSeleccionado()
+                    ForEach(0..<3, id: \.self) { i in
+                        if i < pokemonTeam.count {
+                            ImagenPokemonSeleccionado(img: pokemonTeam[i].sprites.other?.officialArtwork?.frontDefault ?? "")
+                        } else {
+                            ImagenPokemonNoSeleccionado()
+                        }
+                    }
                 }.offset(y: -25)
          
             }.ignoresSafeArea()
@@ -23,7 +26,7 @@ struct SeleccionarEquipoView: View {
 }
 
 struct ImagenPokemonSeleccionado: View {
-    @Binding var img: String
+    @State var img: String
     var body: some View {
         VStack {
             Image(img)
@@ -61,18 +64,19 @@ struct ImagenPokemonNoSeleccionado: View {
     }
 }
 
+
+//Prwwiew
 struct SeleccionarEquipo: View {
     @Binding var showSortFilterView: Bool
     @Binding var showFilterView: Bool
-    @Binding var image: String
     @Binding var pokemons: [Pokemon];
     var body: some View {
         VStack(spacing: -50) {
             HeaderView(
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView)
-            SeleccionarEquipoView(image: $image).cornerRadius(48)
-            ListaPokedexView(//pokemons: $pokemons,
+            SeleccionarEquipoView(pokemonTeam: pokemons).cornerRadius(48)
+            ListaPokedexView(
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView
             )
@@ -83,9 +87,8 @@ struct SeleccionarEquipo: View {
 #Preview{
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
-    @State var image: String = "aceptar"
     @State var pokemons: [Pokemon] = [];
-    SeleccionarEquipo(showSortFilterView: $showSortFilterView, showFilterView: $showFilterView, image: $image, pokemons: $pokemons)
+    SeleccionarEquipo(showSortFilterView: $showSortFilterView, showFilterView: $showFilterView, pokemons: $pokemons)
 }
     
 

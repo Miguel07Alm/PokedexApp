@@ -10,14 +10,12 @@ import SwiftUI
 struct PokedexView: View {
     @Binding var showSortFilterView: Bool
     @Binding var showFilterView: Bool
-    @State private var pokemon: [Pokemon] = [] // Tu array de Pokémon
     var body: some View {
         VStack(spacing: -50) {
             HeaderView(
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView)
             ListaPokedexView(
-                //pokemons: $pokemon,
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView
             ).cornerRadius(48)
