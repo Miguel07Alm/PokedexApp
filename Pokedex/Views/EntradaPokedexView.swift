@@ -8,21 +8,30 @@
 import SwiftUI
 
 struct EntradaPokedexView: View {
-    @State var name: String
-    @State var number: String
-    @State var image: String
-    @State var backgroundColor: [TypeElement];
-    var BgColorName : [String]
+    @State private var pokemon: Pokemon
+        
+        // Variables de estado derivadas
+        @State private var name: String
+        @State private var number: String
+        @State private var image: String
+    @State private var backgroundColor: [String]
+        
+        init(pokemon: Pokemon) {
+            // Inicializa el objeto completo
+            _pokemon = State(initialValue: pokemon)
+            
+            // Inicializa las variables de estado derivadas
+            _name = State(initialValue: pokemon.name.capitalizedFirstLetter())
+            _number = State(initialValue: String(format: "%04d", pokemon.id))
+            _image = State(initialValue: pokemon.sprites.other?.officialArtwork?.frontDefault ?? "")
+            _backgroundColor = State(initialValue:[ pokemon.types.first?.type.name ?? "normal",
+                pokemon.types.last?.type.name ?? (pokemon.types.first?.type.name ?? "normal")])
+        }
     
     var body: some View {
         ZStack {
             ImagenPokemon(img: $image)
-           // CombinedShape(name: $name, num: $number).foregroundColor(getGradient(for: ))
-        }.onAppear {
-            BgColorName[0] = backgroundColor[0].type.name
-            if(backgroundColor.count != 1){
-                BgColorName[1] = backgroundColor[1].type.name
-            }
+            CombinedShape(name: $name, num: $number).foregroundStyle(PokemonType.getGradient(for: backgroundColor))
         }
     }
 }
@@ -193,9 +202,10 @@ extension Color {
 }
 
 #Preview {
-    EntradaPokedexView(name: "Crabominable", number: "0740", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/132.png", backgroundColor: [])
+    @State var showSortFilterView: Bool = false
+    @State var showFilterView: Bool = false
+    ListaPokedexView(
+        showSortFilterView: $showSortFilterView,
+        showFilterView: $showFilterView
+    )
 }
-
-
-
-

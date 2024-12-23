@@ -9,7 +9,7 @@ class PokemonViewModel: ObservableObject {
     }
     
     func fetchPokemonDetails(id: Int, completion: @escaping (Result<Pokemon, Error>) -> Void) {
-        let urlStr = "https://manelme.com/api/v2/pokemon/\(id)"
+        let urlStr = "https://pokeapi.co/api/v2/pokemon/\(id)"
         
         guard let url = URL(string: urlStr) else {
             completion(.failure(NetworkError.badURL))

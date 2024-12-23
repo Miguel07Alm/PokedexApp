@@ -16,12 +16,7 @@ struct ListaPokedexView: View {
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                         ForEach(pokemones.sorted(by: { $0.id < $1.id }), id: \.id) { pokemon in
-                            EntradaPokedexView(
-                                name: pokemon.name.capitalizedFirstLetter(),
-                                number: String(format: "%04d", pokemon.id),
-                                image: pokemon.sprites.other?.officialArtwork?.frontDefault ?? "",
-                                backgroundColor: pokemon.types
-                            )
+                            EntradaPokedexView(pokemon: pokemon)
                             .onAppear {
                                 if self.pokemones.last?.id == pokemon.id && hasMorePokemon {
                                     loadMorePokemon()
