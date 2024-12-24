@@ -107,7 +107,7 @@ struct RegisterView: View {
                     Spacer()
                     // Empuja el FooterView al fondo de la pantalla
                     FooterView(
-                        selectedTab: $selectedTab,
+                        selectedTab: selectedTab,
                         onRegisterTapped: {
                             // Verificar si las contraseñas coinciden
                             if password != reenterPassword {

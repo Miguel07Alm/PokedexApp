@@ -97,7 +97,7 @@ struct LoginView: View {
                         Spacer()
                         // Empuja el FooterView al fondo de la pantalla
                         FooterView(
-                            selectedTab: $selectedTab,
+                            selectedTab: selectedTab,
                             onRegisterTapped: {
                                 if let authenticatedUser =
                                     viewModel.authenticateUser(

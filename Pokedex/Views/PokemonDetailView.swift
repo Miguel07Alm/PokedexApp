@@ -226,7 +226,7 @@ struct CabeceraContenido : View{
     var body: some View {
         VStack(spacing:-100){
             PokemonDetailView()
-            FooterView(selectedTab: $selectedTab)
+            FooterView(selectedTab: selectedTab)
         }.ignoresSafeArea()
     }
 }

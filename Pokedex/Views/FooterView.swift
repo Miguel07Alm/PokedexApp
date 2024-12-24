@@ -1,7 +1,7 @@
 import SwiftUI
 
     struct FooterView: View {
-        @Binding var selectedTab: Int
+        @State var selectedTab: Int
 
         // Closures opcionales para manejar las acciones
         var onRegisterTapped: (() -> Void)?
@@ -102,7 +102,7 @@ import SwiftUI
 
         var body: some View {
             FooterView(
-                selectedTab: $selectedTab,
+                selectedTab: selectedTab,
                 onRegisterTapped: {
                     print("Registro button tapped")
                 }

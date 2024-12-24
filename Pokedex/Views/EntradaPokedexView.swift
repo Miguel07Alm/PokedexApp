@@ -36,7 +36,8 @@ struct EntradaPokedexView: View {
         ZStack {
             ImagenPokemon(img: $image).onTapGesture {
                 if teamId != 0{
-                   
+                    let name = teamId == 1 ? "Equipo1" : "Equipo2"
+                    PokemonTeam.shared.addPokemon(pokemon, to: name)
                 }else{
                     //PokemonDetailView()
                 }

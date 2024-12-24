@@ -17,9 +17,10 @@ struct SeleccionarEquipoView: View {
                     )
                 
                 HStack(spacing: 25){
+                    let name = teamId == 1 ? "Equipo1" : "Equipo2"
                     ForEach(0..<3, id: \.self) { i in
-                        if (i < PokemonTeam.shared.getTeam(named: "Equipo 1")?.pokemons.count ?? 0) {
-                            ImagenPokemonSeleccionado(img:PokemonTeam.shared.getTeam(named: "Equipo 1")?.pokemons[i].sprites.other?.officialArtwork?.frontDefault ?? "")
+                        if (i < PokemonTeam.shared.getTeam(named: name)?.pokemons.count ?? 0) {
+                            ImagenPokemonSeleccionado(img:PokemonTeam.shared.getTeam(named: name)?.pokemons[i].sprites.other?.officialArtwork?.frontDefault ?? "")
                         } else {
                             ImagenPokemonNoSeleccionado()
                         }
@@ -88,7 +89,7 @@ struct ImagenPokemonNoSeleccionado: View {
 }
 
 #Preview{
-    @State var teamId: Int = 0;
+    @State var teamId: Int = 1;
     SeleccionarEquipoView(teamId: teamId)
 }
     
