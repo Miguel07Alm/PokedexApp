@@ -18,7 +18,7 @@ struct PokedexView: View {
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView)
             if(isTeamBuilding){
-                SeleccionarEquipoView(pokemonTeam: pokemonTeam).cornerRadius(48)
+                SeleccionarEquipoView(pokemonTeam: pokemonTeam)
             }
             ListaPokedexView(
                 showSortFilterView: $showSortFilterView,

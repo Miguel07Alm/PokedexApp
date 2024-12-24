@@ -244,12 +244,14 @@ struct ContentView: View {
     @State private var showFilterView = false
     @State private var showSortFilterView = false
     @State private var isTeamBuilding = false
+    @State var pokemons: [Pokemon] = [PokemonType.getAveraged()];
 
 
     var body: some View {
             // Contenido principal de la pantalla
         PokedexView(showSortFilterView: $showSortFilterView, showFilterView: $showFilterView,
-            isTeamBuilding: isTeamBuilding
+            isTeamBuilding: isTeamBuilding,
+            pokemonTeam: pokemons
         )
          
             // Mostrar vista de filtros superpuesta

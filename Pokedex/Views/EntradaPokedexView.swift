@@ -35,7 +35,7 @@ struct EntradaPokedexView: View {
         ZStack {
             ImagenPokemon(img: $image).onTapGesture {
                 if isTeamBuilding{
-                    SeleccionarEquipo(showSortFilterView: false, showFilterView: false, pokemons: [pokemon], isTeamBuilding: true)
+                   // SeleccionarEquipo(showSortFilterView: false, showFilterView: false, pokemons: [pokemon], isTeamBuilding: true)
                 }else{
                     //PokemonDetailView()
                 }

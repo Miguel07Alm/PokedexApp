@@ -9,7 +9,13 @@ struct SeleccionarEquipoView: View {
                 Rectangle()
                     .frame(height: 175)
                     .foregroundColor(Color(red: 0.5764705882352941, green: 0.7372549019607844, blue: 0.7372549019607844))
-
+                    .clipShape(
+                        .rect(
+                            topLeadingRadius: 48,
+                            topTrailingRadius: 48
+                        )
+                    )
+                
                 HStack(spacing: 25){
                     ForEach(0..<3, id: \.self) { i in
                         if i < pokemonTeam.count {
@@ -81,34 +87,9 @@ struct ImagenPokemonNoSeleccionado: View {
     }
 }
 
-
-//Prwwiew
-struct SeleccionarEquipo: View {
-    @State var showSortFilterView: Bool
-    @State var showFilterView: Bool
-    @State var pokemons: [Pokemon];
-    @State var isTeamBuilding: Bool;
-    var body: some View {
-        VStack(spacing: -50) {
-            HeaderView(
-                showSortFilterView: $showSortFilterView,
-                showFilterView: $showFilterView)
-            SeleccionarEquipoView(pokemonTeam: pokemons).cornerRadius(48)
-            ListaPokedexView(
-                showSortFilterView: $showSortFilterView,
-                showFilterView: $showFilterView,
-                isTeamBuilding: isTeamBuilding
-            )
-        }.ignoresSafeArea()
-    }
-}
-
 #Preview{
-    @State var showSortFilterView: Bool = false
-    @State var showFilterView: Bool = false
     @State var pokemons: [Pokemon] = [PokemonType.getAveraged()];
-    @State var isTeamBuilding: Bool = false
-    SeleccionarEquipo(showSortFilterView: showSortFilterView, showFilterView: showFilterView, pokemons: pokemons, isTeamBuilding: isTeamBuilding)
+    SeleccionarEquipoView(pokemonTeam: pokemons)
 }
     
 
