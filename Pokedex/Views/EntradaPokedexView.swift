@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EntradaPokedexView: View {
-    @StateObject private var pokemonTeam = PokemonTeam.shared
+    @ObservedObject private var pokemonTeam = PokemonTeam.shared
     @State private var pokemon: Pokemon
     @State private var teamId: Int
         
@@ -34,15 +34,17 @@ struct EntradaPokedexView: View {
     
     var body: some View {
         ZStack {
-            ImagenPokemon(img: $image).onTapGesture {
-                if teamId != 0{
-                    let name = teamId == 1 ? "Equipo1" : "Equipo2"
-                    PokemonTeam.shared.addPokemon(pokemon, to: name)
-                }else{
-                    //PokemonDetailView()
-                }
-            }
+            ImagenPokemon(img: $image)
             CombinedShape(name: $name, num: $number, backgroundColor: $backgroundColor).opacity(0.9)
+        }.onTapGesture {
+            if teamId != 0{
+                let name = teamId == 1 ? "Equipo1" : "Equipo2"
+                print("no pigamo: " + name)
+                pokemonTeam.addPokemon(pokemon, to: name)
+            }else{
+                print("fui clicao")
+               // NavigationLink(destination: PokemonDetailView()) { EmptyView() }
+            }
         }
     }
 }

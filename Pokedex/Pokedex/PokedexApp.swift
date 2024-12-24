@@ -16,10 +16,7 @@ struct PokedexApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ListaPokedexView(
-                showSortFilterView: $showSortFilterView,
-                showFilterView: $showFilterView,
-                teamId: teamId)
+            InitialView()
             .environmentObject(ViewModel())
         }
     }

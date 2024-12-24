@@ -11,6 +11,7 @@ struct PokedexView: View {
     @State var showSortFilterView: Bool
     @State var showFilterView: Bool
     @State var teamId: Int
+    @StateObject private var pokemonTeam = PokemonTeam.shared
     var body: some View {
         VStack(spacing: -50) {
             HeaderView(

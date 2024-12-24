@@ -2,7 +2,9 @@ import SwiftUI
 
 
 struct SeleccionarEquipoView: View {
+    @ObservedObject private var pokemonTeam = PokemonTeam.shared
     @State var teamId : Int
+    
     var body: some View{
         VStack() {
             ZStack{
@@ -19,8 +21,8 @@ struct SeleccionarEquipoView: View {
                 HStack(spacing: 25){
                     let name = teamId == 1 ? "Equipo1" : "Equipo2"
                     ForEach(0..<3, id: \.self) { i in
-                        if (i < PokemonTeam.shared.getTeam(named: name)?.pokemons.count ?? 0) {
-                            ImagenPokemonSeleccionado(img:PokemonTeam.shared.getTeam(named: name)?.pokemons[i].sprites.other?.officialArtwork?.frontDefault ?? "")
+                        if (i < pokemonTeam.getTeam(named: name)?.pokemons.count ?? 0) {
+                            ImagenPokemonSeleccionado(img:pokemonTeam.getTeam(named: name)?.pokemons[i].sprites.other?.officialArtwork?.frontDefault ?? "")
                         } else {
                             ImagenPokemonNoSeleccionado()
                         }

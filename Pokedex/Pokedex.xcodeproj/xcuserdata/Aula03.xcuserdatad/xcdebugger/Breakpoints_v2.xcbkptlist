@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "67F82A07-4B44-424A-9C67-EE23DEBC6FFE"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "32E44C9D-9BB2-4BDB-8474-FD4EA3185753"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Views/PokedexView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "11"
+            endingLineNumber = "11"
+            landmarkName = "PokedexView"
+            landmarkType = "14">
+            <Locations>
+               <Location
+                  uuid = "32E44C9D-9BB2-4BDB-8474-FD4EA3185753 - c400af719ba4dcbe"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "property wrapper backing initializer of Version2.PokedexView.showSortFilterView : Swift.Bool"
+                  moduleName = "Version2.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Aula03/Documents/PokedexApp/Pokedex/Views/PokedexView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "32E44C9D-9BB2-4BDB-8474-FD4EA3185753 - 68fee007b3b21094"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Version2.PokedexView.showSortFilterView.getter : Swift.Bool"
+                  moduleName = "Version2.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Aula03/Documents/PokedexApp/Pokedex/Views/PokedexView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "32E44C9D-9BB2-4BDB-8474-FD4EA3185753 - e60946321a81399d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Version2.PokedexView.showSortFilterView.setter : Swift.Bool"
+                  moduleName = "Version2.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Aula03/Documents/PokedexApp/Pokedex/Views/PokedexView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "11"
+                  endingLineNumber = "11">
+               </Location>
+               <Location
+                  uuid = "32E44C9D-9BB2-4BDB-8474-FD4EA3185753 - 996cdfa07bd23b6c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Version2.PokedexView.showSortFilterView.modify : Swift.Bool"
+                  moduleName = "Version2.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Aula03/Documents/PokedexApp/Pokedex/Views/PokedexView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "11"
+                  endingLineNumber = "11">
+               </Location>
+               <Location
+                  uuid = "32E44C9D-9BB2-4BDB-8474-FD4EA3185753 - d10e9d7a7ce484c5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Version2.PokedexView.showSortFilterView.modify : Swift.Bool with unmangled suffix &quot;.resume.0&quot;"
+                  moduleName = "Version2.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///%3Ccompiler-generated%3E"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "32E44C9D-9BB2-4BDB-8474-FD4EA3185753 - 177b23938df14ed5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Version2.PokedexView.$showSortFilterView.getter : SwiftUI.Binding&lt;Swift.Bool&gt;"
+                  moduleName = "Version2.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Aula03/Documents/PokedexApp/Pokedex/Views/PokedexView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "11"
+                  endingLineNumber = "11">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
