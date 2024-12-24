@@ -11,7 +11,7 @@ import SwiftUI
 struct PokedexApp: App {
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
-    @State var isTeamBuilding: Bool = false
+    @State var teamId: Int = 0
     
 
     var body: some Scene {
@@ -19,7 +19,7 @@ struct PokedexApp: App {
             ListaPokedexView(
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView,
-                isTeamBuilding: isTeamBuilding)
+                teamId: teamId)
             .environmentObject(ViewModel())
         }
     }

@@ -40,9 +40,20 @@ struct InitialView: View {
                     rotationAngle = 360
                     verticalOffset = 3000
                 }
+        }.onAppear {
+            #if v2
+                createTeams()
+            #endif
         }
+        
     }
 }
+
+//Crea los modelos de ambos equipos
+func createTeams() {
+    PokemonTeam.shared.removeAllTeams()
+    PokemonTeam.shared.createTeam(name: "Equipo1")
+    PokemonTeam.shared.createTeam(name: "Equipo2")}
 
 #Preview {
     InitialView()

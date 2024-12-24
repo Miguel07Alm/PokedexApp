@@ -10,7 +10,7 @@ import SwiftUI
 struct PokedexConFooter: View {
     @Binding var showSortFilterView: Bool
     @Binding var showFilterView: Bool
-    @State var isTeamBuilding: Bool
+    @State var teamId: Int
     @Binding var selectedTab : Int
     @State var pokemons: [Pokemon]
 
@@ -19,7 +19,7 @@ struct PokedexConFooter: View {
             PokedexView(
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView,
-                isTeamBuilding: isTeamBuilding,pokemonTeam: pokemons)
+                teamId: teamId,pokemonTeam: pokemons)
             FooterView(selectedTab: $selectedTab)
         }.ignoresSafeArea()
     }
@@ -28,10 +28,10 @@ struct PokedexConFooter: View {
 #Preview {
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
-    @State var isTeamBuilding: Bool = false
+    @State var teamId: Int = 0
     @State var selectedTab : Int = 1
     @State var pokemons: [Pokemon] = [PokemonType.getAveraged()];
 
     
-    PokedexConFooter(showSortFilterView: $showSortFilterView, showFilterView: $showFilterView, isTeamBuilding: isTeamBuilding, selectedTab: $selectedTab, pokemons: pokemons)
+    PokedexConFooter(showSortFilterView: $showSortFilterView, showFilterView: $showFilterView, teamId: teamId, selectedTab: $selectedTab, pokemons: pokemons)
 }

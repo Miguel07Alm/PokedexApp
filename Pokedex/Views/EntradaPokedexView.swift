@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct EntradaPokedexView: View {
+    @StateObject private var pokemonTeam = PokemonTeam.shared
     @State private var pokemon: Pokemon
-    @State private var isTeamBuilding: Bool
+    @State private var teamId: Int
         
         // Variables de estado derivadas
         @State private var name: String
@@ -17,11 +18,11 @@ struct EntradaPokedexView: View {
         @State private var image: String
     @State private var backgroundColor: [String]
         
-        init(pokemon: Pokemon, isTeamBuilding: Bool) {
+        init(pokemon: Pokemon, teamId: Int) {
             // Inicializa el objeto completo
             _pokemon = State(initialValue: pokemon)
             
-            _isTeamBuilding = State(initialValue: isTeamBuilding)
+            _teamId = State(initialValue: teamId)
             
             // Inicializa las variables de estado derivadas
             _name = State(initialValue: pokemon.name.capitalizedFirstLetter())
@@ -34,8 +35,8 @@ struct EntradaPokedexView: View {
     var body: some View {
         ZStack {
             ImagenPokemon(img: $image).onTapGesture {
-                if isTeamBuilding{
-                   // SeleccionarEquipo(showSortFilterView: false, showFilterView: false, pokemons: [pokemon], isTeamBuilding: true)
+                if teamId != 0{
+                   
                 }else{
                     //PokemonDetailView()
                 }
@@ -215,7 +216,7 @@ extension Color {
 }
 
 #Preview {
-    @State var isTeamBuilding: Bool = false
+    @State var teamId: Int = 0
     @State var pokemon : Pokemon = PokemonType.getAveraged()
-    EntradaPokedexView(pokemon: pokemon, isTeamBuilding: isTeamBuilding)
+    EntradaPokedexView(pokemon: pokemon, teamId: teamId)
 }
