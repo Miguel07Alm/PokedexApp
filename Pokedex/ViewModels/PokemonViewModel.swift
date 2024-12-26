@@ -115,16 +115,17 @@ class PokemonViewModel: ObservableObject {
         func filterPokemon(_ pokemons: [Pokemon], selectedTypes: Set<String>, showFavorites: Bool = false, showLegendaries: Bool = false, showSingulares: Bool = false) -> [Pokemon] {
             var filteredPokemon = pokemons
             
-            // Filter by type
             if !selectedTypes.isEmpty {
                 filteredPokemon = filteredPokemon.filter { pokemon in
-                    pokemon.types.contains { type in
-                        selectedTypes.contains(type.type.name.lowercased())
-                    }
+                    let pokemonTypes = pokemon.types.map { $0.type.name.lowercased() }
+                    // Verifica que el Pokémon tenga los mismos o menos tipos que los seleccionados
+                    let matchingTypes = selectedTypes.filter { pokemonTypes.contains($0) }
+                    return matchingTypes.count == selectedTypes.count && pokemonTypes.count <= 2
                 }
             }
             
             // Filter favorites (you'll need to implement a way to track favorites)
+            // TODO: AQUI ANASS IMPLEMENTA LOS FAVORITOS
             if showFavorites {
                 filteredPokemon = filteredPokemon.filter { pokemon in
                     // Implement your favorite checking logic here

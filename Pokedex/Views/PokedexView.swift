@@ -13,18 +13,21 @@ struct PokedexView: View {
     @State var teamId: Int
     @State var teamPos :Int
     @StateObject private var pokemonTeam = PokemonTeam.shared
+    @StateObject var filterState = PokemonFilterState()
     var body: some View {
         VStack(spacing: -50) {
             HeaderView(
                 showSortFilterView: $showSortFilterView,
-                showFilterView: $showFilterView)
+                showFilterView: $showFilterView,
+                filterState: filterState)
             if(teamId != 0){
                 SeleccionarEquipoView(teamId: teamId,teamPos: teamPos )
             }
             ListaPokedexView(
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView,
-                teamId: teamId
+                teamId: teamId,
+                filterState: filterState
             ).cornerRadius(48)
         }.ignoresSafeArea()
     }
