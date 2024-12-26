@@ -40,7 +40,7 @@ struct EntradaPokedexView: View {
             if teamId != 0{
                 let name = teamId == 1 ? "Equipo1" : "Equipo2"
                 print("no pigamo: " + name)
-                pokemonTeam.addPokemon(pokemon, to: name)
+                pokemonTeam.addPokemon(pokemon, to: name, at: 1)
             }else{
                 print("fui clicao")
                // NavigationLink(destination: PokemonDetailView()) { EmptyView() }

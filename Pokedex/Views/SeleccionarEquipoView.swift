@@ -1,13 +1,13 @@
 import SwiftUI
 
-
 struct SeleccionarEquipoView: View {
     @ObservedObject private var pokemonTeam = PokemonTeam.shared
-    @State var teamId : Int
+    @State var teamId: Int
+    @State var teamPos: Int
     
-    var body: some View{
+    var body: some View {
         VStack() {
-            ZStack{
+            ZStack {
                 Rectangle()
                     .frame(height: 175)
                     .foregroundColor(Color(red: 0.5764705882352941, green: 0.7372549019607844, blue: 0.7372549019607844))
@@ -18,17 +18,23 @@ struct SeleccionarEquipoView: View {
                         )
                     )
                 
-                HStack(spacing: 25){
+                HStack(spacing: 25) {
                     let name = teamId == 1 ? "Equipo1" : "Equipo2"
                     ForEach(0..<3, id: \.self) { i in
-                        if (i < pokemonTeam.getTeam(named: name)?.pokemons.count ?? 0) {
-                            ImagenPokemonSeleccionado(img:pokemonTeam.getTeam(named: name)?.pokemons[i].sprites.other?.officialArtwork?.frontDefault ?? "")
-                        } else {
-                            ImagenPokemonNoSeleccionado()
+                        Button(action: {
+                            teamPos = i
+                        }) {
+                            if (nil != pokemonTeam.getTeam(named: name)?.pokemons[i]) {
+                                ImagenPokemonSeleccionado(
+                                    img: pokemonTeam.getTeam(named: name)?.pokemons[i]?.sprites.other?.officialArtwork?.frontDefault ?? "",
+                                    isSelected: teamPos == i
+                                )
+                            } else {
+                                ImagenPokemonNoSeleccionado(isSelected: teamPos == i)
+                            }
                         }
                     }
                 }.offset(y: -25)
-         
             }.ignoresSafeArea()
         }
     }
@@ -36,25 +42,23 @@ struct SeleccionarEquipoView: View {
 
 struct ImagenPokemonSeleccionado: View {
     @State var img: String
+    var isSelected: Bool
+    
     var body: some View {
         AsyncImage(url: URL(string: img)) { phase in
             switch phase {
             case .empty:
-                // Mientras la imagen se carga
                 ProgressView()
             case .success(let image):
-                // Cuando la imagen se cargó correctamente
                 image
                     .resizable()
                     .scaledToFit()
             case .failure:
-                // Si hay un error al cargar la imagen
                 Image(systemName: "photo")
                     .resizable()
                     .scaledToFit()
                     .foregroundColor(.gray)
             @unknown default:
-                // Fallback para futuros casos
                 EmptyView()
             }
         }
@@ -67,10 +71,16 @@ struct ImagenPokemonSeleccionado: View {
                 bottomTrailingRadius: 25
             )
         )
+        .overlay(
+            RoundedRectangle(cornerRadius: 25)
+                .stroke(isSelected ? Color.red : Color.clear, lineWidth: 3)
+        )
     }
 }
 
 struct ImagenPokemonNoSeleccionado: View {
+    var isSelected: Bool
+    
     var body: some View {
         VStack {
             Image(systemName: "plus")
@@ -87,12 +97,18 @@ struct ImagenPokemonNoSeleccionado: View {
                 bottomTrailingRadius: 25
             )
         )
+        .overlay(
+            RoundedRectangle(cornerRadius: 25)
+                .stroke(isSelected ? Color.red : Color.clear, lineWidth: 3)
+        )
     }
 }
 
-#Preview{
-    @State var teamId: Int = 1;
-    SeleccionarEquipoView(teamId: teamId)
+struct SeleccionarEquipoView_Previews: PreviewProvider {
+    static var previews: some View {
+        @State var teamId: Int = 1
+        @State var teamPos: Int = 0
+        SeleccionarEquipoView(teamId: teamId, teamPos: teamPos)
+    }
 }
-    
 

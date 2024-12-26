@@ -12,10 +12,10 @@ struct TeamsCombateView: View {
                 teamView(teamName: "Equipo2", teamId: 2)
             }
             .background(
-                NavigationLink(destination: PokedexView(showSortFilterView: false, showFilterView: false, teamId: 1), isActive: $navigateToTeam1) { EmptyView() }
+                NavigationLink(destination: PokedexView(showSortFilterView: false, showFilterView: false, teamId: 1, teamPos: 0), isActive: $navigateToTeam1) { EmptyView() }
             )
             .background(
-                NavigationLink(destination: PokedexView(showSortFilterView: false, showFilterView: false, teamId: 2), isActive: $navigateToTeam2) { EmptyView() }
+                NavigationLink(destination: PokedexView(showSortFilterView: false, showFilterView: false, teamId: 2, teamPos: 0), isActive: $navigateToTeam2) { EmptyView() }
             )
         }
     }
@@ -24,10 +24,10 @@ struct TeamsCombateView: View {
         HStack(spacing: 25) {
             ForEach(0..<3, id: \.self) { i in
                 if let team = pokemonTeam.getTeam(named: teamName),
-                   i < team.pokemons.count {
-                    ImagenPokemonSeleccionado(img: team.pokemons[i].sprites.other?.officialArtwork?.frontDefault ?? "")
+                   nil != team.pokemons[i] {
+                    ImagenPokemonSeleccionado(img: team.pokemons[i]?.sprites.other?.officialArtwork?.frontDefault ?? "", isSelected: false)
                 } else {
-                    ImagenPokemonNoSeleccionado()
+                    ImagenPokemonNoSeleccionado(isSelected: false)
                 }
             }
         }

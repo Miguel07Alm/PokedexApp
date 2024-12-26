@@ -4,7 +4,7 @@ import SwiftUI
 struct Team: Identifiable {
     let id = UUID()
     let name: String
-    var pokemons: [Pokemon]
+    var pokemons: [Pokemon?]
 }
 
 class PokemonTeam: ObservableObject {
@@ -15,15 +15,23 @@ class PokemonTeam: ObservableObject {
     private init() {} // Private initializer for Singleton
     
     func createTeam(name: String) {
-        let newTeam = Team(name: name, pokemons: [])
+        let newTeam = Team(name: name, pokemons: [nil, nil, nil])
         teams.append(newTeam)
+        print("Team created: \(name)")
     }
     
-    func addPokemon(_ pokemon: Pokemon, to teamName: String) {
+    func addPokemon(_ pokemon: Pokemon, to teamName: String, at pos: Int) {
+        guard pos >= 0 && pos < 3 else {
+            print("Invalid position: \(pos)")
+            return
+        }
+        
         if let index = teams.firstIndex(where: { $0.name == teamName }) {
-            if (teams[index].pokemons.count < 3){
-                teams[index].pokemons.append(pokemon)
-            }
+            teams[index].pokemons[pos] = pokemon
+            print("Pokemon added to \(teamName) at position \(pos): \(pokemon.name)")
+            objectWillChange.send()
+        } else {
+            print("Team not found: \(teamName)")
         }
     }
     
@@ -49,5 +57,4 @@ class PokemonTeam: ObservableObject {
         teams.removeAll()
     }
 }
-
 
