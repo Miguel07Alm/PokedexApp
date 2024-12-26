@@ -83,7 +83,15 @@ import SwiftUI
                             .buttonStyle(BotonCombateGrande())
                         }
                         .offset(CGSize(width: 0, height: 35))
-
+                        
+                    case 3: // Confirmar selecion pokemon
+                        HStack {
+                            NavigationLink(destination: TeamsCombateView()) {
+                                Text("")
+                            }
+                            .buttonStyle(BotonConfirmarGrande())
+                        }
+                        .offset(CGSize(width: 0, height: 35))
                     default:
                         Text("La cagÜe")
                     }
@@ -98,7 +106,7 @@ import SwiftUI
     }
 
     struct FooterViewPreviewWrapper: View {
-        @State var selectedTab = 0
+        @State var selectedTab = 3
 
         var body: some View {
             FooterView(

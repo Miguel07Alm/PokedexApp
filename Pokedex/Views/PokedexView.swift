@@ -19,6 +19,7 @@ struct PokedexView: View {
                 showFilterView: $showFilterView)
             if(teamId != 0){
                 SeleccionarEquipoView(teamId: teamId)
+                
             }
             ListaPokedexView(
                 showSortFilterView: $showSortFilterView,

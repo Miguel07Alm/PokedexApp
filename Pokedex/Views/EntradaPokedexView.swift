@@ -35,7 +35,7 @@ struct EntradaPokedexView: View {
             CombinedShape(name: $name, num: $number, backgroundColor: $backgroundColor).opacity(0.9)
             
             NavigationLink(
-                destination: PokedexView(showSortFilterView: false, showFilterView: false, teamId: teamId)
+                destination: PokedexConFooter(showSortFilterView: false, showFilterView: false, teamId: teamId, selectedTab: 3)
                     .transaction { $0.animation = nil }, // Elimina la animación
                isActive: $navigateToPokedex
            ) {

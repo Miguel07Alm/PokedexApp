@@ -12,10 +12,10 @@ struct TeamsCombateView: View {
                 teamView(teamId: 2)
             }
             .background(
-                NavigationLink(destination: PokedexView(showSortFilterView: false, showFilterView: false, teamId: 1), isActive: $navigateToTeam1) { EmptyView() }
+                NavigationLink(destination: PokedexConFooter(showSortFilterView: false, showFilterView: false, teamId: 1, selectedTab: 3), isActive: $navigateToTeam1) { EmptyView() }
             )
             .background(
-                NavigationLink(destination: PokedexView(showSortFilterView: false, showFilterView: false, teamId: 2), isActive: $navigateToTeam2) { EmptyView() }
+                NavigationLink(destination: PokedexConFooter(showSortFilterView: false, showFilterView: false, teamId: 2, selectedTab: 3), isActive: $navigateToTeam2) { EmptyView() }
             )
         }
     }

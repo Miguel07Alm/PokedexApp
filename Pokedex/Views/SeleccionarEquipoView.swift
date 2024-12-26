@@ -35,13 +35,6 @@ struct SeleccionarEquipoView: View {
                     }
                 }.offset(y: -25)
             }.ignoresSafeArea()
-            NavigationLink(destination: TeamsCombateView()) {
-                Text("Adios")
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
         }
     }
 }
