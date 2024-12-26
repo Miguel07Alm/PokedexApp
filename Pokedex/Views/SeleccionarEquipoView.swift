@@ -35,6 +35,13 @@ struct SeleccionarEquipoView: View {
                     }
                 }.offset(y: -25)
             }.ignoresSafeArea()
+            NavigationLink(destination: TeamsCombateView()) {
+                Text("Adios")
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
         }
     }
 }
@@ -106,7 +113,7 @@ struct ImagenPokemonNoSeleccionado: View {
 struct SeleccionarEquipoView_Previews: PreviewProvider {
     static var previews: some View {
         @State var teamId: Int = 1
-        @State var teamPos: Int = 0
+        SeleccionarEquipoView(teamId: teamId)
     }
 }
 

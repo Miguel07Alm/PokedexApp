@@ -5,11 +5,15 @@ struct EntradaPokedexView: View {
     @State private var pokemon: Pokemon
     @State private var teamId: Int
         
-        // Variables de estado derivadas
-        @State private var name: String
-        @State private var number: String
-        @State private var image: String
+    // Variables de estado derivadas
+    @State private var name: String
+    @State private var number: String
+    @State private var image: String
     @State private var backgroundColor: [String]
+    
+    // Estado para manejar la navegación
+    @State private var navigateToPokedex: Bool = false
+    @State private var navigateToDetail: Bool = false
         
         init(pokemon: Pokemon, teamId: Int) {
             // Inicializa el objeto completo
@@ -29,14 +33,31 @@ struct EntradaPokedexView: View {
         ZStack {
             ImagenPokemon(img: $image)
             CombinedShape(name: $name, num: $number, backgroundColor: $backgroundColor).opacity(0.9)
+            
+            NavigationLink(
+                destination: PokedexView(showSortFilterView: false, showFilterView: false, teamId: teamId)
+                    .transaction { $0.animation = nil }, // Elimina la animación
+               isActive: $navigateToPokedex
+           ) {
+               EmptyView()
+           }
+
+           NavigationLink(
+               destination: PokemonDetailView(), // Cambia esto a tu vista de detalles
+               isActive: $navigateToDetail
+           ) {
+               EmptyView()
+           }
+            
         }.onTapGesture {
             if teamId != 0{
                 let name = teamId == 1 ? "Equipo1" : "Equipo2"
                 print("no pigamo: " + name)
                 pokemonTeam.addPokemon(pokemon, to: name)
+                navigateToPokedex = true
             }else{
                 print("fui clicao")
-               // NavigationLink(destination: PokemonDetailView()) { EmptyView() }
+                navigateToDetail = true
             }
         }
     }
