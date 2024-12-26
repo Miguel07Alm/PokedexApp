@@ -21,7 +21,9 @@ class PokemonTeam: ObservableObject {
     
     func addPokemon(_ pokemon: Pokemon, to teamName: String) {
         if let index = teams.firstIndex(where: { $0.name == teamName }) {
-            teams[index].pokemons.append(pokemon)
+            if (teams[index].pokemons.count < 3){
+                teams[index].pokemons.append(pokemon)
+            }
         }
     }
     
