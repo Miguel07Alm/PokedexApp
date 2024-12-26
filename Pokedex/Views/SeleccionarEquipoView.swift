@@ -71,7 +71,10 @@ struct ImagenPokemonSeleccionado: View {
             )
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 25)
+            UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(
+                topLeading: 25,
+                bottomLeading: 25,
+                bottomTrailing: 25))
                 .stroke(isSelected ? Color.red : Color.clear, lineWidth: 3)
         )
     }
@@ -79,7 +82,6 @@ struct ImagenPokemonSeleccionado: View {
 
 struct ImagenPokemonNoSeleccionado: View {
     var isSelected: Bool
-    
     var body: some View {
         VStack {
             Image(systemName: "plus")
@@ -97,7 +99,10 @@ struct ImagenPokemonNoSeleccionado: View {
             )
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 25)
+            UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(
+                topLeading: 25,
+                bottomLeading: 25,
+                bottomTrailing: 25))
                 .stroke(isSelected ? Color.red : Color.clear, lineWidth: 3)
         )
     }
