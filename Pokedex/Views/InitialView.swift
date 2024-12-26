@@ -57,6 +57,7 @@ struct InitialView: View {
     }
 }
 
+
 // Crea los modelos de ambos equipos
 func createTeams() {
     PokemonTeam.shared.removeAllTeams()
