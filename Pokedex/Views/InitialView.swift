@@ -47,9 +47,6 @@ struct InitialView: View {
             .onAppear {
                 rotationAngle = 360
                 verticalOffset = 300
-                #if v2
-                createTeams()
-                #endif
             }
             .navigationTitle("Pokédex")
             .navigationBarHidden(true)
@@ -57,13 +54,6 @@ struct InitialView: View {
     }
 }
 
-
-// Crea los modelos de ambos equipos
-func createTeams() {
-    PokemonTeam.shared.removeAllTeams()
-    PokemonTeam.shared.createTeam(name: "Equipo1")
-    PokemonTeam.shared.createTeam(name: "Equipo2")
-}
 
 #Preview {
     InitialView()

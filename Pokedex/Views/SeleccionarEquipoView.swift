@@ -23,6 +23,7 @@ struct SeleccionarEquipoView: View {
                     ForEach(0..<3, id: \.self) { i in
                         Button(action: {
                             teamPos = i
+                            pokemonTeam.setTeamPos(named: name, pos: i)
                         }) {
                             if (nil != pokemonTeam.getTeam(named: name)?.pokemons[i]) {
                                 ImagenPokemonSeleccionado(
