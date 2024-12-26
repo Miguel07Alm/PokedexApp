@@ -1,10 +1,3 @@
-//
-//  SwiftUIView.swift
-//  PokédexApp
-//
-//  Created by Aula03 on 12/11/24.
-//
-
 import SwiftUI
 
 struct EntradaPokedexView: View {

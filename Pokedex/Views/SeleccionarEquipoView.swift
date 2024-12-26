@@ -3,7 +3,6 @@ import SwiftUI
 struct SeleccionarEquipoView: View {
     @ObservedObject private var pokemonTeam = PokemonTeam.shared
     @State var teamId: Int
-    @State var teamPos: Int
     
     var body: some View {
         VStack() {
@@ -22,16 +21,15 @@ struct SeleccionarEquipoView: View {
                     let name = teamId == 1 ? "Equipo1" : "Equipo2"
                     ForEach(0..<3, id: \.self) { i in
                         Button(action: {
-                            teamPos = i
                             pokemonTeam.setTeamPos(named: name, pos: i)
                         }) {
                             if (nil != pokemonTeam.getTeam(named: name)?.pokemons[i]) {
                                 ImagenPokemonSeleccionado(
                                     img: pokemonTeam.getTeam(named: name)?.pokemons[i]?.sprites.other?.officialArtwork?.frontDefault ?? "",
-                                    isSelected: teamPos == i
+                                    isSelected: pokemonTeam.getTeamPos(named: name) == i
                                 )
                             } else {
-                                ImagenPokemonNoSeleccionado(isSelected: teamPos == i)
+                                ImagenPokemonNoSeleccionado(isSelected:pokemonTeam.getTeamPos(named: name) == i)
                             }
                         }
                     }
@@ -109,7 +107,6 @@ struct SeleccionarEquipoView_Previews: PreviewProvider {
     static var previews: some View {
         @State var teamId: Int = 1
         @State var teamPos: Int = 0
-        SeleccionarEquipoView(teamId: teamId, teamPos: teamPos)
     }
 }
 
