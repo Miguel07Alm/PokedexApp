@@ -169,56 +169,72 @@ struct PokemonSortFilterView: View {
                         .padding(.vertical, 16)
                     }
                     
-                    if showTypeIcons {
-                        ZStack {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 16) {
-                                    // Using explicit id for the array of strings
-                                    ForEach(Array(PokemonType.typesToIcon.keys.sorted()), id: \.self) { type in
-                                        VStack {
-                                            Image(PokemonType.typesToIcon[type]!)
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fit)
-                                                .frame(width: 50, height: 50)
-                                                .background(Circle().fill(Color.gray.opacity(0.2)))
-                                            Text(PokemonType.typesToSpanish[type]!.capitalized)
-                                                .font(.caption)
-                                                .foregroundColor(.black)
+                    // Mostrar los iconos de tipo
+                                if showTypeIcons {
+                                    ZStack {
+                                        ScrollView(.horizontal, showsIndicators: false) {
+                                            HStack(spacing: 16) {
+                                                ForEach(Array(PokemonType.typesToIcon.keys.sorted()), id: \.self) { type in
+                                                    VStack {
+                                                        Image(PokemonType.typesToIcon[type]!)
+                                                            .resizable()
+                                                            .aspectRatio(contentMode: .fit)
+                                                            .frame(width: 50, height: 50)
+                                                            .background(
+                                                                // Si el tipo está seleccionado, poner fondo verde claro
+                                                                filterState.selectedTypes.contains(type) ?
+                                                                    Color.green.opacity(0.75) : Color.gray.opacity(0.2)
+                                                            )
+                                                            .clipShape(Circle())
+                                                        
+                                                        Text(PokemonType.typesToSpanish[type]!.capitalized)
+                                                            .font(.caption)
+                                                            .foregroundColor(.black)
+                                                    }
+                                                    .onTapGesture {
+                                                        if filterState.selectedTypes.contains(type) {
+                                                            filterState.selectedTypes.remove(type)
+                                                        } else {
+                                                            if filterState.selectedTypes.count >= 2 {
+                                                                filterState.selectedTypes.remove(filterState.selectedTypes.first!)
+                                                            }
+                                                            filterState.selectedTypes.insert(type)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .padding(.horizontal, 16)
+                                            .padding(.vertical, 8)
                                         }
-                                    }
-                                }
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 8)
-                            }
-                            .offset(y: -150)
+                                        .offset(y: -150)
 
-                            GeometryReader { geometry in
-                                HStack {
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [Color.clear, Color.white.opacity(1)]),
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                    .frame(width: geometry.size.width / 4)
-                                    .blur(radius: 20)
-                                    .offset(x: -110)
-                                    
-                                    Spacer()
-                                    
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [Color.white.opacity(1), Color.clear]),
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                    .frame(width: geometry.size.width / 4)
-                                    .blur(radius: 20)
-                                }
-                                .frame(height: geometry.size.height)
-                                .padding(.horizontal, 16)
-                                .offset(x: 60)
-                            }
-                            .offset(y: -150)
-                        }
+                                        GeometryReader { geometry in
+                                            HStack {
+                                                LinearGradient(
+                                                    gradient: Gradient(colors: [Color.clear, Color.white.opacity(1)]),
+                                                    startPoint: .leading,
+                                                    endPoint: .trailing
+                                                )
+                                                .frame(width: geometry.size.width / 4)
+                                                .blur(radius: 20)
+                                                .offset(x: -110)
+                                                
+                                                Spacer()
+                                                
+                                                LinearGradient(
+                                                    gradient: Gradient(colors: [Color.white.opacity(1), Color.clear]),
+                                                    startPoint: .leading,
+                                                    endPoint: .trailing
+                                                )
+                                                .frame(width: geometry.size.width / 4)
+                                                .blur(radius: 20)
+                                            }
+                                            .frame(height: geometry.size.height)
+                                            .padding(.horizontal, 16)
+                                            .offset(x: 60)
+                                        }
+                                        .offset(y: -150)
+                                    }
                     }
                 }
             }

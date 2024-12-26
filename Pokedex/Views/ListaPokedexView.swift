@@ -11,7 +11,7 @@ struct ListaPokedexView: View {
     @State private var errorMessage: String?
     @State private var currentPage = 1
     @State private var hasMorePokemon = true
-    @StateObject var filterState = PokemonFilterState()
+    @StateObject var filterState: PokemonFilterState;
 
        
     var filteredAndSortedPokemon: [Pokemon] {
@@ -120,9 +120,11 @@ extension String {
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
     @State var teamId: Int = 0
+    @StateObject var filterState = PokemonFilterState()
     ListaPokedexView(
         showSortFilterView: $showSortFilterView,
-        showFilterView: $showFilterView, teamId: teamId
+        showFilterView: $showFilterView, teamId: teamId,
+        filterState: filterState
     )
 }
 
