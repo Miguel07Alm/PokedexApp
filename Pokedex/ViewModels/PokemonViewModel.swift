@@ -1,4 +1,5 @@
 import Foundation
+
 enum PokemonSortOption {
     case id
     case name
@@ -19,7 +20,7 @@ struct PokemonFilters {
     var ascending: Bool = true
 }
 class PokemonFilterState: ObservableObject {
-    @Published var selectedSort: String = "alfabeticamente"
+    @Published var selectedSort: String = "n° pokedex"
     @Published var isAscending: Bool = true
     @Published var selectedTypes: Set<String> = []
     @Published var showFavorites: Bool = false
@@ -151,28 +152,38 @@ class PokemonViewModel: ObservableObject {
             
             return filteredPokemon
         }
-    func fetchPokemonDetails(id: Int, completion: @escaping (Result<Pokemon, Error>) -> Void) {
-        let urlStr = "https://pokeapi.co/api/v2/pokemon/\(id)"
-        
-        guard let url = URL(string: urlStr) else {
-            completion(.failure(NetworkError.badURL))
-            return
-        }
-        
-        self.session.dataTask(with: url) { data, response, error in
-            guard let data = data else {
-                completion(.failure(error ?? NetworkError.badData))
-                return
-            }
-            
-            do {
-                let pokemon = try JSONDecoder().decode(Pokemon.self, from: data)
-                completion(.success(pokemon))
-            } catch {
-                completion(.failure(error))
-            }
-        }.resume()
-    }
+  
+        func fetchPokemonDetails(id: Int, completion: @escaping (Result<Pokemon, Error>) -> Void) {
+              let urlStr = "https://pokeapi.co/api/v2/pokemon/\(id)"
+              
+              guard let url = URL(string: urlStr) else {
+                  completion(.failure(NetworkError.badURL))
+                  return
+              }
+              
+            self.session.dataTask(with: url) { data, response, error in
+                  if let error = error {
+                      completion(.failure(NetworkError.other(error)))
+                      return
+                  }
+                  
+                  guard let data = data else {
+                      completion(.failure(NetworkError.badData))
+                      return
+                  }
+                  
+                // Attempt to decode, handling invalid JSON
+                  do {
+                      let pokemon = try JSONDecoder().decode(Pokemon.self, from: data)
+                      completion(.success(pokemon))
+                  } catch {
+                      // Log or handle the decoding error here
+                      print("Decoding error for Pokemon ID \(id): \(error)")
+                      completion(.failure(NetworkError.other(error)))
+
+                  }
+              }.resume()
+          }
     func fetchPokemonSpecies(id: Int, completion: @escaping (Result<PokemonSpecies, Error>) -> Void) {
         let urlStr = "https://pokeapi.co/api/v2/pokemon-species/\(id)"
         
@@ -182,19 +193,28 @@ class PokemonViewModel: ObservableObject {
         }
         
         self.session.dataTask(with: url) { data, response, error in
+            if let error = error {
+                completion(.failure(NetworkError.other(error)))
+                return
+            }
+            
             guard let data = data else {
-                completion(.failure(error ?? NetworkError.badData))
+                completion(.failure(NetworkError.badData))
                 return
             }
             
             do {
-                let pokemon = try JSONDecoder().decode(PokemonSpecies.self, from: data)
-                completion(.success(pokemon))
+               let pokemon = try JSONDecoder().decode(PokemonSpecies.self, from: data)
+               completion(.success(pokemon))
             } catch {
-                completion(.failure(error))
+                // Log or handle the decoding error here
+                print("Decoding error for PokemonSpecies ID \(id): \(error)")
+                completion(.failure(NetworkError.other(error)))
+
             }
         }.resume()
     }
+    
     func fetchPokemonEvolutionChain(id: Int, completion: @escaping (Result<PokemonEvolutionChain, Error>) -> Void) {
         let urlStr = "https://pokeapi.co/api/v2/evolution-chain/\(id)"
         
@@ -204,8 +224,13 @@ class PokemonViewModel: ObservableObject {
         }
         
         self.session.dataTask(with: url) { data, response, error in
+            if let error = error {
+                completion(.failure(NetworkError.other(error)))
+                return
+            }
+            
             guard let data = data else {
-                completion(.failure(error ?? NetworkError.badData))
+                completion(.failure(NetworkError.badData))
                 return
             }
             
@@ -213,34 +238,42 @@ class PokemonViewModel: ObservableObject {
                 let pokemon = try JSONDecoder().decode(PokemonEvolutionChain.self, from: data)
                 completion(.success(pokemon))
             } catch {
-                completion(.failure(error))
+                // Log or handle the decoding error here
+                print("Decoding error for Evolution Chain ID \(id): \(error)")
+                 completion(.failure(NetworkError.other(error)))
             }
         }.resume()
     }
     
     func fetchAbilityInfo(name: String, completion: @escaping (Result<AbilityData, Error>) -> Void) {
-        let urlStr = "https://pokeapi.co/api/v2/ability/\(name)"
-        
-        guard let url = URL(string: urlStr) else {
-            completion(.failure(NetworkError.badURL))
-            return
-        }
-        
-        self.session.dataTask(with: url) { data, response, error in
-            guard let data = data else {
-                completion(.failure(error ?? NetworkError.badData))
-                return
-            }
-            
-            do {
-                let speciesDetails = try JSONDecoder().decode(AbilityData.self, from: data)
-                completion(.success(speciesDetails))
-            } catch {
-                completion(.failure(error))
-            }
-        }.resume()
-    }
-    
+          let urlStr = "https://pokeapi.co/api/v2/ability/\(name)"
+          
+          guard let url = URL(string: urlStr) else {
+              completion(.failure(NetworkError.badURL))
+              return
+          }
+          
+          self.session.dataTask(with: url) { data, response, error in
+              if let error = error {
+                  completion(.failure(NetworkError.other(error)))
+                  return
+              }
+              
+              guard let data = data else {
+                  completion(.failure(NetworkError.badData))
+                  return
+              }
+              
+              do {
+                  let speciesDetails = try JSONDecoder().decode(AbilityData.self, from: data)
+                  completion(.success(speciesDetails))
+              } catch {
+                  // Log or handle the decoding error here
+                    print("Decoding error for ability name \(name): \(error)")
+                    completion(.failure(NetworkError.other(error)))
+              }
+          }.resume()
+      }
 }
 
 enum NetworkError: Error {
