@@ -11,9 +11,10 @@ struct PokedexView: View {
     @State var showSortFilterView: Bool
     @State var showFilterView: Bool
     @State var teamId: Int
-    @State var teamPos :Int
     @StateObject private var pokemonTeam = PokemonTeam.shared
+    @StateObject private var refreshManager = RefreshManager.shared
     @StateObject var filterState = PokemonFilterState()
+
     var body: some View {
         VStack(spacing: -50) {
             HeaderView(
@@ -21,16 +22,15 @@ struct PokedexView: View {
                 showFilterView: $showFilterView,
                 filterState: filterState)
             if(teamId != 0){
-                SeleccionarEquipoView(teamId: teamId,teamPos: teamPos )
-            }
+                SeleccionarEquipoView(teamId: teamId).id(refreshManager.refreshFlag)            }
             ListaPokedexView(
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView,
-                teamId: teamId,
-                filterState: filterState
+                teamId: teamId
             ).cornerRadius(48)
         }.ignoresSafeArea()
     }
+
 }
 
 struct PokedexView_Previews: PreviewProvider {
@@ -42,13 +42,11 @@ struct PokedexView_Previews: PreviewProvider {
         @State var showSortFilterView = false
         @State var showFilterView = false
         @State var teamId = 1
-        @State var teamPos = 0
         var body: some View {
             PokedexView(
                 showSortFilterView: showSortFilterView,
                 showFilterView: showFilterView,
-                teamId: teamId,
-                teamPos: teamPos
+                teamId: teamId
             )
         }
     }
