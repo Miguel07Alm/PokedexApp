@@ -7,9 +7,26 @@ struct TeamsCombateView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 30) {
-                teamView(teamId: 1)
-                teamView(teamId: 2)
+            ZStack {
+                Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647)
+                    .ignoresSafeArea()
+
+                VStack(spacing: 100) {
+                    VStack(spacing: 30){
+                        teamView(teamId: 1)
+                        
+                        VersusIcon().frame(width: 450)
+                        
+                        teamView(teamId: 2)
+                    }
+                    
+                    HStack {
+                        NavigationLink(destination: CombateView()) {
+                            Text("")
+                        }
+                        .buttonStyle(BotonConfirmarGrande())
+                    }
+                }
             }
             .background(
                 NavigationLink(destination: PokedexConFooter(showSortFilterView: false, showFilterView: false, teamId: 1, selectedTab: 3), isActive: $navigateToTeam1) { EmptyView() }
@@ -17,7 +34,9 @@ struct TeamsCombateView: View {
             .background(
                 NavigationLink(destination: PokedexConFooter(showSortFilterView: false, showFilterView: false, teamId: 2, selectedTab: 3), isActive: $navigateToTeam2) { EmptyView() }
             )
-        }.navigationBarBackButtonHidden()
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+        .navigationBarBackButtonHidden(true)
     }
     
     private func teamView(teamId: Int) -> some View {
@@ -41,6 +60,41 @@ struct TeamsCombateView: View {
                 }
             }
         }
+    }
+}
+
+struct VersusIcon: View {
+    var body: some View {
+        HStack(spacing: 0) {
+            // Left line
+            Rectangle()
+                .fill(.white)
+                .frame(height: 2)
+            
+            // VS Circle
+            ZStack {
+                Circle()
+                    .fill(Color(red: 239/255, green: 83/255, blue: 96/255))
+                    .frame(width: 50, height: 50)
+                
+                Text("VS")
+                    .foregroundColor(.white)
+                    .font(.system(size: 20, weight: .bold))
+                    .overlay {
+                        Circle().stroke(Color.white, lineWidth: 5)
+                            .frame(width: 50, height: 50)
+                    }
+            }
+            .padding(.horizontal, -1) // Adjust circle overlap with lines
+            
+            // Right line
+            Rectangle()
+                .fill(.white)
+                .frame(height: 2)
+        }
+        .ignoresSafeArea()
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 40) // Adjust the overall width of the component
     }
 }
 

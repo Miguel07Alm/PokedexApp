@@ -75,7 +75,7 @@ struct ImagenPokemonSeleccionado: View {
                 topLeading: 25,
                 bottomLeading: 25,
                 bottomTrailing: 25))
-                .stroke(isSelected ? Color.red : Color.clear, lineWidth: 3)
+                .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 5)
         )
     }
 }
@@ -86,11 +86,11 @@ struct ImagenPokemonNoSeleccionado: View {
         VStack {
             Image(systemName: "plus")
                 .resizable()
-                .foregroundColor(Color(red: 0.5764705882352941, green: 0.7372549019607844, blue: 0.7372549019607844))
+                .foregroundColor(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
                 .frame(width: 50, height: 50)
         }
         .frame(width: 90, height: 90)
-        .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
+        .background(Color(hue: 0.5, saturation: 0.0, brightness: 0.908))
         .clipShape(
             .rect(
                 topLeadingRadius: 25,
@@ -103,7 +103,7 @@ struct ImagenPokemonNoSeleccionado: View {
                 topLeading: 25,
                 bottomLeading: 25,
                 bottomTrailing: 25))
-                .stroke(isSelected ? Color.red : Color.clear, lineWidth: 3)
+                .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 5)
         )
     }
 }

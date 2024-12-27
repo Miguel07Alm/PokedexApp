@@ -26,7 +26,8 @@ struct PokedexView: View {
             ListaPokedexView(
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView,
-                teamId: teamId
+                teamId: teamId,
+                filterState: filterState
             ).cornerRadius(48)
         }.ignoresSafeArea()
     }
