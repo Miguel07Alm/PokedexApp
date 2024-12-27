@@ -1,53 +1,61 @@
-//
-//  SwiftUIView.swift
-//  PokédexApp
-//
-//  Created by Aula03 on 12/11/24.
-//
-
 import SwiftUI
 
 struct EntradaPokedexView: View {
     @ObservedObject private var pokemonTeam = PokemonTeam.shared
+    @ObservedObject private var refreshManager = RefreshManager.shared
     @State private var pokemon: Pokemon
     @State private var teamId: Int
-        
-        // Variables de estado derivadas
-        @State private var name: String
-        @State private var number: String
-        @State private var image: String
+    
+    // Variables de estado derivadas
+    @State private var name: String
+    @State private var number: String
+    @State private var image: String
     @State private var backgroundColor: [String]
+    
+    // Estado para manejar la navegación
+    @State private var navigateToPokedex: Bool = false
+    @State private var navigateToDetail: Bool = false
+    
+    init(pokemon: Pokemon, teamId: Int) {
+        _pokemon = State(initialValue: pokemon)
+        _teamId = State(initialValue: teamId)
         
-        init(pokemon: Pokemon, teamId: Int) {
-            // Inicializa el objeto completo
-            _pokemon = State(initialValue: pokemon)
-            
-            _teamId = State(initialValue: teamId)
-            
-            // Inicializa las variables de estado derivadas
-            _name = State(initialValue: pokemon.name.capitalizedFirstLetter())
-            _number = State(initialValue: String(format: "%04d", pokemon.id))
-            _image = State(initialValue: pokemon.sprites.other?.officialArtwork?.frontDefault ?? "")
-            _backgroundColor = State(initialValue:[ pokemon.types.first?.type.name ?? "normal",
-                pokemon.types.last?.type.name ?? (pokemon.types.first?.type.name ?? "normal")])
-        }
+        _name = State(initialValue: pokemon.name.capitalizedFirstLetter())
+        _number = State(initialValue: String(format: "%04d", pokemon.id))
+        _image = State(initialValue: pokemon.sprites.other?.officialArtwork?.frontDefault ?? "")
+        _backgroundColor = State(initialValue: [
+            pokemon.types.first?.type.name ?? "normal",
+            pokemon.types.last?.type.name ?? (pokemon.types.first?.type.name ?? "normal")
+        ])
+    }
     
     var body: some View {
         ZStack {
             ImagenPokemon(img: $image)
             CombinedShape(name: $name, num: $number, backgroundColor: $backgroundColor).opacity(0.9)
-        }.onTapGesture {
-            if teamId != 0{
+            
+            NavigationLink(
+                destination: PokemonDetailView(),
+                isActive: $navigateToDetail
+            ) {
+                EmptyView()
+            }
+        }
+        .onTapGesture {
+            if teamId != 0 {
                 let name = teamId == 1 ? "Equipo1" : "Equipo2"
                 print("no pigamo: " + name)
-                pokemonTeam.addPokemon(pokemon, to: name, at: 1)
-            }else{
-                print("fui clicao")
-               // NavigationLink(destination: PokemonDetailView()) { EmptyView() }
+                pokemonTeam.addPokemon(pokemon, to: name)
+                refreshManager.forceRefresh() // Forzamos la actualización
+                navigateToPokedex = true
+            } else {
+                navigateToDetail = true
             }
         }
     }
 }
+
+
 struct ImagenPokemon: View {
     @Binding var img: String
     var body: some View {
@@ -219,7 +227,7 @@ extension Color {
 }
 
 #Preview {
-    @State var teamId: Int = 0
+    @State var teamId: Int = 1
     @State var pokemon : Pokemon = PokemonType.getAveraged()
     EntradaPokedexView(pokemon: pokemon, teamId: teamId)
 }

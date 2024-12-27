@@ -4,6 +4,7 @@ import SwiftUI
 struct Team: Identifiable {
     let id = UUID()
     let name: String
+    var pos : Int
     var pokemons: [Pokemon?]
 }
 
@@ -12,27 +13,44 @@ class PokemonTeam: ObservableObject {
     
     @Published private var teams: [Team] = []
     
-    private init() {} // Private initializer for Singleton
+    private init() {
+        removeAllTeams()
+        createTeam(name: "Equipo1")
+        createTeam(name: "Equipo2")
+    }
     
     func createTeam(name: String) {
-        let newTeam = Team(name: name, pokemons: [nil, nil, nil])
+        let newTeam = Team(name: name, pos: 0, pokemons: [nil, nil, nil])
         teams.append(newTeam)
         print("Team created: \(name)")
     }
     
-    func addPokemon(_ pokemon: Pokemon, to teamName: String, at pos: Int) {
-        guard pos >= 0 && pos < 3 else {
-            print("Invalid position: \(pos)")
-            return
-        }
-        
-        if let index = teams.firstIndex(where: { $0.name == teamName }) {
+    func addPokemon(_ pokemon: Pokemon, to teamName: String) {
+        let pos = teams.first(where: { $0.name == teamName })?.pos ?? -1
+        if let index = teams.firstIndex(where: { $0.name == teamName }){
             teams[index].pokemons[pos] = pokemon
             print("Pokemon added to \(teamName) at position \(pos): \(pokemon.name)")
             objectWillChange.send()
         } else {
             print("Team not found: \(teamName)")
         }
+    }
+    
+    func setTeamPos(named teamName: String, pos: Int) {
+        if pos < 0 || pos > 2 {
+            print("Invalid position: \(pos)")
+            return
+        }
+        if let index = teams.firstIndex(where: { $0.name == teamName }) {
+            teams[index].pos = pos
+            objectWillChange.send()
+        } else {
+            print("Team not found: \(teamName)")
+        }
+    }
+    
+    func getTeamPos(named teamName: String) -> Int {
+        return teams.first(where: { $0.name == teamName })?.pos ?? -1
     }
     
     func getTeam(named teamName: String) -> Team? {
@@ -45,12 +63,6 @@ class PokemonTeam: ObservableObject {
     
     func removeTeam(named teamName: String) {
         teams.removeAll(where: { $0.name == teamName })
-    }
-    
-    func updateTeamName(_ oldName: String, to newName: String) {
-        if let index = teams.firstIndex(where: { $0.name == oldName }) {
-            teams[index] = Team(name: newName, pokemons: teams[index].pokemons)
-        }
     }
     
     func removeAllTeams() {

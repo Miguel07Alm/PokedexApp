@@ -8,29 +8,29 @@
 import SwiftUI
 
 struct PokedexConFooter: View {
+    @StateObject private var refreshManager = RefreshManager.shared
     @State var showSortFilterView: Bool
     @State var showFilterView: Bool
     @State var teamId: Int
-    @State var selectedTab : Int
-    @State var teamPos: Int
+    @State var selectedTab: Int
+    
     var body: some View {
         VStack(spacing: -100) {
             PokedexView(
                 showSortFilterView: showSortFilterView,
                 showFilterView: showFilterView,
-                teamId: teamId,
-                teamPos: teamPos)
+                teamId: teamId
+            )
             FooterView(selectedTab: selectedTab)
-        }.ignoresSafeArea()
+        }.ignoresSafeArea().navigationBarBackButtonHidden()
     }
 }
 
 #Preview {
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
-    @State var teamId: Int = 0
-    @State var selectedTab : Int = 1
-    @State var teamPos: Int = 0
+    @State var teamId: Int = 1
+    @State var selectedTab : Int = 3
     
-    PokedexConFooter(showSortFilterView: showSortFilterView, showFilterView: showFilterView, teamId: teamId, selectedTab: selectedTab, teamPos: teamPos)
+    PokedexConFooter(showSortFilterView: showSortFilterView, showFilterView: showFilterView, teamId: teamId, selectedTab: selectedTab)
 }
