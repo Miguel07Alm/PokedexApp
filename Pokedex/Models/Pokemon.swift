@@ -1,284 +1,14 @@
 import Foundation
 
-// MARK: - Welcome
-struct AbilityData: Codable {
-    let effectChanges: [EffectChange]
-    let effectEntries: [WelcomeEffectEntry]
-    let flavorTextEntries: [AbilityFlavorTextEntry]
-    let generation: Generation
-    let id: Int
-    let isMainSeries: Bool
-    let name: String
-    let names: [AbilityName]
-    let pokemon: [AbilityPokemon]
-
-    enum CodingKeys: String, CodingKey {
-        case effectChanges = "effect_changes"
-        case effectEntries = "effect_entries"
-        case flavorTextEntries = "flavor_text_entries"
-        case generation, id
-        case isMainSeries = "is_main_series"
-        case name, names, pokemon
-    }
-}
-
-// MARK: - EffectChange
-struct EffectChange: Codable {
-    let effectEntries: [EffectChangeEffectEntry]
-    let versionGroup: Generation
-
-    enum CodingKeys: String, CodingKey {
-        case effectEntries = "effect_entries"
-        case versionGroup = "version_group"
-    }
-}
-
-// MARK: - EffectChangeEffectEntry
-struct EffectChangeEffectEntry: Codable {
-    let effect: String
-    let language: Generation
-}
-
-// MARK: - Generation
-struct Generation: Codable {
-    let name: String
-    let url: String
-}
-
-// MARK: - WelcomeEffectEntry
-struct WelcomeEffectEntry: Codable {
-    let effect: String
-    let language: Generation
-    let shortEffect: String
-
-    enum CodingKeys: String, CodingKey {
-        case effect, language
-        case shortEffect = "short_effect"
-    }
-}
-
-// MARK: - FlavorTextEntry
-struct AbilityFlavorTextEntry: Codable {
-    let flavorText: String
-    let language, versionGroup: Generation
-
-    enum CodingKeys: String, CodingKey {
-        case flavorText = "flavor_text"
-        case language
-        case versionGroup = "version_group"
-    }
-}
-
-// MARK: - Name
-struct AbilityName: Codable {
-    let language: Generation
-    let name: String
-}
-
 // MARK: - Pokemon
-struct AbilityPokemon: Codable {
-    let isHidden: Bool
-    let pokemon: Generation
-    let slot: Int
-
-    enum CodingKeys: String, CodingKey {
-        case isHidden = "is_hidden"
-        case pokemon, slot
-    }
-}
-
-// MARK: - Welcome
-struct PokemonEvolutionChain: Codable {
-    let babyTriggerItem: JSONNull?
-    let chain: Chain
-    let id: Int
-
-    enum CodingKeys: String, CodingKey {
-        case babyTriggerItem = "baby_trigger_item"
-        case chain, id
-    }
-}
-
-// MARK: - Chain
-struct Chain: Codable {
-    let evolutionDetails: [EvolutionDetail]
-    let evolvesTo: [Chain]
-    let isBaby: Bool
-    let species: Species
-
-    enum CodingKeys: String, CodingKey {
-        case evolutionDetails = "evolution_details"
-        case evolvesTo = "evolves_to"
-        case isBaby = "is_baby"
-        case species
-    }
-}
-
-// MARK: - EvolutionDetail
-struct EvolutionDetail: Codable {
-    let gender, heldItem: JSONNull?
-    let item: Species?
-    let knownMove, knownMoveType, location, minAffection: JSONNull?
-    let minBeauty: JSONNull?
-    let minHappiness: Int?
-    let minLevel: JSONNull?
-    let needsOverworldRain: Bool
-    let partySpecies, partyType, relativePhysicalStats: JSONNull?
-    let timeOfDay: String
-    let tradeSpecies: JSONNull?
-    let trigger: Species
-    let turnUpsideDown: Bool
-
-    enum CodingKeys: String, CodingKey {
-        case gender
-        case heldItem = "held_item"
-        case item
-        case knownMove = "known_move"
-        case knownMoveType = "known_move_type"
-        case location
-        case minAffection = "min_affection"
-        case minBeauty = "min_beauty"
-        case minHappiness = "min_happiness"
-        case minLevel = "min_level"
-        case needsOverworldRain = "needs_overworld_rain"
-        case partySpecies = "party_species"
-        case partyType = "party_type"
-        case relativePhysicalStats = "relative_physical_stats"
-        case timeOfDay = "time_of_day"
-        case tradeSpecies = "trade_species"
-        case trigger
-        case turnUpsideDown = "turn_upside_down"
-    }
-}
-
-
-// MARK: - Welcome
-struct PokemonSpecies: Codable {
-    let baseHappiness, captureRate: Int
-    let color: PokemonColor
-    let eggGroups: [PokemonColor]
-    let evolutionChain: EvolutionChain
-    let evolvesFromSpecies: PokemonColor
-    let flavorTextEntries: [FlavorTextEntry]
-    let formDescriptions: [JSONAny]
-    let formsSwitchable: Bool
-    let genderRate: Int
-    let genera: [Genus]
-    let generation, growthRate, habitat: PokemonColor
-    let hasGenderDifferences: Bool
-    let hatchCounter, id: Int
-    let isBaby, isLegendary, isMythical: Bool
-    let name: String
-    let names: [Name]
-    let order: Int
-    let palParkEncounters: [PalParkEncounter]
-    let pokedexNumbers: [PokedexNumber]
-    let shape: PokemonColor
-    let varieties: [Variety]
-
-    enum CodingKeys: String, CodingKey {
-        case baseHappiness = "base_happiness"
-        case captureRate = "capture_rate"
-        case color
-        case eggGroups = "egg_groups"
-        case evolutionChain = "evolution_chain"
-        case evolvesFromSpecies = "evolves_from_species"
-        case flavorTextEntries = "flavor_text_entries"
-        case formDescriptions = "form_descriptions"
-        case formsSwitchable = "forms_switchable"
-        case genderRate = "gender_rate"
-        case genera, generation
-        case growthRate = "growth_rate"
-        case habitat
-        case hasGenderDifferences = "has_gender_differences"
-        case hatchCounter = "hatch_counter"
-        case id
-        case isBaby = "is_baby"
-        case isLegendary = "is_legendary"
-        case isMythical = "is_mythical"
-        case name, names, order
-        case palParkEncounters = "pal_park_encounters"
-        case pokedexNumbers = "pokedex_numbers"
-        case shape, varieties
-    }
-}
-
-// MARK: - Color
-struct PokemonColor: Codable {
-    let name: String
-    let url: String
-}
-
-// MARK: - EvolutionChain
-struct EvolutionChain: Codable {
-    let url: String
-}
-
-// MARK: - FlavorTextEntry
-struct FlavorTextEntry: Codable {
-    let flavorText: String
-    let language, version: PokemonColor
-
-    enum CodingKeys: String, CodingKey {
-        case flavorText = "flavor_text"
-        case language, version
-    }
-}
-
-// MARK: - Genus
-struct Genus: Codable {
-    let genus: String
-    let language: PokemonColor
-}
-
-// MARK: - Name
-struct Name: Codable {
-    let language: PokemonColor
-    let name: String
-}
-
-// MARK: - PalParkEncounter
-struct PalParkEncounter: Codable {
-    let area: PokemonColor
-    let baseScore, rate: Int
-
-    enum CodingKeys: String, CodingKey {
-        case area
-        case baseScore = "base_score"
-        case rate
-    }
-}
-
-// MARK: - PokedexNumber
-struct PokedexNumber: Codable {
-    let entryNumber: Int
-    let pokedex: PokemonColor
-
-    enum CodingKeys: String, CodingKey {
-        case entryNumber = "entry_number"
-        case pokedex
-    }
-}
-
-// MARK: - Variety
-struct Variety: Codable {
-    let isDefault: Bool
-    let pokemon: PokemonColor
-
-    enum CodingKeys: String, CodingKey {
-        case isDefault = "is_default"
-        case pokemon
-    }
-}
-
-struct Pokemon: Identifiable, Codable {
+struct Pokemon: Codable  {
     let abilities: [Ability]
     let baseExperience: Int
     let cries: Cries
     let forms: [Species]
     let gameIndices: [GameIndex]
     let height: Int
-    let heldItems: [HeldItem]
+    let heldItems: [HeldItem?] // Changed to JSONAny to match the provided code
     let id: Int
     let isDefault: Bool
     let locationAreaEncounters: String
@@ -330,7 +60,7 @@ struct Species: Codable {
 
 // MARK: - Cries
 struct Cries: Codable {
-    let latest, legacy: String
+    let latest, legacy: String?
 }
 
 // MARK: - GameIndex
@@ -429,18 +159,19 @@ struct Versions: Codable {
 
 // MARK: - Other
 struct Other: Codable {
-    let dreamWorld: DreamWorld?
-    let home: Home?
-    let officialArtwork: OfficialArtwork?
-    
+      let dreamWorld: DreamWorld?
+      let home: Home?
+      let officialArtwork: OfficialArtwork?
+      let showdown: Sprites?
 
     enum CodingKeys: String, CodingKey {
         case dreamWorld = "dream_world"
         case home
         case officialArtwork = "official-artwork"
-        
+        case showdown
     }
 }
+
 
 // MARK: - Sprites
 class Sprites: Codable {
@@ -508,8 +239,12 @@ struct GenerationI: Codable {
 
 // MARK: - RedBlue
 struct RedBlue: Codable {
-    let backDefault, backGray, backTransparent, frontDefault: String?
-    let frontGray, frontTransparent: String?
+      let backDefault: String?
+      let backGray: String?
+      let backTransparent: String?
+      let frontDefault: String?
+      let frontGray: String?
+      let frontTransparent: String?
 
     enum CodingKeys: String, CodingKey {
         case backDefault = "back_default"
@@ -529,8 +264,14 @@ struct GenerationIi: Codable {
 
 // MARK: - Crystal
 struct Crystal: Codable {
-    let backDefault, backShiny, backShinyTransparent, backTransparent: String
-    let frontDefault, frontShiny, frontShinyTransparent, frontTransparent: String
+    let backDefault: String?
+    let backShiny: String?
+    let backShinyTransparent: String?
+    let backTransparent: String?
+    let frontDefault: String?
+    let frontShiny: String?
+    let frontShinyTransparent: String?
+    let frontTransparent: String?
 
     enum CodingKeys: String, CodingKey {
         case backDefault = "back_default"
@@ -546,8 +287,11 @@ struct Crystal: Codable {
 
 // MARK: - Gold
 struct Gold: Codable {
-    let backDefault, backShiny, frontDefault, frontShiny: String
-    let frontTransparent: String?
+    let backDefault: String?
+    let backShiny: String?
+    let frontDefault: String?
+    let frontShiny: String?
+     let frontTransparent: String? //Changed to String?
 
     enum CodingKeys: String, CodingKey {
         case backDefault = "back_default"
@@ -572,8 +316,8 @@ struct GenerationIii: Codable {
 
 // MARK: - OfficialArtwork
 struct OfficialArtwork: Codable {
-    let frontDefault, frontShiny: String
-
+     let frontDefault: String?
+    let frontShiny: String? //added optional
     enum CodingKeys: String, CodingKey {
         case frontDefault = "front_default"
         case frontShiny = "front_shiny"
@@ -582,7 +326,10 @@ struct OfficialArtwork: Codable {
 
 // MARK: - Home
 struct Home: Codable {
-    let frontDefault, frontFemale, frontShiny, frontShinyFemale: String?
+    let frontDefault: String?
+    let frontFemale: String?
+    let frontShiny: String?
+    let frontShinyFemale: String?
 
     enum CodingKeys: String, CodingKey {
         case frontDefault = "front_default"
@@ -605,7 +352,7 @@ struct GenerationVii: Codable {
 
 // MARK: - DreamWorld
 struct DreamWorld: Codable {
-    let frontDefault: String
+    let frontDefault: String?
     let frontFemale: String?
 
     enum CodingKeys: String, CodingKey {
@@ -875,5 +622,276 @@ class JSONAny: Codable {
                     var container = encoder.singleValueContainer()
                     try JSONAny.encode(to: &container, value: self.value)
             }
+    }
+}
+
+// MARK: - AbilityData
+struct AbilityData: Codable {
+    let effectChanges: [EffectChange]
+    let effectEntries: [WelcomeEffectEntry]
+    let flavorTextEntries: [AbilityFlavorTextEntry]
+    let generation: Generation
+    let id: Int
+    let isMainSeries: Bool
+    let name: String
+    let names: [AbilityName]
+    let pokemon: [AbilityPokemon]
+
+    enum CodingKeys: String, CodingKey {
+        case effectChanges = "effect_changes"
+        case effectEntries = "effect_entries"
+        case flavorTextEntries = "flavor_text_entries"
+        case generation, id
+        case isMainSeries = "is_main_series"
+        case name, names, pokemon
+    }
+}
+
+// MARK: - EffectChange
+struct EffectChange: Codable {
+    let effectEntries: [EffectChangeEffectEntry]
+    let versionGroup: Generation
+
+    enum CodingKeys: String, CodingKey {
+        case effectEntries = "effect_entries"
+        case versionGroup = "version_group"
+    }
+}
+
+// MARK: - EffectChangeEffectEntry
+struct EffectChangeEffectEntry: Codable {
+    let effect: String
+    let language: Generation
+}
+
+// MARK: - Generation
+struct Generation: Codable {
+    let name: String
+    let url: String
+}
+
+// MARK: - WelcomeEffectEntry
+struct WelcomeEffectEntry: Codable {
+    let effect: String
+    let language: Generation
+    let shortEffect: String
+
+    enum CodingKeys: String, CodingKey {
+        case effect, language
+        case shortEffect = "short_effect"
+    }
+}
+
+// MARK: - FlavorTextEntry
+struct AbilityFlavorTextEntry: Codable {
+    let flavorText: String
+    let language, versionGroup: Generation
+
+    enum CodingKeys: String, CodingKey {
+        case flavorText = "flavor_text"
+        case language
+        case versionGroup = "version_group"
+    }
+}
+
+// MARK: - Name
+struct AbilityName: Codable {
+    let language: Generation
+    let name: String
+}
+
+// MARK: - Pokemon
+struct AbilityPokemon: Codable {
+    let isHidden: Bool
+    let pokemon: Generation
+    let slot: Int
+
+    enum CodingKeys: String, CodingKey {
+        case isHidden = "is_hidden"
+        case pokemon, slot
+    }
+}
+
+// MARK: - Welcome
+struct PokemonEvolutionChain: Codable {
+    let babyTriggerItem: JSONNull?
+    let chain: Chain
+    let id: Int
+
+    enum CodingKeys: String, CodingKey {
+        case babyTriggerItem = "baby_trigger_item"
+        case chain, id
+    }
+}
+
+// MARK: - Chain
+struct Chain: Codable {
+    let evolutionDetails: [EvolutionDetail]
+    let evolvesTo: [Chain]
+    let isBaby: Bool
+    let species: Species
+
+    enum CodingKeys: String, CodingKey {
+        case evolutionDetails = "evolution_details"
+        case evolvesTo = "evolves_to"
+        case isBaby = "is_baby"
+        case species
+    }
+}
+
+// MARK: - EvolutionDetail
+struct EvolutionDetail: Codable {
+    let gender, heldItem: JSONNull?
+    let item: Species?
+    let knownMove, knownMoveType, location, minAffection: JSONNull?
+    let minBeauty: JSONNull?
+    let minHappiness: Int?
+    let minLevel: JSONNull?
+    let needsOverworldRain: Bool
+    let partySpecies, partyType, relativePhysicalStats: JSONNull?
+    let timeOfDay: String
+    let tradeSpecies: JSONNull?
+    let trigger: Species
+    let turnUpsideDown: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case gender
+        case heldItem = "held_item"
+        case item
+        case knownMove = "known_move"
+        case knownMoveType = "known_move_type"
+        case location
+        case minAffection = "min_affection"
+        case minBeauty = "min_beauty"
+        case minHappiness = "min_happiness"
+        case minLevel = "min_level"
+        case needsOverworldRain = "needs_overworld_rain"
+        case partySpecies = "party_species"
+        case partyType = "party_type"
+        case relativePhysicalStats = "relative_physical_stats"
+        case timeOfDay = "time_of_day"
+        case tradeSpecies = "trade_species"
+        case trigger
+        case turnUpsideDown = "turn_upside_down"
+    }
+}
+
+
+// MARK: - Welcome
+struct PokemonSpecies: Codable {
+    let baseHappiness, captureRate: Int
+    let color: PokemonColor
+    let eggGroups: [PokemonColor]
+    let evolutionChain: EvolutionChain
+    let evolvesFromSpecies: PokemonColor
+    let flavorTextEntries: [FlavorTextEntry]
+    let formDescriptions: [JSONAny]
+    let formsSwitchable: Bool
+    let genderRate: Int
+    let genera: [Genus]
+    let generation, growthRate, habitat: PokemonColor
+    let hasGenderDifferences: Bool
+    let hatchCounter, id: Int
+    let isBaby, isLegendary, isMythical: Bool
+    let name: String
+    let names: [Name]
+    let order: Int
+    let palParkEncounters: [PalParkEncounter]
+    let pokedexNumbers: [PokedexNumber]
+    let shape: PokemonColor
+    let varieties: [Variety]
+
+    enum CodingKeys: String, CodingKey {
+        case baseHappiness = "base_happiness"
+        case captureRate = "capture_rate"
+        case color
+        case eggGroups = "egg_groups"
+        case evolutionChain = "evolution_chain"
+        case evolvesFromSpecies = "evolves_from_species"
+        case flavorTextEntries = "flavor_text_entries"
+        case formDescriptions = "form_descriptions"
+        case formsSwitchable = "forms_switchable"
+        case genderRate = "gender_rate"
+        case genera, generation
+        case growthRate = "growth_rate"
+        case habitat
+        case hasGenderDifferences = "has_gender_differences"
+        case hatchCounter = "hatch_counter"
+        case id
+        case isBaby = "is_baby"
+        case isLegendary = "is_legendary"
+        case isMythical = "is_mythical"
+        case name, names, order
+        case palParkEncounters = "pal_park_encounters"
+        case pokedexNumbers = "pokedex_numbers"
+        case shape, varieties
+    }
+}
+
+// MARK: - Color
+struct PokemonColor: Codable {
+    let name: String
+    let url: String
+}
+
+// MARK: - EvolutionChain
+struct EvolutionChain: Codable {
+    let url: String
+}
+
+// MARK: - FlavorTextEntry
+struct FlavorTextEntry: Codable {
+    let flavorText: String
+    let language, version: PokemonColor
+
+    enum CodingKeys: String, CodingKey {
+        case flavorText = "flavor_text"
+        case language, version
+    }
+}
+
+// MARK: - Genus
+struct Genus: Codable {
+    let genus: String
+    let language: PokemonColor
+}
+
+// MARK: - Name
+struct Name: Codable {
+    let language: PokemonColor
+    let name: String
+}
+
+// MARK: - PalParkEncounter
+struct PalParkEncounter: Codable {
+    let area: PokemonColor
+    let baseScore, rate: Int
+
+    enum CodingKeys: String, CodingKey {
+        case area
+        case baseScore = "base_score"
+        case rate
+    }
+}
+
+// MARK: - PokedexNumber
+struct PokedexNumber: Codable {
+    let entryNumber: Int
+    let pokedex: PokemonColor
+
+    enum CodingKeys: String, CodingKey {
+        case entryNumber = "entry_number"
+        case pokedex
+    }
+}
+
+// MARK: - Variety
+struct Variety: Codable {
+    let isDefault: Bool
+    let pokemon: PokemonColor
+
+    enum CodingKeys: String, CodingKey {
+        case isDefault = "is_default"
+        case pokemon
     }
 }

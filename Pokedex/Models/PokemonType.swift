@@ -148,8 +148,7 @@ struct PokemonType: Codable, Identifiable {
             pastAbilities: [],
             pastTypes: [],
             species: Species(name: "bulbasaur", url: ""),
-            sprites: Sprites(backDefault: "", backFemale: "", backShiny: "", backShinyFemale: "", frontDefault: "", frontFemale: "", frontShiny: "", frontShinyFemale: "", other: Other(dreamWorld: DreamWorld(frontDefault: "", frontFemale: ""), home: Home(frontDefault: "", frontFemale: "", frontShiny: "", frontShinyFemale: ""), officialArtwork: OfficialArtwork(frontDefault: "https://external-preview.redd.it/yEq2rNEa_uklQU2AGaI7hh-wtO0otiS2h04orK0wE7k.png?format=pjpg&auto=webp&s=5c39e0c3965d0a2b7d5b09b1ae6206b9920f337a", frontShiny: ""))
-                            ),
+            sprites: Sprites(backDefault: nil, backFemale: nil, backShiny: nil, backShinyFemale: nil, frontDefault: nil, frontFemale: nil, frontShiny: nil, frontShinyFemale: nil, other: Other(dreamWorld: DreamWorld(frontDefault: nil, frontFemale: nil), home: Home(frontDefault: nil, frontFemale: nil, frontShiny: nil, frontShinyFemale: nil), officialArtwork: OfficialArtwork(frontDefault: "https://external-preview.redd.it/yEq2rNEa_uklQU2AGaI7hh-wtO0otiS2h04orK0wE7k.png?format=pjpg&auto=webp&s=5c39e0c3965d0a2b7d5b09b1ae6206b9920f337a", frontShiny: nil), showdown: Sprites(backDefault: nil, backFemale: nil, backShiny: nil, backShinyFemale: nil, frontDefault: nil, frontFemale: nil, frontShiny: nil, frontShinyFemale: nil))),
             stats: [
                 Stat(baseStat: 45, effort: 0, stat: Species(name: "hp", url: "")),
                 Stat(baseStat: 49, effort: 0, stat: Species(name: "attack", url: "")),

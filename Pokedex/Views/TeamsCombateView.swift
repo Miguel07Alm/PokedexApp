@@ -29,10 +29,10 @@ struct TeamsCombateView: View {
                 }
             }
             .background(
-                NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 1, selectedTab: 3), isActive: $navigateToTeam1) { EmptyView() }
+                NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 1, selectedTab: 3, irA: ""), isActive: $navigateToTeam1) { EmptyView() }
             )
             .background(
-                NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 2, selectedTab: 3), isActive: $navigateToTeam2) { EmptyView() }
+                NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 2, selectedTab: 3, irA: ""), isActive: $navigateToTeam2) { EmptyView() }
             )
         }
         .navigationViewStyle(StackNavigationViewStyle())
