@@ -6,16 +6,31 @@ struct MainView: View {
     @State var showFilterView: Bool
     @State var teamId: Int
     @State var selectedTab: Int
+    @State var irA : String
     
     var body: some View {
         VStack(spacing: -100) {
-            PokedexView(
+            switch selectedTab {
+            case 0: // Registro o iniciar Sesion
+                LoginView()
+            case 1: //Todo
+                PokedexView(
+                    showSortFilterView: showSortFilterView,
+                    showFilterView: showFilterView,
+                    teamId: 0
+                    )
+            case 2: //Combate
+                CombateView()
+            case 3: //Seleccion COmbate Pokemons
+                PokedexView(
                 showSortFilterView: showSortFilterView,
                 showFilterView: showFilterView,
                 teamId: teamId
-            )
-            FooterView(selectedTab: selectedTab)
-        }.ignoresSafeArea().navigationBarBackButtonHidden()
+                )
+            default:
+                Text("la cague")
+            }
+            FooterView(selectedTab: selectedTab)        }.ignoresSafeArea().navigationBarBackButtonHidden()
     }
 }
 
@@ -23,7 +38,8 @@ struct MainView: View {
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
     @State var teamId: Int = 1
-    @State var selectedTab : Int = 3
+    @State var selectedTab : Int = 2
+    @State var irA : String = "esta"
     
-    MainView(showSortFilterView: showSortFilterView, showFilterView: showFilterView, teamId: teamId, selectedTab: selectedTab)
+    MainView(showSortFilterView: showSortFilterView, showFilterView: showFilterView, teamId: teamId, selectedTab: selectedTab, irA: irA)
 }

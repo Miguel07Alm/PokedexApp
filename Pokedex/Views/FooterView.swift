@@ -17,7 +17,7 @@ import SwiftUI
                     switch selectedTab {
                     case 0: // Registro
                         HStack {
-                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 0, selectedTab: 1)) {
+                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 0, selectedTab: 1, irA: "")) {
                                 Text("")
                             }
                             .buttonStyle(BotonRegistroGrande())
@@ -50,7 +50,7 @@ import SwiftUI
                             }
                             .buttonStyle(BotonPerfilGrande())
 
-                            NavigationLink(destination: TeamsCombateView()) {
+                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 0, selectedTab: 1, irA:"teamsCombate")) {
                                 Text("")
                             }
                             .buttonStyle(BotonCombate())

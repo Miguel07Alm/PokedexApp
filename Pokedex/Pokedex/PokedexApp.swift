@@ -16,7 +16,7 @@ struct PokedexApp: App {
 
     var body: some Scene {
         WindowGroup {
-            InitialView()
+            LoginView()
             .environmentObject(ViewModel())
         }
     }
