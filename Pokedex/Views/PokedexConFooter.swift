@@ -20,9 +20,9 @@ struct PokedexConFooter: View {
                 showSortFilterView: showSortFilterView,
                 showFilterView: showFilterView,
                 teamId: teamId
-            ).id(refreshManager.refreshFlag)
+            )
             FooterView(selectedTab: selectedTab)
-        }.ignoresSafeArea()
+        }.ignoresSafeArea().navigationBarBackButtonHidden()
     }
 }
 

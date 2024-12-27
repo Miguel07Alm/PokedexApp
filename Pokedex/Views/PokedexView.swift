@@ -12,6 +12,7 @@ struct PokedexView: View {
     @State var showFilterView: Bool
     @State var teamId: Int
     @StateObject private var pokemonTeam = PokemonTeam.shared
+    @StateObject private var refreshManager = RefreshManager.shared
 
     var body: some View {
         VStack(spacing: -50) {
@@ -19,8 +20,7 @@ struct PokedexView: View {
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView)
             if(teamId != 0){
-                SeleccionarEquipoView(teamId: teamId)
-            }
+                SeleccionarEquipoView(teamId: teamId).id(refreshManager.refreshFlag)            }
             ListaPokedexView(
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView,

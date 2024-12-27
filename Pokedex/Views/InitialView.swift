@@ -42,13 +42,13 @@ struct InitialView: View {
                             .cornerRadius(10)
                     }
                     .padding(.top, 50)
+                    
                 }
             }
             .onAppear {
                 rotationAngle = 360
                 verticalOffset = 300
             }
-            .navigationTitle("Pokédex")
             .navigationBarHidden(true)
         }
     }

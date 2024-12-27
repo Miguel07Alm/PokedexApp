@@ -4,7 +4,7 @@ struct TeamsCombateView: View {
     @StateObject private var pokemonTeam = PokemonTeam.shared
     @State private var navigateToTeam1 = false
     @State private var navigateToTeam2 = false
-
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 30) {
@@ -17,7 +17,7 @@ struct TeamsCombateView: View {
             .background(
                 NavigationLink(destination: PokedexConFooter(showSortFilterView: false, showFilterView: false, teamId: 2, selectedTab: 3), isActive: $navigateToTeam2) { EmptyView() }
             )
-        }
+        }.navigationBarBackButtonHidden()
     }
     
     private func teamView(teamId: Int) -> some View {
