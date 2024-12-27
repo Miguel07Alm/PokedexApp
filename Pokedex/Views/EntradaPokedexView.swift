@@ -13,7 +13,6 @@ struct EntradaPokedexView: View {
     @State private var backgroundColor: [String]
     
     // Estado para manejar la navegación
-    @State private var navigateToPokedex: Bool = false
     @State private var navigateToDetail: Bool = false
     
     init(pokemon: Pokemon, teamId: Int) {
@@ -35,7 +34,7 @@ struct EntradaPokedexView: View {
             CombinedShape(name: $name, num: $number, backgroundColor: $backgroundColor).opacity(0.9)
             
             NavigationLink(
-                destination: PokemonDetailView(),
+                destination:MainView(irA: "Detalle"),
                 isActive: $navigateToDetail
             ) {
                 EmptyView()
@@ -47,7 +46,6 @@ struct EntradaPokedexView: View {
                 print("no pigamo: " + name)
                 pokemonTeam.addPokemon(pokemon, to: name)
                 refreshManager.forceRefresh() // Forzamos la actualización
-                navigateToPokedex = true
             } else {
                 navigateToDetail = true
             }

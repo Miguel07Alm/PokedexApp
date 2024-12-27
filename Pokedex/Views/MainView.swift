@@ -2,13 +2,13 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject private var refreshManager = RefreshManager.shared
-    @State var showSortFilterView: Bool? = false
-    @State var showFilterView: Bool? = false
-    @State var teamId: Int? = 0
+    @State var showSortFilterView: Bool
+    @State var showFilterView: Bool
+    @State var teamId: Int
     @State var irA: String
     @State var selectedTab: Int
     
-    init(showSortFilterView: Bool?, showFilterView: Bool?, teamId: Int?, irA: String) {
+    init(showSortFilterView: Bool = false, showFilterView: Bool = false, teamId: Int = 0, irA: String) {
         self.showSortFilterView = showSortFilterView
         self.showFilterView = showFilterView
         self.teamId = teamId
@@ -25,8 +25,8 @@ struct MainView: View {
                 RegisterView()
             case "Pokedex":
                 PokedexView(
-                    showSortFilterView: showSortFilterView ?? false,
-                    showFilterView: showFilterView ?? false,
+                    showSortFilterView: showSortFilterView,
+                    showFilterView: showFilterView,
                     teamId: 0
                 )
             case "Detalle":
@@ -39,9 +39,9 @@ struct MainView: View {
                 CombateView()
             case "SeleccionarEquipo":
                 PokedexView(
-                    showSortFilterView: showSortFilterView ?? false,
-                    showFilterView: showFilterView ?? false,
-                    teamId: teamId ?? 0
+                    showSortFilterView: showSortFilterView,
+                    showFilterView: showFilterView,
+                    teamId: teamId
                 )
             default:
                 Text("la cague")
