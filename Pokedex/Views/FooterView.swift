@@ -17,7 +17,7 @@ import SwiftUI
                     switch selectedTab {
                     case 0: // Registro
                         HStack {
-                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 0, irA: "Pokedex")) {
+                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false,teamId: 0, irA: "Pokedex")) {
                                 Text("")
                             }
                             .buttonStyle(BotonRegistroGrande())
