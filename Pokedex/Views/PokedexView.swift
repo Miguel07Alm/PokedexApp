@@ -12,6 +12,7 @@ struct PokedexView: View {
     @State var showFilterView: Bool
     @State var teamId: Int
     @StateObject private var pokemonTeam = PokemonTeam.shared
+
     var body: some View {
         VStack(spacing: -50) {
             HeaderView(
@@ -19,7 +20,6 @@ struct PokedexView: View {
                 showFilterView: $showFilterView)
             if(teamId != 0){
                 SeleccionarEquipoView(teamId: teamId)
-                
             }
             ListaPokedexView(
                 showSortFilterView: $showSortFilterView,
@@ -28,6 +28,7 @@ struct PokedexView: View {
             ).cornerRadius(48)
         }.ignoresSafeArea()
     }
+
 }
 
 struct PokedexView_Previews: PreviewProvider {

@@ -56,12 +56,12 @@ struct ListaPokedexView: View {
     }
     
     private func loadInitialPokemon() {
-        loadPokemon(startId: 1, count: 100)
+        loadPokemon(startId: 1, count: 10)
     }
     
     private func loadMorePokemon() {
         let nextStartId = pokemones.count + 1
-        loadPokemon(startId: nextStartId, count: 100)
+        loadPokemon(startId: nextStartId, count: 10)
     }
     
     private func loadPokemon(startId: Int, count: Int) {
