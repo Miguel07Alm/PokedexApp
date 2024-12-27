@@ -13,12 +13,14 @@ struct PokedexView: View {
     @State var teamId: Int
     @StateObject private var pokemonTeam = PokemonTeam.shared
     @StateObject private var refreshManager = RefreshManager.shared
+    @StateObject var filterState = PokemonFilterState()
 
     var body: some View {
         VStack(spacing: -50) {
             HeaderView(
                 showSortFilterView: $showSortFilterView,
-                showFilterView: $showFilterView)
+                showFilterView: $showFilterView,
+                filterState: filterState)
             if(teamId != 0){
                 SeleccionarEquipoView(teamId: teamId).id(refreshManager.refreshFlag)            }
             ListaPokedexView(
