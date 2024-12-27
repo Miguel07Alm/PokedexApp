@@ -17,7 +17,7 @@ import SwiftUI
                     switch selectedTab {
                     case 0: // Registro
                         HStack {
-                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 0, selectedTab: 1, irA: "")) {
+                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 0, irA: "Pokedex")) {
                                 Text("")
                             }
                             .buttonStyle(BotonRegistroGrande())
@@ -27,12 +27,12 @@ import SwiftUI
                     case 1: // Average
                         #if !v2
                         HStack(spacing: 120) {
-                            NavigationLink(destination: TeamsCombateView()) {
+                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 0, irA: "Pokedex")) {
                                 Text("")
                             }
                             .buttonStyle(BotonPokedex())
 
-                            NavigationLink(destination: TeamsCombateView()) {
+                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 0, irA: "Perfil")) {
                                 Text("")
                             }
                             .buttonStyle(BotonPerfil())
@@ -40,17 +40,17 @@ import SwiftUI
                         .offset(CGSize(width: 0, height: 35))
                         #else
                         HStack(spacing: 83) {
-                            NavigationLink(destination: TeamsCombateView()) {
+                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 0, irA: "Pokedex")) {
                                 Text("")
                             }
                             .buttonStyle(BotonPokedex())
 
-                            NavigationLink(destination: TeamsCombateView()) {
+                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 0, irA: "Perfil")) {
                                 Text("")
                             }
                             .buttonStyle(BotonPerfilGrande())
 
-                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 0, selectedTab: 1, irA:"teamsCombate")) {
+                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 0, irA: "TeamsCombate")) {
                                 Text("")
                             }
                             .buttonStyle(BotonCombate())
@@ -71,7 +71,7 @@ import SwiftUI
                         
                     case 3: // Confirmar selecion pokemon
                         HStack {
-                            NavigationLink(destination: TeamsCombateView()) {
+                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 0, irA: "TeamsCombate")) {
                                 Text("")
                             }
                             .buttonStyle(BotonConfirmarGrande())
