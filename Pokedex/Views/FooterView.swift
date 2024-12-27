@@ -5,8 +5,6 @@ import SwiftUI
 
         // Closures opcionales para manejar las acciones
         var onRegisterTapped: (() -> Void)?
-        var onPokedexTapped: (() -> Void)?
-        var onProfileTapped: (() -> Void)?
         var onCombateTapped: (() -> Void)?
 
         var body: some View {
@@ -19,10 +17,7 @@ import SwiftUI
                     switch selectedTab {
                     case 0: // Registro
                         HStack {
-                            Button(action: {
-                                // Llama al closure si no es nulo
-                                onRegisterTapped?()
-                            }) {
+                            NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 0, selectedTab: 1)) {
                                 Text("")
                             }
                             .buttonStyle(BotonRegistroGrande())
@@ -32,16 +27,12 @@ import SwiftUI
                     case 1: // Average
                         #if !v2
                         HStack(spacing: 120) {
-                            Button(action: {
-                                onPokedexTapped?()
-                            }) {
+                            NavigationLink(destination: TeamsCombateView()) {
                                 Text("")
                             }
                             .buttonStyle(BotonPokedex())
 
-                            Button(action: {
-                                onProfileTapped?()
-                            }) {
+                            NavigationLink(destination: TeamsCombateView()) {
                                 Text("")
                             }
                             .buttonStyle(BotonPerfil())
@@ -49,23 +40,17 @@ import SwiftUI
                         .offset(CGSize(width: 0, height: 35))
                         #else
                         HStack(spacing: 83) {
-                            Button(action: {
-                                onPokedexTapped?()
-                            }) {
+                            NavigationLink(destination: TeamsCombateView()) {
                                 Text("")
                             }
                             .buttonStyle(BotonPokedex())
 
-                            Button(action: {
-                                onProfileTapped?()
-                            }) {
+                            NavigationLink(destination: TeamsCombateView()) {
                                 Text("")
                             }
                             .buttonStyle(BotonPerfilGrande())
 
-                            Button(action: {
-                                onCombateTapped?()
-                            }) {
+                            NavigationLink(destination: TeamsCombateView()) {
                                 Text("")
                             }
                             .buttonStyle(BotonCombate())

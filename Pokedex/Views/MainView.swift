@@ -1,13 +1,6 @@
-//
-//  PokedexConFooter.swift
-//  Pokedex
-//
-//  Created by Aula03 on 23/12/24.
-//
-
 import SwiftUI
 
-struct PokedexConFooter: View {
+struct MainView: View {
     @StateObject private var refreshManager = RefreshManager.shared
     @State var showSortFilterView: Bool
     @State var showFilterView: Bool
@@ -32,5 +25,5 @@ struct PokedexConFooter: View {
     @State var teamId: Int = 1
     @State var selectedTab : Int = 3
     
-    PokedexConFooter(showSortFilterView: showSortFilterView, showFilterView: showFilterView, teamId: teamId, selectedTab: selectedTab)
+    MainView(showSortFilterView: showSortFilterView, showFilterView: showFilterView, teamId: teamId, selectedTab: selectedTab)
 }
