@@ -19,7 +19,16 @@ struct PokemonFilters {
     var sortOption: PokemonSortOption = .id
     var ascending: Bool = true
 }
-class PokemonFilterState: ObservableObject {
+class PokemonFilterState: ObservableObject, Equatable {
+    static func == (lhs: PokemonFilterState, rhs: PokemonFilterState) -> Bool {
+        return lhs.selectedSort == rhs.selectedSort &&
+               lhs.isAscending == rhs.isAscending &&
+               lhs.selectedTypes == rhs.selectedTypes &&
+               lhs.showFavorites == rhs.showFavorites &&
+               lhs.showLegendaries == rhs.showLegendaries &&
+               lhs.showSingulares == rhs.showSingulares
+    }
+    
     @Published var selectedSort: String = "n° pokedex"
     @Published var isAscending: Bool = true
     @Published var selectedTypes: Set<String> = []

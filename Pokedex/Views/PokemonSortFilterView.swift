@@ -51,43 +51,6 @@ struct PokemonSortFilterView: View {
     @Binding var pokemons: [Pokemon]
     @StateObject var filterState: PokemonFilterState
     
-    private func filterPokemon() -> [Pokemon] {
-        var filteredPokemon = pokemons
-        
-        let selectedTypes = filterChips.filter { $0.isSelected }.map { $0.title.lowercased() }
-        if !selectedTypes.isEmpty {
-            filteredPokemon = filteredPokemon.filter { pokemon in
-                pokemon.types.contains { typeElement in
-                    selectedTypes.contains(typeElement.type.name)
-                }
-            }
-        }
-        
-        return filteredPokemon
-    }
-    
-    private func sortPokemon(pokemon: [Pokemon]) -> [Pokemon] {
-        switch selectedSort {
-        case "alfabeticamente":
-            return pokemon.sorted { (p1, p2) in
-                isAscending ? p1.name < p2.name : p1.name > p2.name
-            }
-        case "n_pokedex":
-            return pokemon.sorted { (p1, p2) in
-                isAscending ? p1.id < p2.id : p1.id > p2.id
-            }
-        case "ataque", "ataque especial", "vida", "defensa", "defensa especial", "velocidad":
-            let statName = selectedSort.replacingOccurrences(of: " ", with: "_").lowercased()
-            return pokemon.sorted { (p1, p2) in
-                let stat1 = p1.stats.first(where: { $0.stat.name == statName })?.baseStat ?? 0
-                let stat2 = p2.stats.first(where: { $0.stat.name == statName })?.baseStat ?? 0
-                return isAscending ? stat1 < stat2 : stat1 > stat2
-            }
-        default:
-            return pokemon
-        }
-    }
-    
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -103,6 +66,7 @@ struct PokemonSortFilterView: View {
                                         filterState.selectedSort = option.title.lowercased()
                                         filterState.isAscending = true
                                     }
+                                    isSortFilterShow.toggle()
                                 }) {
                                     ZStack(alignment: .leading) {
                                         HStack(spacing: 12) {
@@ -200,13 +164,14 @@ struct PokemonSortFilterView: View {
                                                             }
                                                             filterState.selectedTypes.insert(type)
                                                         }
+                                                        isFilterShow.toggle()
                                                     }
                                                 }
                                             }
                                             .padding(.horizontal, 16)
                                             .padding(.vertical, 8)
                                         }
-                                        .offset(y: -150)
+                                        .offset(y: -50)
 
                                         GeometryReader { geometry in
                                             HStack {
@@ -233,7 +198,7 @@ struct PokemonSortFilterView: View {
                                             .padding(.horizontal, 16)
                                             .offset(x: 60)
                                         }
-                                        .offset(y: -150)
+                                        .offset(y: -50)
                                     }
                     }
                 }
