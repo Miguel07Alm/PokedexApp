@@ -1,4 +1,6 @@
+
 import SwiftUI
+import Combine
 
 struct ListaPokedexView: View {
     @StateObject private var pokemonTeam = PokemonTeam.shared
@@ -8,101 +10,165 @@ struct ListaPokedexView: View {
     @State var teamId: Int
     @State private var pokemones: [Pokemon] = []
     @State private var isLoading = false
+     @State private var isFetchingMore = false // Nuevo flag para evitar múltiples peticiones
     @State private var errorMessage: String?
-    @State private var currentPage = 1
     @State private var hasMorePokemon = true
-    @StateObject var filterState: PokemonFilterState;
-
-       
-    var filteredAndSortedPokemon: [Pokemon] {
-           pokemonViewModel.applyFiltersAndSort(pokemons: pokemones, filterState: filterState)
-       }
-       
-       
+    @StateObject var filterState: PokemonFilterState
+    @State private var filteredAndSortedPokemon: [Pokemon] = []
+    
+    // Add a cancellable for async tasks
+    @State private var cancellables = Set<AnyCancellable>()
+    
     var body: some View {
-           ZStack {
-               VStack(spacing: 0) {
-                   ScrollView {
-                       LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-                           ForEach(filteredAndSortedPokemon, id: \.id) { pokemon in
-                               EntradaPokedexView(pokemon: pokemon, teamId: teamId)
-                                   .onAppear {
-                                       if self.filteredAndSortedPokemon.last?.id == pokemon.id && hasMorePokemon {
-                                           loadMorePokemon()
-                                       }
-                                   }
-                           }
-                       }
-                       .padding()
-                   }
-                   .edgesIgnoringSafeArea(.bottom)
-                   .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
-               }
-               
-               if isLoading {
-                   ProgressView()
-               }
-               
-               if let errorMessage = errorMessage {
-                   Text(errorMessage)
-                       .foregroundColor(.red)
-                       .padding()
-               }
-
-               if showSortFilterView || showFilterView {
-                   PokemonSortFilterView(
-                       isPresented: true,
-                       isFilterShow: $showFilterView,
-                       isSortFilterShow: $showSortFilterView,
-                       pokemons: .constant(pokemones),
-                       filterState: filterState
-                   )
-                   .transition(.move(edge: .bottom))
-               }
-           }
-           .onAppear(perform: loadInitialPokemon)
-       }
+        ZStack {
+            VStack(spacing: 0) {
+                ScrollView {
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                        ForEach(filteredAndSortedPokemon, id: \.id) { pokemon in
+                            EntradaPokedexView(pokemon: pokemon, teamId: teamId)
+                                .onAppear {
+                                    if let lastPokemon = filteredAndSortedPokemon.last,
+                                       lastPokemon.id == pokemon.id && hasMorePokemon && !filteredAndSortedPokemon.isEmpty {
+                                        loadMorePokemon()
+                                    }
+                                }
+                        }
+                    }
+                    .padding()
+                }
+                .edgesIgnoringSafeArea(.bottom)
+                .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
+            }
+            
+            if isLoading {
+                ProgressView()
+            }
+            
+            if let errorMessage = errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .padding()
+            }
+            
+            if showSortFilterView || showFilterView {
+                PokemonSortFilterView(
+                    isPresented: true,
+                    isFilterShow: $showFilterView,
+                    isSortFilterShow: $showSortFilterView,
+                    pokemons: .constant(pokemones),
+                    filterState: filterState
+                )
+                .transition(.move(edge: .bottom))
+            }
+        }
+        .onAppear(perform: loadInitialPokemon)
+        .onChange(of: filterState.selectedSort) { _ in
+            applyFiltersAndSort()
+        }
+        .onChange(of: filterState.isAscending) { _ in
+            applyFiltersAndSort()
+        }
+        .onChange(of: filterState.selectedTypes) { _ in
+            applyFiltersAndSort()
+        }
+        .onChange(of: filterState.showFavorites) { _ in
+            applyFiltersAndSort()
+        }
+        .onChange(of: filterState.showLegendaries) { _ in
+            applyFiltersAndSort()
+        }
+        .onChange(of: filterState.showSingulares) { _ in
+            applyFiltersAndSort()
+        }
+        .onChange(of: pokemones) { _ in
+            applyFiltersAndSort()
+        }
+        
+    }
+    
+    private func applyFiltersAndSort() {
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+        
+        let filteredPokemons = pokemonViewModel.applyFiltersAndSort(pokemons: pokemones, filterState: filterState)
+        self.filteredAndSortedPokemon = filteredPokemons;
+        
+        if filteredPokemons.count < 10 {
+            loadMoreIfNeeded()
+        }
+    }
     
     private func loadInitialPokemon() {
         loadPokemon(startId: 1, count: 100)
     }
     
-    private func loadMorePokemon() {
-        let nextStartId = pokemones.count + 1
-        loadPokemon(startId: nextStartId, count: 100)
+    private func loadMoreIfNeeded(){
+        guard !isFetchingMore, hasMorePokemon, !pokemones.isEmpty else {
+             return
+        }
+        isFetchingMore = true // Marca que se está realizando la petición
+        loadMorePokemon()
+            .receive(on: DispatchQueue.main) // Aseguramos que se ejecuta en el hilo principal
+            .sink { completion in
+                isFetchingMore = false // Restablecer el flag
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print("Error loading more pokemons: \(error)")
+                    self.hasMorePokemon = false
+                    self.errorMessage = "Error cargando pokemons"
+                }
+            } receiveValue: { _ in
+                self.applyFiltersAndSort()
+            }
+            .store(in: &cancellables)
     }
     
-    private func loadPokemon(startId: Int, count: Int) {
-        guard !isLoading && hasMorePokemon else { return }
+    private func loadMorePokemon() -> Future<[Pokemon], Error> {
+        let nextStartId = pokemones.count + 1
+        return loadPokemon(startId: nextStartId, count: 100)
+    }
+    
+    private func loadPokemon(startId: Int, count: Int) -> Future<[Pokemon], Error> {
         
-        isLoading = true
-        errorMessage = nil
-        
-        let group = DispatchGroup()
-        var newPokemon: [Pokemon] = []
-        
-        for i in startId...(startId + count - 1) {
-            group.enter()
-            pokemonViewModel.fetchPokemonDetails(id: i) { result in
-                defer { group.leave() }
-                switch result {
-                case .success(let details):
-                    newPokemon.append(details)
-                case .failure(let error):
-                    print("Error al obtener detalles del Pokémon \(i): \(error)")
-                    if error.localizedDescription.contains("The operation couldn't be completed") {
-                        hasMorePokemon = false
+        return Future { promise in
+            guard !isLoading && hasMorePokemon else {
+                promise(.success([]))
+                return
+            }
+            
+            isLoading = true
+            errorMessage = nil
+            
+            let group = DispatchGroup()
+            var newPokemon: [Pokemon] = []
+            
+            for i in startId...(startId + count - 1) {
+                group.enter()
+                pokemonViewModel.fetchPokemonDetails(id: i) { result in
+                    defer { group.leave() }
+                    switch result {
+                    case .success(let details):
+                        newPokemon.append(details)
+                    case .failure(let error):
+                        print("Error al obtener detalles del Pokémon \(i): \(error)")
+                        if error.localizedDescription.contains("The operation couldn't be completed") {
+                            hasMorePokemon = false
+                        }
                     }
                 }
             }
-        }
-        
-        group.notify(queue: .main) {
-            self.pokemones.append(contentsOf: newPokemon)
-            self.isLoading = false
-            if newPokemon.isEmpty {
-                self.hasMorePokemon = false
-                self.errorMessage = "No hay más Pokémon para cargar"
+            
+            group.notify(queue: .main) {
+                
+                self.pokemones.append(contentsOf: newPokemon)
+                self.isLoading = false
+                if newPokemon.isEmpty {
+                    self.hasMorePokemon = false
+                    self.errorMessage = "No hay más Pokémon para cargar"
+                }
+                promise(.success(newPokemon))
             }
         }
     }
@@ -113,7 +179,6 @@ extension String {
         return prefix(1).uppercased() + dropFirst()
     }
 }
-
 
 
 #Preview {
@@ -127,5 +192,3 @@ extension String {
         filterState: filterState
     )
 }
-
-

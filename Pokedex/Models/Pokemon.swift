@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - Pokemon
-struct Pokemon: Codable  {
+struct Pokemon: Codable, Equatable  {
     let abilities: [Ability]
     let baseExperience: Int
     let cries: Cries
@@ -21,7 +21,14 @@ struct Pokemon: Codable  {
     let stats: [Stat]
     let types: [TypeElement]
     let weight: Int
+    
+    static func == (lhs: Pokemon, rhs: Pokemon) -> Bool {
+       return lhs.id == rhs.id
+    }
 
+      func hash(into hasher: inout Hasher) {
+       hasher.combine(id)
+    }
     enum CodingKeys: String, CodingKey {
         case abilities
         case baseExperience = "base_experience"
