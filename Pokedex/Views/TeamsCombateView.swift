@@ -4,6 +4,7 @@ struct TeamsCombateView: View {
     @StateObject private var pokemonTeam = PokemonTeam.shared
     @State private var navigateToTeam1 = false
     @State private var navigateToTeam2 = false
+    @State private var teamIsNil = false
     
     var body: some View {
         NavigationView {
@@ -19,12 +20,13 @@ struct TeamsCombateView: View {
                         
                         teamView(teamId: 2)
                     }
-                    
                     HStack {
-                        NavigationLink(destination: CombateView()) {
-                            Text("")
+                        if(!teamIsNil){
+                            NavigationLink(destination: MainView(irA: "Combate")) {
+                                Text("")
+                            }
+                            .buttonStyle(BotonConfirmarGrande())
                         }
-                        .buttonStyle(BotonConfirmarGrande())
                     }
                 }
             }
@@ -55,7 +57,9 @@ struct TeamsCombateView: View {
                        nil != team.pokemons[i] {
                         ImagenPokemonSeleccionado(img: team.pokemons[i]?.sprites.other?.officialArtwork?.frontDefault ?? "", isSelected: false)
                     } else {
-                        ImagenPokemonNoSeleccionado(isSelected: false)
+                        ImagenPokemonNoSeleccionado(isSelected: false).onAppear(){
+                            teamIsNil =  true
+                        }
                     }
                 }
             }
