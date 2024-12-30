@@ -124,7 +124,7 @@ struct CombateView: View {
                             x: CGFloat(i - 1) * 45 + (teamId == 1 ? 60 : -60),
                             y: CGFloat(i - 1) * 30 + (teamId == 1 ? 20 : -120)
                         )
-                        .zIndex(Double(3 - i))
+                        .zIndex(Double(i)) // Cambiado de `3 - i` a `i` para invertir el orden
                 }
             }
         }
