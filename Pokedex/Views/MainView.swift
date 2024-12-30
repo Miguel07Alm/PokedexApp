@@ -18,7 +18,7 @@ struct MainView: View {
         self.irA = irA
         self._selectedTab = State(initialValue: Self.getInitialTab(for: irA))
     }
-    
+    @State var pokemon : Pokemon = PokemonType.getAveraged()
     var body: some View {
         VStack(spacing: -100) {
             switch irA {
@@ -32,8 +32,7 @@ struct MainView: View {
                     showFilterView: showFilterView,
                     teamId: 0
                 )
-            case "Detalle":
-                PokemonDetailView()
+            
             case "TeamsCombate":
                 TeamsCombateView()
             case "Perfil":

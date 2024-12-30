@@ -722,7 +722,7 @@ struct AbilityPokemon: Codable {
 // MARK: - Welcome
 struct PokemonEvolutionChain: Codable {
     let babyTriggerItem: JSONNull?
-    let chain: Chain
+    let chain: Chain?
     let id: Int
 
     enum CodingKeys: String, CodingKey {
@@ -733,10 +733,10 @@ struct PokemonEvolutionChain: Codable {
 
 // MARK: - Chain
 struct Chain: Codable {
-    let evolutionDetails: [EvolutionDetail]
-    let evolvesTo: [Chain]
+    let evolutionDetails: [EvolutionDetail?]
+    let evolvesTo: [Chain?]
     let isBaby: Bool
-    let species: Species
+    let species: Species?
 
     enum CodingKeys: String, CodingKey {
         case evolutionDetails = "evolution_details"
@@ -754,12 +754,12 @@ struct EvolutionDetail: Codable {
     let minBeauty: JSONNull?
     let minHappiness: Int?
     let minLevel: JSONNull?
-    let needsOverworldRain: Bool
+    let needsOverworldRain: Bool?
     let partySpecies, partyType, relativePhysicalStats: JSONNull?
-    let timeOfDay: String
+    let timeOfDay: String?
     let tradeSpecies: JSONNull?
-    let trigger: Species
-    let turnUpsideDown: Bool
+    let trigger: Species?
+    let turnUpsideDown: Bool?
 
     enum CodingKeys: String, CodingKey {
         case gender
@@ -783,30 +783,35 @@ struct EvolutionDetail: Codable {
     }
 }
 
-
 // MARK: - Welcome
 struct PokemonSpecies: Codable {
-    let baseHappiness, captureRate: Int
-    let color: PokemonColor
-    let eggGroups: [PokemonColor]
-    let evolutionChain: EvolutionChain
-    let evolvesFromSpecies: PokemonColor
-    let flavorTextEntries: [FlavorTextEntry]
-    let formDescriptions: [JSONAny]
-    let formsSwitchable: Bool
-    let genderRate: Int
-    let genera: [Genus]
-    let generation, growthRate, habitat: PokemonColor
-    let hasGenderDifferences: Bool
-    let hatchCounter, id: Int
-    let isBaby, isLegendary, isMythical: Bool
-    let name: String
-    let names: [Name]
-    let order: Int
-    let palParkEncounters: [PalParkEncounter]
-    let pokedexNumbers: [PokedexNumber]
-    let shape: PokemonColor
-    let varieties: [Variety]
+    let baseHappiness: Int?
+    let captureRate: Int?
+    let color: PokemonColor?
+    let eggGroups: [PokemonColor]?
+    let evolutionChain: EvolutionChain?
+    let evolvesFromSpecies: PokemonColor?
+    let flavorTextEntries: [FlavorTextEntry]?
+    let formDescriptions: [String]?
+    let formsSwitchable: Bool?
+    let genderRate: Int?
+    let genera: [Genus]?
+    let generation: PokemonColor?
+    let growthRate: PokemonColor?
+    let habitat: PokemonColor?
+    let hasGenderDifferences: Bool?
+    let hatchCounter: Int?
+    let id: Int?
+    let isBaby: Bool?
+    let isLegendary: Bool?
+    let isMythical: Bool?
+    let name: String?
+    let names: [Name]?
+    let order: Int?
+    let palParkEncounters: [PalParkEncounter]?
+    let pokedexNumbers: [PokedexNumber]?
+    let shape: PokemonColor?
+    let varieties: [Variety]?
 
     enum CodingKeys: String, CodingKey {
         case baseHappiness = "base_happiness"
@@ -837,19 +842,20 @@ struct PokemonSpecies: Codable {
 
 // MARK: - Color
 struct PokemonColor: Codable {
-    let name: String
-    let url: String
+    let name: String?
+    let url: String?
 }
 
 // MARK: - EvolutionChain
 struct EvolutionChain: Codable {
-    let url: String
+    let url: String?
 }
 
 // MARK: - FlavorTextEntry
 struct FlavorTextEntry: Codable {
-    let flavorText: String
-    let language, version: PokemonColor
+    let flavorText: String?
+    let language: PokemonColor?
+    let version: PokemonColor?
 
     enum CodingKeys: String, CodingKey {
         case flavorText = "flavor_text"
@@ -859,20 +865,21 @@ struct FlavorTextEntry: Codable {
 
 // MARK: - Genus
 struct Genus: Codable {
-    let genus: String
-    let language: PokemonColor
+    let genus: String?
+    let language: PokemonColor?
 }
 
 // MARK: - Name
 struct Name: Codable {
-    let language: PokemonColor
-    let name: String
+    let language: PokemonColor?
+    let name: String?
 }
 
 // MARK: - PalParkEncounter
 struct PalParkEncounter: Codable {
-    let area: PokemonColor
-    let baseScore, rate: Int
+    let area: PokemonColor?
+    let baseScore: Int?
+    let rate: Int?
 
     enum CodingKeys: String, CodingKey {
         case area
@@ -883,8 +890,8 @@ struct PalParkEncounter: Codable {
 
 // MARK: - PokedexNumber
 struct PokedexNumber: Codable {
-    let entryNumber: Int
-    let pokedex: PokemonColor
+    let entryNumber: Int?
+    let pokedex: PokemonColor?
 
     enum CodingKeys: String, CodingKey {
         case entryNumber = "entry_number"
@@ -894,15 +901,14 @@ struct PokedexNumber: Codable {
 
 // MARK: - Variety
 struct Variety: Codable {
-    let isDefault: Bool
-    let pokemon: PokemonColor
+    let isDefault: Bool?
+    let pokemon: PokemonColor?
 
     enum CodingKeys: String, CodingKey {
         case isDefault = "is_default"
         case pokemon
     }
 }
-
 // MARK: - MoveData
 struct MoveData: Codable {
     let accuracy: Int?
