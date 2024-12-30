@@ -15,16 +15,24 @@ struct CombateView: View {
             
             VStack {
                 ZStack {
-                    Image("RingCombate")
-                        .resizable()
-                        .frame(width: 400, height: 400)
+                    VStack(spacing: 0) {
+                        // Top health bar
+                        HealthBar(health: teamHealth[0], isTopBar: true)
+                            .offset(y: -20)
+                        
+                        Image("RingCombate")
+                            .resizable()
+                            .frame(width: 400, height: 400)
+                        
+                        // Bottom health bar
+                        HealthBar(health: teamHealth[1], isTopBar: false)
+                            .offset(y: 20)
+                    }
                     
                     VStack(spacing: 50) {
                         teamView(teamId: 1)
                         teamView(teamId: 2)
                     }
-                }.onAppear(){
-                    print("mi vida: ", teamHealth)
                 }
                 
                 Button {
@@ -163,6 +171,42 @@ struct CombatLog: View {
         .padding()
         .background(Color.gray.opacity(0.1))
         .cornerRadius(16)
+    }
+}
+
+struct HealthBar: View {
+    let health: Int
+    let isTopBar: Bool
+    
+    var body: some View {
+        ZStack(alignment: .leading) {
+            // Background
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color.black.opacity(0.6))
+                .frame(width: 200, height: 20)
+            
+            // Health bar
+            HStack(spacing: 0) {
+                // Red portion (depleted health)
+                Rectangle()
+                    .fill(Color.red)
+                    .frame(width: 200 * CGFloat(100 - health) / 100)
+                
+                // Green portion (remaining health)
+                Rectangle()
+                    .fill(Color.green)
+                    .frame(width: 200 * CGFloat(health) / 100)
+            }
+            .frame(height: 16)
+            .padding(.horizontal, 2)
+            
+            // HP Label
+            Text("HP")
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.horizontal, 6)
+                .offset(x: isTopBar ? -75 : 75)
+        }
     }
 }
 
