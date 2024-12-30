@@ -283,6 +283,37 @@ class PokemonViewModel: ObservableObject {
               }
           }.resume()
       }
+    
+    func fetchMoveInfo(name: String, completion: @escaping (Result<AbilityData, Error>) -> Void) {
+          let urlStr = "https://pokeapi.co/api/v2/move/\(name)"
+          
+          guard let url = URL(string: urlStr) else {
+              completion(.failure(NetworkError.badURL))
+              return
+          }
+          
+          self.session.dataTask(with: url) { data, response, error in
+              if let error = error {
+                  completion(.failure(NetworkError.other(error)))
+                  return
+              }
+              
+              guard let data = data else {
+                  completion(.failure(NetworkError.badData))
+                  return
+              }
+              
+              do {
+                  let speciesDetails = try JSONDecoder().decode(AbilityData.self, from: data)
+                  completion(.success(speciesDetails))
+              } catch {
+                  // Log or handle the decoding error here
+                    print("Decoding error for ability name \(name): \(error)")
+                    completion(.failure(NetworkError.other(error)))
+              }
+          }.resume()
+      }
+    
 }
 
 enum NetworkError: Error {

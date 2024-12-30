@@ -654,6 +654,13 @@ struct AbilityData: Codable {
     }
 }
 
+
+// MARK: - MoveData
+struct MoveData: Codable {
+    
+    
+}
+
 // MARK: - EffectChange
 struct EffectChange: Codable {
     let effectEntries: [EffectChangeEffectEntry]
