@@ -11,6 +11,7 @@
 		3524A1192D1EB1DC005BAB91 /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3524A1172D1EB1DC005BAB91 /* RefreshManager.swift */; };
 		3524A1282D1EC90F005BAB91 /* CombateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3524A1272D1EC90F005BAB91 /* CombateView.swift */; };
 		3524A1292D1EC90F005BAB91 /* CombateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3524A1272D1EC90F005BAB91 /* CombateView.swift */; };
+		3547BA852D233FF100EE135E /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3547BA842D233FF100EE135E /* SDWebImageSwiftUI */; };
 		355F8D942D1B00C400E2D758 /* PokemonTeam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355F8D932D1B00C400E2D758 /* PokemonTeam.swift */; };
 		355F8D952D1B00C400E2D758 /* PokemonTeam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355F8D932D1B00C400E2D758 /* PokemonTeam.swift */; };
 		355F8D972D1B045C00E2D758 /* TeamsCombateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355F8D962D1B045C00E2D758 /* TeamsCombateView.swift */; };
@@ -28,7 +29,6 @@
 		3574C31E2D089CB20041EE41 /* SeleccionarEquipoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3574C31D2D089CB20041EE41 /* SeleccionarEquipoView.swift */; };
 		3574C31F2D089CB20041EE41 /* SeleccionarEquipoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3574C31D2D089CB20041EE41 /* SeleccionarEquipoView.swift */; };
 		359488272D22C04F00BC8552 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 359488262D22C04F00BC8552 /* SDWebImageSwiftUI */; };
-		359488292D22C05800BC8552 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 359488282D22C05800BC8552 /* SDWebImageSwiftUI */; };
 		3597CB962CFF7AB700D6B6A4 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3597CB952CFF7AB700D6B6A4 /* ImagePicker.swift */; };
 		3597CB972CFF7AB700D6B6A4 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3597CB952CFF7AB700D6B6A4 /* ImagePicker.swift */; };
 		35A9D5482CF61D1D00D7B680 /* PokeballAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C3D5662CECEB300022495F /* PokeballAnimationView.swift */; };
@@ -134,7 +134,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				359488292D22C05800BC8552 /* SDWebImageSwiftUI in Frameworks */,
+				3547BA852D233FF100EE135E /* SDWebImageSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,7 +264,7 @@
 			);
 			name = Version2;
 			packageProductDependencies = (
-				359488282D22C05800BC8552 /* SDWebImageSwiftUI */,
+				3547BA842D233FF100EE135E /* SDWebImageSwiftUI */,
 			);
 			productName = Pokedex;
 			productReference = 35A9D55E2CF61D1D00D7B680 /* Version2.app */;
@@ -318,7 +318,7 @@
 			mainGroup = 35C3D5302CECEA870022495F;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				3516493A2CF6233B0083E7F6 /* XCLocalSwiftPackageReference "SDWebImageSwiftUI-master" */,
+				3547BA832D233FF100EE135E /* XCLocalSwiftPackageReference "SDWebImageSwiftUI-master" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 35C3D53A2CECEA870022495F /* Products */;
@@ -688,18 +688,18 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		3516493A2CF6233B0083E7F6 /* XCLocalSwiftPackageReference "SDWebImageSwiftUI-master" */ = {
+		3547BA832D233FF100EE135E /* XCLocalSwiftPackageReference "SDWebImageSwiftUI-master" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "SDWebImageSwiftUI-master";
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		359488262D22C04F00BC8552 /* SDWebImageSwiftUI */ = {
+		3547BA842D233FF100EE135E /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SDWebImageSwiftUI;
 		};
-		359488282D22C05800BC8552 /* SDWebImageSwiftUI */ = {
+		359488262D22C04F00BC8552 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SDWebImageSwiftUI;
 		};
