@@ -4,110 +4,110 @@ import SDWebImageSwiftUI
 struct CombateView: View {
     @StateObject private var pokemonTeam = PokemonTeam.shared
     @StateObject var pokemonViewModel = PokemonViewModel()
-
+    @State var moveAcc = 0
+    @State var movePower = 0
+    
     var body: some View {
-        ZStack {
+        
+        ZStack{
             Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647)
                 .ignoresSafeArea()
-
+            
             Image("RingCombate").resizable().frame(width: 400, height: 400)
             VStack(spacing: 50) {
                 teamView(teamId: 1)
                 teamView(teamId: 2)
             }
-           
         }
-        .onAppear{
-            print("team 1: \(pokemonTeam.getTeam(named: "Equipo1")?.pokemons.first??.name ?? "no team")")
-            print("team 2: \(pokemonTeam.getTeam(named: "Equipo2")?.pokemons.first??.name ?? "no team")")
+    }
+    
+    
+    private func atacar(teamId: Int) -> some View {
+        HStack(spacing: 25) {
+            let team = pokemonTeam.getTeam(named: teamId == 1 ? "Equipo1" : "Equipo2")
+            var teamDamage = 0
+            ForEach(Array(team!.pokemons.enumerated()), id: \.0) { poke in
+                
+                let moveName = randomMove(poke: poke)
+
+                print("Movimiento: ", moveName)
+                print("Precisión: ", moveAcc)
+                print("Daño: ", movePower)
+                
+                if(moveAcc > Int.random(in: 0...99)){
+                    teamDamage = movePower
+                    print("Movimiento: " + moveName)
+                    print("Precisión: " + moveAcc)
+                    print("Daño: " + movePower)
+                }else{
+                    print("Movimiento: " + moveName)
+                    print("Precisión: " + moveAcc, "FALLO!!!")
+                }
+            }
+            //print ("Daño del equipo: ", teamDamage)
         }
     }
 
-    private func atacar(teamId: Int) -> some View {
-        HStack(spacing: 25) {
-            let name = teamId == 1 ? "Equipo1" : "Equipo2"
-            ForEach(0..<3, id: \.self) { i in
-                if let team = pokemonTeam.getTeam(named: name),
-                   let poke = team.pokemons[i],
-                   !poke.moves.isEmpty { // Ensure the pokemon has moves
-                    let randMove = Int.random(in: 0..<poke.moves.count)
-                    let id = poke.moves[randMove].move.url.split(separator: "/").last
-                   MoveDisplay(moveURL:  id.map{ String($0) })
-                }
-                else{
-                    Text("No move available")
-                }
-            }
-        }
+    private func randomMove(poke : Pokemon) -> String{
+        let randMove = 0
+        repeat{
+            let randMove = Int.random(in: 0...poke.moves.count-1)
+            queryMoves(name: poke.moves[randMove].move.name);
+        }while(movePower == 0 || moveAcc == 0 );
+        return poke.moves[randMove].move.name
     }
-    
-    private func MoveDisplay(moveURL: String?) -> some View{
-        print("Move name: \(moveURL)")
-        if let moveURL = moveURL{
-            
-        
-            return  AnyView(Text("\(moveURL)").task {
-                    queryMoves(name: moveURL)
-             }
-            
-            
-        )
-        }
-        else{
-           return AnyView(Text("No move available"))
-        }
-    }
-    
+
+
     
     private func queryMoves(name : String){
         pokemonViewModel.fetchMoveInfoByName(name: name) { result in
-            switch result {
-            case .success(let details):
-                DispatchQueue.main.async {
-                   // self.selectedPokemon = details // Actualiza el estado
-                    print("Accuracy: \(details.accuracy ?? 0)")
-                    print("Name: \(details.name ?? "NoName")")
-                    print("Power: \(details.power ?? 0)")
-                    print("PP: \(details.pp ?? 0)")
-                    print()
-                }
-            case .failure(let error):
-                print("Error fetching details: \(error)")
-            }
-        }
-    }
-
-    private func teamView(teamId: Int) -> some View {
-        VStack{
-            HStack(spacing: 25) {
-                let name = teamId == 1 ? "Equipo1" : "Equipo2"
-                ForEach(0..<3, id: \.self) { i in
-                    if let team = pokemonTeam.getTeam(named: name),
-                       let poke = team.pokemons[i],
-                       let sprite = teamId == 1 ? poke.sprites.other?.showdown?.frontDefault : poke.sprites.other?.showdown?.backDefault {
-                        PokemonDisplay(img: URL(string: sprite)!)
+                        switch result {
+                        case .success(let details):
+                            DispatchQueue.main.async {
+                                moveAcc = details.accuracy ?? 0
+                                movePower = details.power ?? 0
+                            }
+                        case .failure(let error):
+                            print("Error fetching details: \(error)")
+                        }
                     }
-                }
-            }
-             atacar(teamId: teamId)
-        }
     }
+    
+    private func teamView(teamId: Int) -> some View {
+           ZStack {
+               let name = teamId == 1 ? "Equipo1" : "Equipo2"
+               ForEach(0..<3, id: \.self) { i in
+                   if let team = pokemonTeam.getTeam(named: name),
+                      nil != team.pokemons[i] {
+                       let sprite = teamId == 1 ? team.pokemons[i]?.sprites.other?.showdown?.frontDefault : team.pokemons[i]?.sprites.other?.showdown?.backDefault
+                       PokemonDisplay(img: (URL(string: sprite ?? ""))!)
+                           .offset(
+                            x: CGFloat(i - 1) * 45 + (teamId == 1 ? 60 : -60),
+                            y: CGFloat(i - 1) * 30 + (teamId == 1 ? 20 : -120)
+                           )
+                           .zIndex(Double(3 - i))  // Ensure proper layering
+                       
+                   }
+               }
+           }
+           .frame(width: 200, height: 150)  // Adjust frame to accommodate the diagonal layout
+       }
 }
 
 
 struct PokemonDisplay: View {
     @State var img: URL
-
+    
     var body: some View {
         VStack{
-            WebImage(url: img)
+            WebImage(url: img) // Usamos WebImage para manejar GIFs
                 .resizable()
                 .scaledToFit()
                 .cornerRadius(20)
                 .padding()
             
         }
-        .frame(width: 90, height: 90)
+        .frame(width: 125, height: 125)
     }
 }
 
