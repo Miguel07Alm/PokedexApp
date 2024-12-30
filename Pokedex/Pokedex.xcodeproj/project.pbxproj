@@ -11,9 +11,6 @@
 		3524A1192D1EB1DC005BAB91 /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3524A1172D1EB1DC005BAB91 /* RefreshManager.swift */; };
 		3524A1282D1EC90F005BAB91 /* CombateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3524A1272D1EC90F005BAB91 /* CombateView.swift */; };
 		3524A1292D1EC90F005BAB91 /* CombateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3524A1272D1EC90F005BAB91 /* CombateView.swift */; };
-		35556CFA2D0CBA3100D4DDC9 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 35556CF92D0CBA3100D4DDC9 /* SDWebImageSwiftUI */; };
-		35556CFC2D0CBA4D00D4DDC9 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 35556CFB2D0CBA4D00D4DDC9 /* SDWebImageSwiftUI */; };
-		35556CFE2D0CBA7700D4DDC9 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 35556CFD2D0CBA7700D4DDC9 /* SDWebImageSwiftUI */; };
 		355F8D942D1B00C400E2D758 /* PokemonTeam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355F8D932D1B00C400E2D758 /* PokemonTeam.swift */; };
 		355F8D952D1B00C400E2D758 /* PokemonTeam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355F8D932D1B00C400E2D758 /* PokemonTeam.swift */; };
 		355F8D972D1B045C00E2D758 /* TeamsCombateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355F8D962D1B045C00E2D758 /* TeamsCombateView.swift */; };
@@ -30,7 +27,8 @@
 		3574C31C2D089C8E0041EE41 /* PokedexManager.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3561B3052CFF60F20000B9A6 /* PokedexManager.xcdatamodeld */; };
 		3574C31E2D089CB20041EE41 /* SeleccionarEquipoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3574C31D2D089CB20041EE41 /* SeleccionarEquipoView.swift */; };
 		3574C31F2D089CB20041EE41 /* SeleccionarEquipoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3574C31D2D089CB20041EE41 /* SeleccionarEquipoView.swift */; };
-		359713FA2CF649BA007DA78D /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 359713F92CF649BA007DA78D /* SDWebImageSwiftUI */; };
+		359488272D22C04F00BC8552 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 359488262D22C04F00BC8552 /* SDWebImageSwiftUI */; };
+		359488292D22C05800BC8552 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 359488282D22C05800BC8552 /* SDWebImageSwiftUI */; };
 		3597CB962CFF7AB700D6B6A4 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3597CB952CFF7AB700D6B6A4 /* ImagePicker.swift */; };
 		3597CB972CFF7AB700D6B6A4 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3597CB952CFF7AB700D6B6A4 /* ImagePicker.swift */; };
 		35A9D5482CF61D1D00D7B680 /* PokeballAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C3D5662CECEB300022495F /* PokeballAnimationView.swift */; };
@@ -50,7 +48,6 @@
 		35A9D5582CF61D1D00D7B680 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C3D5762CECEB3C0022495F /* ProfileView.swift */; };
 		35A9D5612CF61E9500D7B680 /* PokemonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A9D5602CF61E6900D7B680 /* PokemonDetailView.swift */; };
 		35A9D5622CF61E9500D7B680 /* PokemonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A9D5602CF61E6900D7B680 /* PokemonDetailView.swift */; };
-		35BB24192D0CB64E0008E67F /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 35BB24182D0CB64E0008E67F /* SDWebImageSwiftUI */; };
 		35C3D5682CECEB300022495F /* PokeballAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C3D5662CECEB300022495F /* PokeballAnimationView.swift */; };
 		35C3D57A2CECEB3C0022495F /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C3D56D2CECEB3C0022495F /* FooterView.swift */; };
 		35C3D57B2CECEB3C0022495F /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C3D56E2CECEB3C0022495F /* HeaderView.swift */; };
@@ -137,9 +134,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35556CFC2D0CBA4D00D4DDC9 /* SDWebImageSwiftUI in Frameworks */,
-				35BB24192D0CB64E0008E67F /* SDWebImageSwiftUI in Frameworks */,
-				359713FA2CF649BA007DA78D /* SDWebImageSwiftUI in Frameworks */,
+				359488292D22C05800BC8552 /* SDWebImageSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,8 +142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35556CFE2D0CBA7700D4DDC9 /* SDWebImageSwiftUI in Frameworks */,
-				35556CFA2D0CBA3100D4DDC9 /* SDWebImageSwiftUI in Frameworks */,
+				359488272D22C04F00BC8552 /* SDWebImageSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,9 +264,7 @@
 			);
 			name = Version2;
 			packageProductDependencies = (
-				359713F92CF649BA007DA78D /* SDWebImageSwiftUI */,
-				35BB24182D0CB64E0008E67F /* SDWebImageSwiftUI */,
-				35556CFB2D0CBA4D00D4DDC9 /* SDWebImageSwiftUI */,
+				359488282D22C05800BC8552 /* SDWebImageSwiftUI */,
 			);
 			productName = Pokedex;
 			productReference = 35A9D55E2CF61D1D00D7B680 /* Version2.app */;
@@ -295,8 +287,7 @@
 			);
 			name = Version1;
 			packageProductDependencies = (
-				35556CF92D0CBA3100D4DDC9 /* SDWebImageSwiftUI */,
-				35556CFD2D0CBA7700D4DDC9 /* SDWebImageSwiftUI */,
+				359488262D22C04F00BC8552 /* SDWebImageSwiftUI */,
 			);
 			productName = Pokedex;
 			productReference = 35C3D5392CECEA870022495F /* Version1.app */;
@@ -704,23 +695,11 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		35556CF92D0CBA3100D4DDC9 /* SDWebImageSwiftUI */ = {
+		359488262D22C04F00BC8552 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SDWebImageSwiftUI;
 		};
-		35556CFB2D0CBA4D00D4DDC9 /* SDWebImageSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SDWebImageSwiftUI;
-		};
-		35556CFD2D0CBA7700D4DDC9 /* SDWebImageSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SDWebImageSwiftUI;
-		};
-		359713F92CF649BA007DA78D /* SDWebImageSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SDWebImageSwiftUI;
-		};
-		35BB24182D0CB64E0008E67F /* SDWebImageSwiftUI */ = {
+		359488282D22C05800BC8552 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SDWebImageSwiftUI;
 		};
