@@ -1,65 +1,79 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
+
 struct CombateView: View {
     @StateObject private var pokemonTeam = PokemonTeam.shared
     @StateObject var pokemonViewModel = PokemonViewModel()
     @State var moveAcc = 0
     @State var movePower = 0
+    @State private var combatLog: [String] = []
     
     var body: some View {
-
-        ZStack{
+        ZStack {
             Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647)
                 .ignoresSafeArea()
             
-            Image("RingCombate").resizable().frame(width: 400, height: 400)
-            VStack(spacing: 50) {
-                teamView(teamId: 1)
-                teamView(teamId: 2)
-            }
-            
-            Button {
-                print("MAWUOINDFUHWFUWIJ")
-                atacar(teamId: 1)
-                atacar(teamId: 2)
-            } label: {
-                Text("Ti pego")
-            }.background(Color.red)
-        }
-
-    }
-    
-    
-    private func atacar(teamId: Int) -> some View {
-        HStack(spacing: 25) {
-            if let team = pokemonTeam.getTeam(named: teamId == 1 ? "Equipo1" : "Equipo2") {
-                let teamDamage = team.pokemons.compactMap { poke -> Int? in
-                    guard let poke = poke else { return nil }
-                    let moveName = randomMove(poke: poke)
+            VStack {
+                ZStack {
+                    Image("RingCombate")
+                        .resizable()
+                        .frame(width: 400, height: 400)
                     
-                    print("Movimiento: \(moveName)")
-                    print("Precisión: \(moveAcc)")
-                    print("Daño: \(movePower)")
-                    
-                    if moveAcc > Int.random(in: 0...99) {
-                        print("Movimiento: \(moveName)")
-                        print("Precisión: \(moveAcc)")
-                        print("Daño: \(movePower)")
-                        return movePower
-                    } else {
-                        print("Movimiento: \(moveName)")
-                        print("Precisión: \(moveAcc), FALLO!!!")
-                        return 0
+                    VStack(spacing: 50) {
+                        teamView(teamId: 1)
+                        teamView(teamId: 2)
                     }
-                }.reduce(0, +)
+                }
                 
-                Text("Daño del equipo \(teamId): \(teamDamage)")
-            } else {
-                Text("Equipo no encontrado")
+                Button {
+                    addToCombatLog("¡Comienza el combate!")
+                    atacar(teamId: 1)
+                    atacar(teamId: 2)
+                } label: {
+                    Text("Atacar")
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.red)
+                        .cornerRadius(10)
+                }
+                .padding(.bottom)
+                
+                CombatLog(title: "Registro de Combate", messages: $combatLog)
+                    .padding()
+                
+                
             }
         }
     }
+    
+    // Método para añadir mensajes al registro
+    private func addToCombatLog(_ message: String) {
+        combatLog.append(message)
+        
+        // Opcional: mantener un límite de mensajes para evitar problemas de memoria
+        if combatLog.count > 100 {
+            combatLog.removeFirst()
+        }
+    }
+    
+    private func atacar(teamId: Int){
+             let team = pokemonTeam.getTeam(named: teamId == 1 ? "Equipo1" : "Equipo2")
+             var teamDamage = 0
+             for poke in team!.pokemons{
+                 let moveName = randomMove(poke: poke!)
+                 
+                 addToCombatLog("Pokémon \(poke!.name) usa \(moveName)")
+                 addToCombatLog("Precisión: \(moveAcc) | Daño: \(movePower)")
+                 
+                 if(moveAcc > Int.random(in: 0...99)){
+                     teamDamage = movePower
+                 }else{
+                     addToCombatLog("¡El ataque falló!")
+                 }
+             }
+             print ("Daño del equipo: ", teamDamage)
+     }
     
     private func randomMove(poke : Pokemon) -> String{
         let randMove = 0
@@ -105,6 +119,37 @@ struct CombateView: View {
            }
            .frame(width: 200, height: 150)  // Adjust frame to accommodate the diagonal layout
        }
+}
+
+struct CombatLog: View {
+    let title: String
+    @Binding var messages: [String]
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.headline)
+                .padding(.bottom, 4)
+            
+            ScrollView {
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(messages.indices, id: \.self) { index in
+                        Text(messages[index])
+                            .font(.system(.body, design: .monospaced))
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .frame(height: 200)
+            .background(Color.white.opacity(0.9))
+            .cornerRadius(12)
+            .padding(8)
+        }
+        .padding()
+        .background(Color.gray.opacity(0.1))
+        .cornerRadius(16)
+    }
 }
 
 
