@@ -5,13 +5,16 @@ struct MainView: View {
     @State var showSortFilterView: Bool
     @State var showFilterView: Bool
     @State var teamId: Int
+    @State var teamHealth : [Int]
     @State var irA: String
     @State var selectedTab: Int
     
-    init(showSortFilterView: Bool = false, showFilterView: Bool = false, teamId: Int = 0, irA: String) {
+    
+    init(showSortFilterView: Bool = false, showFilterView: Bool = false, teamId: Int = 0, teamHealth : [Int] = [0,0], irA: String) {
         self.showSortFilterView = showSortFilterView
         self.showFilterView = showFilterView
         self.teamId = teamId
+        self.teamHealth = teamHealth
         self.irA = irA
         self._selectedTab = State(initialValue: Self.getInitialTab(for: irA))
     }
@@ -36,7 +39,7 @@ struct MainView: View {
             case "Perfil":
                 ProfileView()
             case "Combate":
-                CombateView()
+                CombateView(teamHealth: teamHealth)
             case "SeleccionarEquipo":
                 PokedexView(
                     showSortFilterView: showSortFilterView,

@@ -6,6 +6,7 @@ struct CombateView: View {
     @StateObject var pokemonViewModel = PokemonViewModel()
     @State private var isLoading = false
     @State private var combatLog: [String] = []
+    @State var teamHealth : [Int]
     
     var body: some View {
         ZStack {
@@ -22,6 +23,8 @@ struct CombateView: View {
                         teamView(teamId: 1)
                         teamView(teamId: 2)
                     }
+                }.onAppear(){
+                    print("mi vida: ", teamHealth)
                 }
                 
                 Button {
@@ -179,5 +182,5 @@ struct PokemonDisplay: View {
 }
 
 #Preview {
-    CombateView()
+    CombateView(teamHealth: [100,100])
 }

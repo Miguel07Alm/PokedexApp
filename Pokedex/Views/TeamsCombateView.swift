@@ -5,7 +5,8 @@ struct TeamsCombateView: View {
     @State private var navigateToTeam1 = false
     @State private var navigateToTeam2 = false
     @State private var teamIsNil = false
-    
+    @State private var teamHealth : [Int] = [0,0]
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -22,7 +23,7 @@ struct TeamsCombateView: View {
                     }
                     HStack {
                         if(!teamIsNil){
-                            NavigationLink(destination: MainView(irA: "Combate")) {
+                            NavigationLink(destination: MainView(teamHealth: teamHealth, irA: "Combate")) {
                                 Text("")
                             }
                             .buttonStyle(BotonConfirmarGrande())
@@ -55,7 +56,9 @@ struct TeamsCombateView: View {
                 }) {
                     if let team = pokemonTeam.getTeam(named: name),
                        nil != team.pokemons[i] {
-                        ImagenPokemonSeleccionado(img: team.pokemons[i]?.sprites.other?.officialArtwork?.frontDefault ?? "", isSelected: false)
+                        ImagenPokemonSeleccionado(img: team.pokemons[i]?.sprites.other?.officialArtwork?.frontDefault ?? "", isSelected: false).onAppear(){
+                            teamHealth[teamId-1] += team.pokemons[i]?.stats[0].baseStat ?? 0
+                        }
                     } else {
                         ImagenPokemonNoSeleccionado(isSelected: false).onAppear(){
                             teamIsNil =  true
