@@ -121,5 +121,9 @@ class PokemonTeam: ObservableObject {
          log.combatLog.removeAll()
          objectWillChange.send()
      }
+    
+    func getCombatLog() -> [String] {
+         return log.combatLog
+     }
 }
 

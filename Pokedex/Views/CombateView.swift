@@ -9,7 +9,7 @@ struct CombateView: View {
     @State var teamHealth: [Int] = [0, 0]
     @State var teamMaxHealth: [Int] = [0, 0]
     @State private var onAttackTapped: (() async -> Void)?
-    @StateObject private var refreshManager = RefreshManager.shared // Update 1
+    @StateObject private var refreshManager = RefreshManager.shared
 
     var body: some View {
         ScrollView {
@@ -27,27 +27,32 @@ struct CombateView: View {
                 }
                 HealthBar(maxHealth: teamMaxHealth[1], health: teamHealth[1])
                 
-                CombatLog(title: "Registro de Combate", messages: $combatLog)
+                CombatLog(title: "Registro de Combate", messages: combatLog)
                     .padding()
             }
         }
         .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
         .ignoresSafeArea()
-        .onAppear(perform: updateHealthBars) // Update 2
+        .onAppear(perform: updateView)
         .onChange(of: refreshManager.refreshFlag) { _ in
-            updateHealthBars()
+            updateView()
         }
     }
     
+    private func updateView() {
+            updateHealthBars()
+            updateCombatLog()
+        }
+    
     private func updateHealthBars() { // Update 3
-           teamMaxHealth[0] = pokemonTeam.getTeamMaxHealth(named: "Equipo1")
-           teamMaxHealth[1] = pokemonTeam.getTeamMaxHealth(named: "Equipo2")
-           
-           teamHealth[0] = pokemonTeam.getTeamHealth(named: "Equipo1")
-           teamHealth[1] = pokemonTeam.getTeamHealth(named: "Equipo2")
-       }
-   
-   
+        teamMaxHealth[0] = pokemonTeam.getTeamMaxHealth(named: "Equipo1")
+        teamMaxHealth[1] = pokemonTeam.getTeamMaxHealth(named: "Equipo2")
+        
+        teamHealth[0] = pokemonTeam.getTeamHealth(named: "Equipo1")
+        teamHealth[1] = pokemonTeam.getTeamHealth(named: "Equipo2")
+    }
+    
+    
     
     private func teamView(teamId: Int) -> some View {
         ZStack {
@@ -67,11 +72,15 @@ struct CombateView: View {
         }
         .frame(width: 200, height: 150)
     }
+    
+    private func updateCombatLog() {
+        combatLog = pokemonTeam.getCombatLog()
+    }
 }
 
 struct CombatLog: View {
     let title: String
-    @Binding var messages: [String]
+    let messages: [String]
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

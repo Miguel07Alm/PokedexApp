@@ -96,16 +96,9 @@ import SwiftUI
             .ignoresSafeArea()
         }
         
-        private func addToCombatLog(_ message: String) {
-            combatLog.append(message)
-            if combatLog.count > 100 {
-                combatLog.removeFirst()
-            }
-        }
-        
         private func atacar(teamId: Int) async {
             guard let team = pokemonTeam.getTeam(named: teamId == 1 ? "Equipo1" : "Equipo2") else {
-                addToCombatLog("Equipo \(teamId) no encontrado")
+                pokemonTeam.addToCombatLog("Equipo \(teamId) no encontrado")
                 return
             }
             
@@ -113,17 +106,17 @@ import SwiftUI
             for poke in team.pokemons.compactMap({ $0 }) {
                 let (moveName, moveAcc, movePower) = await randomMove(poke: poke)
                 
-                addToCombatLog("Pokémon \(poke.name) usa \(moveName)")
-                addToCombatLog("Precisión: \(moveAcc) | Daño: \(movePower)")
+                pokemonTeam.addToCombatLog("Pokémon \(poke.name) usa \(moveName)")
+                pokemonTeam.addToCombatLog("Precisión: \(moveAcc) | Daño: \(movePower)")
                 
                 if moveAcc > Int.random(in: 0...99) {
                     teamDamage += movePower
-                    addToCombatLog("¡El ataque fue exitoso!")
+                    pokemonTeam.addToCombatLog("¡El ataque fue exitoso!")
                 } else {
-                    addToCombatLog("¡El ataque falló!")
+                    pokemonTeam.addToCombatLog("¡El ataque falló!")
                 }
             }
-            addToCombatLog("Daño total del equipo \(teamId): \(teamDamage)")
+            pokemonTeam.addToCombatLog("Daño total del equipo \(teamId): \(teamDamage)")
             let teamName = teamId == 2 ? "Equipo1" : "Equipo2"
             pokemonTeam.setTeamHealth(named: teamName, hp: (pokemonTeam.getTeamHealth(named: teamName) - teamDamage))
         }
