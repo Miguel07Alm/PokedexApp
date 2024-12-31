@@ -4,121 +4,50 @@ import SDWebImageSwiftUI
 struct CombateView: View {
     @StateObject private var pokemonTeam = PokemonTeam.shared
     @StateObject var pokemonViewModel = PokemonViewModel()
-    @State private var isLoading = false
+    @State var isLoading: Bool = false
     @State private var combatLog: [String] = []
-    @State var teamHealth : [Int] = [0,0]
-    @State var teamMaxHealth : [Int] = [0,0]
-    
+    @State var teamHealth: [Int] = [0, 0]
+    @State var teamMaxHealth: [Int] = [0, 0]
+    @State private var onAttackTapped: (() async -> Void)?
+    @StateObject private var refreshManager = RefreshManager.shared // Update 1
+
     var body: some View {
         ScrollView {
-                VStack {
-                    HealthBar(maxHealth: teamMaxHealth[0], health: teamHealth[0])
-                    ZStack {
-                        Image("RingCombate")
-                            .resizable()
-                            .frame(width: 400, height: 400)
-                        
-                        VStack(spacing: 50) {
-                            teamView(teamId: 1)
-                            teamView(teamId: 2)
-                        }
-                    }
-                    HealthBar(maxHealth: teamMaxHealth[1], health: teamHealth[1])
-                    Button {
-                        Task {
-                            isLoading = true
-                            addToCombatLog("¡Comienza el combate!")
-                            await atacar(teamId: 1)
-                            await atacar(teamId: 2)
-                            if(teamHealth[0] < 1 || teamHealth[1] < 1){
-                                print("Se mamo")
-                            }
-                            isLoading = false
-                        }
-                    } label: {
-                        Text(isLoading ? "Cargando..." : "Atacar")
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(isLoading ? Color.gray : Color.red)
-                            .cornerRadius(10)
-                    }
-                    .disabled(isLoading)
-                    .padding(.bottom)
+            VStack {
+                HealthBar(maxHealth: teamMaxHealth[0], health: teamHealth[0])
+                ZStack {
+                    Image("RingCombate")
+                        .resizable()
+                        .frame(width: 400, height: 400)
                     
-                    CombatLog(title: "Registro de Combate", messages: $combatLog)
-                        .padding()
+                    VStack(spacing: 50) {
+                        teamView(teamId: 1)
+                        teamView(teamId: 2)
+                    }
                 }
-        }.background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
-            .ignoresSafeArea()
-            .onAppear(){
-                teamMaxHealth[0] = pokemonTeam.getTeamMaxHealth(named: "Equipo1")
-                teamMaxHealth[1] = pokemonTeam.getTeamMaxHealth(named: "Equipo2")
+                HealthBar(maxHealth: teamMaxHealth[1], health: teamHealth[1])
                 
-                teamHealth[0] = pokemonTeam.getTeamHealth(named: "Equipo1")
-                teamHealth[1] = pokemonTeam.getTeamHealth(named: "Equipo2")
-            }
-    }
-    
-    private func addToCombatLog(_ message: String) {
-        combatLog.append(message)
-        if combatLog.count > 100 {
-            combatLog.removeFirst()
-        }
-    }
-    
-    private func atacar(teamId: Int) async {
-        guard let team = pokemonTeam.getTeam(named: teamId == 1 ? "Equipo1" : "Equipo2") else {
-            addToCombatLog("Equipo \(teamId) no encontrado")
-            return
-        }
-        
-        var teamDamage = 0
-        for poke in team.pokemons.compactMap({ $0 }) {
-            let (moveName, moveAcc, movePower) = await randomMove(poke: poke)
-            
-            addToCombatLog("Pokémon \(poke.name) usa \(moveName)")
-            addToCombatLog("Precisión: \(moveAcc) | Daño: \(movePower)")
-            
-            if moveAcc > Int.random(in: 0...99) {
-                teamDamage += movePower
-                addToCombatLog("¡El ataque fue exitoso!")
-            } else {
-                addToCombatLog("¡El ataque falló!")
+                CombatLog(title: "Registro de Combate", messages: $combatLog)
+                    .padding()
             }
         }
-        addToCombatLog("Daño total del equipo \(teamId): \(teamDamage)")
-        teamHealth[teamId == 1 ? 1 : 0] -= teamDamage
-    }
-    
-    private func randomMove(poke: Pokemon) async -> (name: String, accuracy: Int, power: Int) {
-        var moveName = ""
-        var moveAcc = 0
-        var movePower = 0
-        
-        repeat {
-            let randMove = Int.random(in: 0..<poke.moves.count)
-            moveName = poke.moves[randMove].move.name
-            let result = await queryMoves(name: moveName)
-            moveAcc = result.accuracy
-            movePower = result.power
-        } while movePower == 0 || moveAcc == 0
-        
-        return (moveName, moveAcc, movePower)
-    }
-    
-    private func queryMoves(name: String) async -> (accuracy: Int, power: Int) {
-        await withCheckedContinuation { continuation in
-            pokemonViewModel.fetchMoveInfoByName(name: name) { result in
-                switch result {
-                case .success(let details):
-                    continuation.resume(returning: (details.accuracy ?? 0, details.power ?? 0))
-                case .failure(let error):
-                    print("Error fetching details: \(error)")
-                    continuation.resume(returning: (0, 0))
-                }
-            }
+        .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
+        .ignoresSafeArea()
+        .onAppear(perform: updateHealthBars) // Update 2
+        .onChange(of: refreshManager.refreshFlag) { _ in
+            updateHealthBars()
         }
     }
+    
+    private func updateHealthBars() { // Update 3
+           teamMaxHealth[0] = pokemonTeam.getTeamMaxHealth(named: "Equipo1")
+           teamMaxHealth[1] = pokemonTeam.getTeamMaxHealth(named: "Equipo2")
+           
+           teamHealth[0] = pokemonTeam.getTeamHealth(named: "Equipo1")
+           teamHealth[1] = pokemonTeam.getTeamHealth(named: "Equipo2")
+       }
+   
+   
     
     private func teamView(teamId: Int) -> some View {
         ZStack {
@@ -222,5 +151,5 @@ struct PokemonDisplay: View {
 }
 
 #Preview {
-    CombateView()
+    //CombateView()
 }
