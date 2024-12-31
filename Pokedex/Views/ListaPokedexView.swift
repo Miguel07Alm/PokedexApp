@@ -146,7 +146,7 @@ struct ListaPokedexView: View {
             
             for i in startId...(startId + count - 1) {
                 group.enter()
-                pokemonViewModel.fetchPokemonDetails(id: i) { result in
+                pokemonViewModel.fetchPokemonDetails(id: "\(i)") { result in
                     defer { group.leave() }
                     switch result {
                     case .success(let details):
