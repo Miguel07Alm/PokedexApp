@@ -6,6 +6,8 @@ struct Team: Identifiable {
     let name: String
     var pos : Int
     var pokemons: [Pokemon?]
+    var health : Int
+    var maxHealth : Int
 }
 
 class PokemonTeam: ObservableObject {
@@ -20,7 +22,7 @@ class PokemonTeam: ObservableObject {
     }
     
     func createTeam(name: String) {
-        let newTeam = Team(name: name, pos: 0, pokemons: [nil, nil, nil])
+        let newTeam = Team(name: name, pos: 0, pokemons: [nil, nil, nil], health: 0, maxHealth: 0)
         teams.append(newTeam)
         print("Team created: \(name)")
     }
@@ -57,6 +59,14 @@ class PokemonTeam: ObservableObject {
         return teams.first(where: { $0.name == teamName })
     }
     
+    func getTeamMaxHealth(named teamName: String) -> Int {
+        return teams.first(where: { $0.name == teamName })?.maxHealth ?? -1
+    }
+    
+    func getTeamHealth(named teamName: String) -> Int {
+        return teams.first(where: { $0.name == teamName })?.health ?? 0
+    }
+    
     func getAllTeams() -> [Team] {
         return teams
     }
@@ -67,6 +77,20 @@ class PokemonTeam: ObservableObject {
     
     func removeAllTeams() {
         teams.removeAll()
+    }
+    
+    func updateMaxHealth(named teamName: String) {
+        if let index = teams.firstIndex(where: { $0.name == teamName }) {
+            var updatedTeam = teams[index]
+            updatedTeam.maxHealth = 0
+            for poke in updatedTeam.pokemons.compactMap({ $0 }) {
+                updatedTeam.maxHealth += poke.stats[0].baseStat
+            }
+            teams[index] = updatedTeam
+            objectWillChange.send()
+        } else {
+            print("Team not found: \(teamName)")
+        }
     }
 }
 

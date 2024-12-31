@@ -51,8 +51,11 @@ struct CombateView: View {
         }.background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
             .ignoresSafeArea()
             .onAppear(){
-                setMaxHealth(teamId: 1)
-                setMaxHealth(teamId: 2)
+                teamMaxHealth[0] = pokemonTeam.getTeamMaxHealth(named: "Equipo1")
+                teamMaxHealth[1] = pokemonTeam.getTeamMaxHealth(named: "Equipo2")
+                print(teamMaxHealth)
+                print(pokemonTeam.getTeamMaxHealth(named: "Equipo1"))
+                
                 teamHealth[0] = teamMaxHealth[0]
                 teamHealth[1] = teamMaxHealth[1]
             }
@@ -87,16 +90,6 @@ struct CombateView: View {
         }
         addToCombatLog("Daño total del equipo \(teamId): \(teamDamage)")
         teamHealth[teamId == 1 ? 1 : 0] -= teamDamage
-    }
-    
-    private func setMaxHealth(teamId: Int) {
-        guard let team = pokemonTeam.getTeam(named: teamId == 1 ? "Equipo1" : "Equipo2") else {
-            addToCombatLog("Equipo \(teamId) no encontrado")
-            return
-        }
-        for poke in team.pokemons.compactMap({ $0 }) {
-            teamMaxHealth[teamId-1] += poke.stats[0].baseStat
-        }
     }
     
     private func randomMove(poke: Pokemon) async -> (name: String, accuracy: Int, power: Int) {

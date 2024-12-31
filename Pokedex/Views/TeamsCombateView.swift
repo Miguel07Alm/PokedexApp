@@ -29,6 +29,9 @@ struct TeamsCombateView: View {
                         }
                     }
                 }
+            }.onAppear(){
+                pokemonTeam.updateMaxHealth(named: "Equipo1")
+                pokemonTeam.updateMaxHealth(named: "Equipo2")
             }
             .background(
                 NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 1, irA: "SeleccionarEquipo"), isActive: $navigateToTeam1) { EmptyView() }
