@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SDWebImageSwiftUI
+import AVFoundation
 
 struct habilidades : Identifiable {
     var id = UUID()
@@ -21,8 +22,11 @@ struct PokemonDetailView: View {
     @State var descripcion : String = ""
     @State var abilityData : [AbilityData] = []
     @State var abilities : [habilidades] = []
-    @State var isLoading: Bool = true
+    @State var isLoading : Bool = true
     @State var colorFondo : LinearGradient = LinearGradient(colors: [.white], startPoint: .top, endPoint: .bottom)
+    @State var evolutionChain : PokemonEvolutionChain?
+    @State var pokemonEvolucion : [Pokemon] = []
+    @StateObject private var audioPlayer = AudioPlayer()
     var body: some View {
         VStack (spacing: -50){
             if isLoading {
@@ -50,7 +54,7 @@ struct PokemonDetailView: View {
                                     }
                                     Spacer()
                                     Button{
-                                        
+                                        audioPlayer.playSound(for: "\(pokemon.name)")
                                     }label:{
                                         Image(systemName: "speaker.3.fill").foregroundColor(.gray).font(.system(size: 35))
                                     }
@@ -156,6 +160,12 @@ struct PokemonDetailView: View {
                                 
                             }
                             Spacer()
+                            //Apartado evoluciones
+                            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                                ForEach(pokemonEvolucion, id: \.id) { pokemon in
+                                    EntradaPokedexView(pokemon: pokemon, teamId: 0)
+                                }
+                            }
                         }
                     }.ignoresSafeArea()
                 }.background(colorFondo).edgesIgnoringSafeArea(.bottom).ignoresSafeArea().cornerRadius(48)
@@ -184,7 +194,7 @@ struct PokemonDetailView: View {
                 }
             }
             
-            // Fetch de las habilidades del Pokémon
+            // Fetch de las habilidades del Pokemon
             for ability in pokemon.abilities {
                 group.enter()
                 pokemonViewModel.fetchAbilityInfo(name: ability.ability.name) { result in
@@ -198,6 +208,60 @@ struct PokemonDetailView: View {
                 }
             }
             
+            // Fetch de la cadena evolutiva del Pokemon
+            group.enter()
+            pokemonViewModel.fetchPokemonEvolutionChain(id: pokemon.id) { result in
+                defer { group.leave() }
+                switch result {
+                case .success(let details):
+                    evolutionChain = details
+                case .failure(let error):
+                    print("Error al obtener detalles del Pokémon \(pokemon.id): \(error)")
+                }
+            }
+            
+            // Tras recoger la cadena evolutiva hay que buscar todos los objetos pokemon
+            // El pokemon base (primera evolucion está por fuera la estructura)
+            // Ver si se puede acceder al array de segunda evolucion (hay pokemon que solo tienen 1 evolucion)
+            // Si se puede acceder al array de segunda, recorrerlo, añadir los pokemon y tratar de acceder al array de terceras evoluciones (puede no tener tercera)
+            group.enter()
+            pokemonViewModel.fetchPokemonEvolutionChain(id: pokemon.id) { result in
+                defer { group.leave() }
+                switch result {
+                case .success(let details):
+                    evolutionChain = details
+                    
+                    // Procesar la cadena evolutiva
+                    func processChain(_ chain: Chain?) {
+                        guard let chain = chain else { return }
+                        
+                        // Obtener el nombre del Pokémon actual
+                        if let pokemonName = chain.species?.name {
+                            group.enter()
+                            pokemonViewModel.fetchPokemonDetails(id: pokemonName) { result in
+                                defer { group.leave() }
+                                switch result {
+                                case .success(let pokemon):
+                                    pokemonEvolucion.append(pokemon)
+                                case .failure(let error):
+                                    print("Error al obtener el Pokémon \(pokemonName): \(error)")
+                                }
+                            }
+                        }
+                        
+                        // Procesar las evoluciones
+                        chain.evolvesTo.forEach { nextChain in
+                            processChain(nextChain)
+                        }
+                    }
+                    
+                    // Iniciar el procesamiento desde la cadena principal
+                    processChain(details.chain)
+                    
+                case .failure(let error):
+                    print("Error al obtener detalles del Pokémon \(pokemon.id): \(error)")
+                }
+            }
             // Notificación cuando todas las tareas estén completadas
             group.notify(queue: .main) {
                 descripcion = pokemonSpecies?.flavorTextEntries?
@@ -212,9 +276,9 @@ struct PokemonDetailView: View {
                             .map { $0.name }
                             .joined(separator: " "),
                         descripcion: habilidad.flavorTextEntries
-                                .filter { $0.language.name == "en" }
-                                .map { $0.flavorText }
-                                .joined(separator: " ")
+                            .filter { $0.language.name == "en" }
+                            .map { $0.flavorText }
+                            .joined(separator: " ")
                     )
                 }
                 
@@ -231,7 +295,7 @@ struct CabeceraConNombre : View{
         ZStack{
             Rectangle().foregroundColor(.white)
             //Image("CabeceraSinNada").resizable().frame(height: 150)
-            Text(nombre + " #" + id).font(.title)
+            Text(nombre + " #" + id).font(.title).offset(y: 15) // Aportacion de un pikachu
         }.ignoresSafeArea().frame(alignment: .top).frame(height: 175)
     }
 }
@@ -414,6 +478,146 @@ struct AutoScroller: View {
     }
 }
 
+class AudioPlayer: NSObject, ObservableObject {
+    private var player: AVPlayer?
+    private var playerItem: AVPlayerItem?
+    private var timeObserver: Any?
+    @Published var isPlaying = false
+    
+    override init() {
+        super.init()
+    }
+    
+    func playSound(for pokemonName: String) {
+        // Stop current playback if any
+        stop()
+        
+        // Construct the URL for the Pokémon cry
+        let formattedName = pokemonName.lowercased().replacingOccurrences(of: " ", with: "")
+        guard let url = URL(string: "https://play.pokemonshowdown.com/audio/cries/\(formattedName).mp3") else {
+            print("Invalid URL for Pokémon cry")
+            playFallbackSound()
+            return
+        }
+        
+        // Check if the URL is valid
+        URLSession.shared.dataTask(with: url) { [weak self] _, response, error in
+            if let error = error {
+                print("Error fetching Pokémon cry: \(error)")
+                DispatchQueue.main.async {
+                    self?.playFallbackSound()
+                }
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                print("Pokémon cry not found: \(url)")
+                DispatchQueue.main.async {
+                    self?.playFallbackSound()
+                }
+                return
+            }
+            
+            // URL is valid, start playback
+            DispatchQueue.main.async {
+                self?.startPlayback(with: url)
+            }
+        }.resume()
+    }
+    
+    private func startPlayback(with url: URL) {
+        playerItem = AVPlayerItem(url: url)
+        player = AVPlayer(playerItem: playerItem)
+        
+        // Set up audio session
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Failed to set up audio session: \(error)")
+            playFallbackSound()
+            return
+        }
+        
+        // Add observer for playback status
+        playerItem?.addObserver(self,
+                                forKeyPath: #keyPath(AVPlayerItem.status),
+                                options: [.old, .new],
+                                context: nil)
+        
+        // Add observer for when playback ends
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(playerDidFinishPlaying),
+                                               name: .AVPlayerItemDidPlayToEndTime,
+                                               object: playerItem)
+        
+        // Start playback
+        player?.play()
+        isPlaying = true
+    }
+    
+    private func playFallbackSound() {
+        guard let fallbackUrl = URL(string: "https://drive.google.com/file/d/1FdZyx_Oh-qKSQwG78Adp7GYDTFOH3s2I/view?usp=sharing") else {
+            print("Invalid fallback URL")
+            return
+        }
+        
+        startPlayback(with: fallbackUrl)
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?,
+                               of object: Any?,
+                               change: [NSKeyValueChangeKey : Any]?,
+                               context: UnsafeMutableRawPointer?) {
+        if keyPath == #keyPath(AVPlayerItem.status) {
+            let status: AVPlayerItem.Status
+            if let statusNumber = change?[.newKey] as? NSNumber {
+                status = AVPlayerItem.Status(rawValue: statusNumber.intValue)!
+            } else {
+                status = .unknown
+            }
+            
+            // Switch over status value
+            switch status {
+            case .failed:
+                print("Player item failed with error: \(String(describing: playerItem?.error))")
+                DispatchQueue.main.async { [weak self] in
+                    self?.isPlaying = false
+                }
+            case .readyToPlay:
+                print("Player item is ready to play")
+            case .unknown:
+                print("Player item is not yet ready")
+            @unknown default:
+                print("Unknown player item status")
+            }
+        }
+    }
+    
+    @objc func playerDidFinishPlaying() {
+        DispatchQueue.main.async { [weak self] in
+            self?.isPlaying = false
+        }
+    }
+    
+    private func stop() {
+        if let playerItem = playerItem {
+            playerItem.removeObserver(self, forKeyPath: #keyPath(AVPlayerItem.status))
+        }
+        player?.pause()
+        player = nil
+        playerItem = nil
+        isPlaying = false
+    }
+    
+    deinit {
+        stop()
+        try? AVAudioSession.sharedInstance().setActive(false)
+        if let observer = timeObserver {
+            player?.removeTimeObserver(observer)
+        }
+    }
+}
 
 struct CabeceraContenido: View {
     @State private var selectedTab = 1
@@ -440,7 +644,7 @@ struct CabeceraContenido: View {
         .ignoresSafeArea()
         .onAppear {
             // Llamada asíncrona para cargar los datos
-            pokemonViewModel.fetchPokemonDetails(id: 1000) { result in
+            pokemonViewModel.fetchPokemonDetails(id: "133") { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let details):

@@ -162,7 +162,7 @@ class PokemonViewModel: ObservableObject {
             return filteredPokemon
         }
   
-        func fetchPokemonDetails(id: Int, completion: @escaping (Result<Pokemon, Error>) -> Void) {
+    func fetchPokemonDetails(id: String, completion: @escaping (Result<Pokemon, Error>) -> Void) {
               let urlStr = "https://pokeapi.co/api/v2/pokemon/\(id)"
               
               guard let url = URL(string: urlStr) else {
