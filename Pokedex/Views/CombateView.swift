@@ -231,5 +231,5 @@ struct PokemonDisplay: View {
 }
 
 #Preview {
-    CombateView(teamHealth: [100,100])
+    CombateView()
 }
