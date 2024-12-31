@@ -92,5 +92,13 @@ class PokemonTeam: ObservableObject {
             print("Team not found: \(teamName)")
         }
     }
-}
+    
+    func setTeamHealth(named teamName: String, hp: Int) {
+        if let index = teams.firstIndex(where: { $0.name == teamName }) {
+            teams[index].health = hp
+            objectWillChange.send()
+        } else {
+            print("Team not found: \(teamName)")
+        }
+    }}
 

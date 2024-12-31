@@ -53,11 +53,9 @@ struct CombateView: View {
             .onAppear(){
                 teamMaxHealth[0] = pokemonTeam.getTeamMaxHealth(named: "Equipo1")
                 teamMaxHealth[1] = pokemonTeam.getTeamMaxHealth(named: "Equipo2")
-                print(teamMaxHealth)
-                print(pokemonTeam.getTeamMaxHealth(named: "Equipo1"))
                 
-                teamHealth[0] = teamMaxHealth[0]
-                teamHealth[1] = teamMaxHealth[1]
+                teamHealth[0] = pokemonTeam.getTeamHealth(named: "Equipo1")
+                teamHealth[1] = pokemonTeam.getTeamHealth(named: "Equipo2")
             }
     }
     

@@ -32,6 +32,8 @@ struct TeamsCombateView: View {
             }.onAppear(){
                 pokemonTeam.updateMaxHealth(named: "Equipo1")
                 pokemonTeam.updateMaxHealth(named: "Equipo2")
+                pokemonTeam.setTeamHealth(named: "Equipo1", hp: pokemonTeam.getTeamMaxHealth(named: "Equipo1"))
+                pokemonTeam.setTeamHealth(named: "Equipo2", hp: pokemonTeam.getTeamMaxHealth(named: "Equipo2"))
             }
             .background(
                 NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 1, irA: "SeleccionarEquipo"), isActive: $navigateToTeam1) { EmptyView() }
