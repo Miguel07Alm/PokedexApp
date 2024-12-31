@@ -10,11 +10,18 @@ struct Team: Identifiable {
     var maxHealth : Int
 }
 
+struct Log: Identifiable {
+    let id = UUID()
+    let name: String
+    var combatLog : [String]
+}
+
 class PokemonTeam: ObservableObject {
     static let shared = PokemonTeam() // Singleton instance
     
     @Published private var teams: [Team] = []
     
+    @Published private var log: Log = Log(name: "log", combatLog: [])
     private init() {
         removeAllTeams()
         createTeam(name: "Equipo1")
@@ -100,5 +107,19 @@ class PokemonTeam: ObservableObject {
         } else {
             print("Team not found: \(teamName)")
         }
-    }}
+    }
+    
+    func addToCombatLog(_ message: String) {
+        log.combatLog.append(message)
+        if log.combatLog.count > 100 {
+           log.combatLog.removeFirst()
+        }
+        objectWillChange.send()
+    }
+    
+    func clearCombatLog() {
+         log.combatLog.removeAll()
+         objectWillChange.send()
+     }
+}
 
