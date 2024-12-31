@@ -6,53 +6,56 @@ struct CombateView: View {
     @StateObject var pokemonViewModel = PokemonViewModel()
     @State private var isLoading = false
     @State private var combatLog: [String] = []
-    @State var teamHealth : [Int]
+    @State var teamHealth : [Int] = [0,0]
+    @State var teamMaxHealth : [Int] = [0,0]
     
     var body: some View {
-        ZStack {
-            Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647)
-                .ignoresSafeArea()
-            
-            VStack {
-                ZStack {
-                    VStack(spacing: 0) {
-                        // Top health bar
-                        HealthBar(health: teamHealth[0], isTopBar: true)
-                            .offset(y: -20)
-                        
+        ScrollView {
+                VStack {
+                    HealthBar(maxHealth: teamMaxHealth[0], health: teamHealth[0])
+                    ZStack {
                         Image("RingCombate")
                             .resizable()
                             .frame(width: 400, height: 400)
                         
-                        // Bottom health bar
-                        HealthBar(health: teamHealth[1], isTopBar: false)
-                            .offset(y: 20)
+                        VStack(spacing: 50) {
+                            teamView(teamId: 1)
+                            teamView(teamId: 2)
+                        }
                     }
+                    HealthBar(maxHealth: teamMaxHealth[1], health: teamHealth[1])
+                    Button {
+                        Task {
+                            isLoading = true
+                            addToCombatLog("¡Comienza el combate!")
+                            await atacar(teamId: 1)
+                            await atacar(teamId: 2)
+                            if(teamHealth[0] < 1 || teamHealth[1] < 1){
+                                print("Se mamo")
+                            }
+                            isLoading = false
+                        }
+                    } label: {
+                        Text(isLoading ? "Cargando..." : "Atacar")
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(isLoading ? Color.gray : Color.red)
+                            .cornerRadius(10)
+                    }
+                    .disabled(isLoading)
+                    .padding(.bottom)
                     
-                    VStack(spacing: 50) {
-                        teamView(teamId: 1)
-                        teamView(teamId: 2)
-                    }
-                }
-                
-                Button {
-                    Task {
-                        await startCombat()
-                    }
-                } label: {
-                    Text(isLoading ? "Cargando..." : "Atacar")
-                        .foregroundColor(.white)
+                    CombatLog(title: "Registro de Combate", messages: $combatLog)
                         .padding()
-                        .background(isLoading ? Color.gray : Color.red)
-                        .cornerRadius(10)
                 }
-                .disabled(isLoading)
-                .padding(.bottom)
-                
-                CombatLog(title: "Registro de Combate", messages: $combatLog)
-                    .padding()
+        }.background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
+            .ignoresSafeArea()
+            .onAppear(){
+                setMaxHealth(teamId: 1)
+                setMaxHealth(teamId: 2)
+                teamHealth[0] = teamMaxHealth[0]
+                teamHealth[1] = teamMaxHealth[1]
             }
-        }
     }
     
     private func addToCombatLog(_ message: String) {
@@ -60,14 +63,6 @@ struct CombateView: View {
         if combatLog.count > 100 {
             combatLog.removeFirst()
         }
-    }
-    
-    private func startCombat() async {
-        isLoading = true
-        addToCombatLog("¡Comienza el combate!")
-        await atacar(teamId: 1)
-        await atacar(teamId: 2)
-        isLoading = false
     }
     
     private func atacar(teamId: Int) async {
@@ -91,6 +86,17 @@ struct CombateView: View {
             }
         }
         addToCombatLog("Daño total del equipo \(teamId): \(teamDamage)")
+        teamHealth[teamId == 1 ? 1 : 0] -= teamDamage
+    }
+    
+    private func setMaxHealth(teamId: Int) {
+        guard let team = pokemonTeam.getTeam(named: teamId == 1 ? "Equipo1" : "Equipo2") else {
+            addToCombatLog("Equipo \(teamId) no encontrado")
+            return
+        }
+        for poke in team.pokemons.compactMap({ $0 }) {
+            teamMaxHealth[teamId-1] += poke.stats[0].baseStat
+        }
     }
     
     private func randomMove(poke: Pokemon) async -> (name: String, accuracy: Int, power: Int) {
@@ -175,9 +181,9 @@ struct CombatLog: View {
 }
 
 struct HealthBar: View {
+    let maxHealth: Int
     let health: Int
-    let isTopBar: Bool
-    
+        
     var body: some View {
         ZStack(alignment: .leading) {
             // Background
@@ -190,22 +196,21 @@ struct HealthBar: View {
                 // Red portion (depleted health)
                 Rectangle()
                     .fill(Color.red)
-                    .frame(width: 200 * CGFloat(100 - health) / 100)
+                    .frame(width: 200 * CGFloat(maxHealth - health) / CGFloat(maxHealth))
                 
                 // Green portion (remaining health)
                 Rectangle()
                     .fill(Color.green)
-                    .frame(width: 200 * CGFloat(health) / 100)
+                    .frame(width: 200 * CGFloat(health) / CGFloat(maxHealth))
             }
             .frame(height: 16)
             .padding(.horizontal, 2)
             
             // HP Label
-            Text("HP")
+            Text("HP: \(health)/\(maxHealth)")
                 .font(.system(size: 12, weight: .bold))
                 .foregroundColor(.white)
                 .padding(.horizontal, 6)
-                .offset(x: isTopBar ? -75 : 75)
         }
     }
 }
