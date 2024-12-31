@@ -39,7 +39,7 @@ struct PokemonDetailView: View {
                         VStack (spacing: 30){
                             //Imagen Carrusel
                             Spacer(minLength: 75)
-                            AutoScroller(imageNames: [ pokemon.sprites.other?.officialArtwork?.frontDefault ?? "", pokemon.sprites.other?.officialArtwork?.frontShiny ?? "", pokemon.sprites.frontFemale ?? "", pokemon.sprites.frontShinyFemale ?? "", pokemon.sprites.versions?.generationV.blackWhite.animated?.frontDefault ?? ""]).cornerRadius(48).frame(height: 100).padding()
+                            AutoScroller(imageNames: [ pokemon.sprites.other?.officialArtwork?.frontDefault ?? "", pokemon.sprites.other?.officialArtwork?.frontShiny ?? "", pokemon.sprites.frontFemale ?? pokemon.sprites.frontDefault, pokemon.sprites.frontShinyFemale ?? pokemon.sprites.frontShiny, pokemon.sprites.other?.showdown?.frontDefault ?? pokemon.sprites.other?.home?.frontShiny]).cornerRadius(48).frame(height: 100).padding()
                             
                             //Botones de extrella y boton altavoz
                             Spacer(minLength: 45)
@@ -128,6 +128,7 @@ struct PokemonDetailView: View {
                                         Text(abilities[0].descripcion).frame(width: 320, alignment: .leading)
                                     }
                                     if abilities.count > 1 {
+                                        Text("")
                                         Text(abilities[1].nombre).font(.title3).frame(width: 320, alignment: .leading)
                                         Text(abilities[1].descripcion).frame(width: 320, alignment: .leading)
                                     }
@@ -264,7 +265,7 @@ struct PokemonDetailView: View {
             // Notificación cuando todas las tareas estén completadas
             group.notify(queue: .main) {
                 descripcion = pokemonSpecies?.flavorTextEntries?
-                    .filter { $0.language?.name == "es" }
+                    .filter { $0.language?.name == "en" }
                     .map { $0.flavorText ?? "" }
                     .joined(separator: " ") ?? ""
                 
@@ -383,15 +384,14 @@ struct StatHexagonView: View {
                     }
                     path.closeSubpath()
                 }
-                .stroke(strokeColor, lineWidth: 2)
+                    .stroke(strokeColor, lineWidth: 2)
             )
             
             // Stat labels
             ForEach(0..<6) { i in
                 let point = point(for: i, radius: size/2 + 20)
                 Text(stats[i].name)
-                    .font(.caption)
-                   .offset(x: point.x - size/2, y: point.y - size/2)
+                    .font(.caption).position(point)
             }
             
             // Stat values
@@ -399,8 +399,7 @@ struct StatHexagonView: View {
                let point = point(for: i, radius: size/2 + 35)
                 Text("\(Int(stats[i].value))")
                     .font(.caption)
-                    .bold()
-                  .offset(x: point.x - size/2, y: point.y - size/2)
+                    .bold().position(point)
                 
             }
         }
@@ -425,7 +424,7 @@ struct AutoScroller: View {
                     ZStack(alignment: .topLeading) {
                         // Step 7: Display Image
                         if let imageName = imageNames?[index], let url = URL(string: imageName) {
-                           if (index < 4) {
+                            if (index < 4) {
                                 // Cargar imágenes normales (sin GIF)
                                 AsyncImage(url: url) { image in
                                     image
@@ -445,7 +444,7 @@ struct AutoScroller: View {
                                     .padding()
                             }
                         } else {
-                               Text("Invalid URL").foregroundColor(.red)
+                            Text("Invalid URL").foregroundColor(.red)
                         }
                     } // Step 8: Apply Visual Effect Blur
                     .shadow(radius: 20) // Step 9: Apply Shadow
@@ -625,7 +624,7 @@ struct CabeceraContenido: View {
     @State private var pokemon: Pokemon?
     @State private var isLoading = true
     @StateObject private var pokemonViewModel = PokemonViewModel()
-
+    
     var body: some View {
         VStack(spacing: -100) {
             if isLoading {
