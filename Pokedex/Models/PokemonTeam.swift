@@ -109,6 +109,27 @@ class PokemonTeam: ObservableObject {
         }
     }
     
+    func isFaster(named thisTeamName: String, thanNamed otherTeamName : String) -> Bool{
+        var thisVel = 0
+        var otherVel = 0
+        if let thisIndex = teams.firstIndex(where: { $0.name == thisTeamName }),
+            let otherIndex = teams.firstIndex(where: { $0.name == otherTeamName }) {
+            let thisTeam = teams[thisIndex]
+            var otherTeam = teams[otherIndex]
+            for poke in thisTeam.pokemons.compactMap({ $0 }) {
+                thisVel += poke.stats[5].baseStat
+            }
+            for poke in otherTeam.pokemons.compactMap({ $0 }) {
+                otherVel += poke.stats[5].baseStat
+            }
+        } else {
+            print("Team not found")
+            return false
+        }
+         
+        return ((thisVel > otherVel) ? true : ((thisVel < otherVel) ? false : Bool.random()))
+                                                    }
+    
     func addToCombatLog(_ message: String) {
         log.combatLog.append(message)
         if log.combatLog.count > 100 {

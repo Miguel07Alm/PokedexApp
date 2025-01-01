@@ -160,5 +160,5 @@ struct PokemonDisplay: View {
 }
 
 #Preview {
-    //CombateView()
+    CombateView()
 }

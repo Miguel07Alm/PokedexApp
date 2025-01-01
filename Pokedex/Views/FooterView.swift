@@ -69,8 +69,19 @@ import SwiftUI
                         HStack {
                             Button(action: {
                                 Task {
-                                    await atacar(teamId: 1)
-                                    await atacar(teamId: 2)
+                                    var fastestTeam = pokemonTeam.isFaster(named: "Equipo1", thanNamed: "Equipo2") ? "Equipo1" : "Equipo2"
+                                    var slowestTeam = fastestTeam == "Equipo1" ? "Equipo2" : "Equipo1"
+                                    print("Comienza atacando el \(fastestTeam) ")
+                                    
+                                    await atacar(teamName: fastestTeam, enemyTeamName: slowestTeam)
+                                    if(pokemonTeam.getTeamHealth(named: slowestTeam) < 1 ){
+                                        print("se mamo el \(slowestTeam)")
+                                    }
+                                    await atacar(teamName: slowestTeam, enemyTeamName: fastestTeam)
+                                    
+                                    if(pokemonTeam.getTeamHealth(named: fastestTeam) < 1 ){
+                                        print("se mamo el \(fastestTeam)")
+                                    }
                                     refreshManager.forceRefresh()
                                 }
                             }) {
@@ -96,9 +107,9 @@ import SwiftUI
             .ignoresSafeArea()
         }
         
-        private func atacar(teamId: Int) async {
-            guard let team = pokemonTeam.getTeam(named: teamId == 1 ? "Equipo1" : "Equipo2") else {
-                pokemonTeam.addToCombatLog("Equipo \(teamId) no encontrado")
+        private func atacar(teamName: String, enemyTeamName : String) async {
+            guard let team = pokemonTeam.getTeam(named: teamName) else {
+                pokemonTeam.addToCombatLog("\(teamName) no encontrado")
                 return
             }
             
@@ -116,9 +127,8 @@ import SwiftUI
                     pokemonTeam.addToCombatLog("¡El ataque falló!")
                 }
             }
-            pokemonTeam.addToCombatLog("Daño total del equipo \(teamId): \(teamDamage)")
-            let teamName = teamId == 2 ? "Equipo1" : "Equipo2"
-            pokemonTeam.setTeamHealth(named: teamName, hp: (pokemonTeam.getTeamHealth(named: teamName) - teamDamage))
+            pokemonTeam.addToCombatLog("Daño total del equipo \(teamName): \(teamDamage)")
+            pokemonTeam.setTeamHealth(named: enemyTeamName, hp: (pokemonTeam.getTeamHealth(named: enemyTeamName) - teamDamage))
         }
         
         private func randomMove(poke: Pokemon) async -> (name: String, accuracy: Int, power: Int) {
