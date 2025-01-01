@@ -718,12 +718,11 @@ struct AbilityPokemon: Codable {
         case pokemon, slot
     }
 }
-
 // MARK: - Welcome
 struct PokemonEvolutionChain: Codable {
     let babyTriggerItem: JSONNull?
     let chain: Chain?
-    let id: Int
+    let id: Int?
 
     enum CodingKeys: String, CodingKey {
         case babyTriggerItem = "baby_trigger_item"
@@ -733,10 +732,10 @@ struct PokemonEvolutionChain: Codable {
 
 // MARK: - Chain
 struct Chain: Codable {
-    let evolutionDetails: [EvolutionDetail?]
-    let evolvesTo: [Chain?]
-    let isBaby: Bool
-    let species: Species?
+    let evolutionDetails: [EvolutionDetail?]?
+    let evolvesTo: [Chain?]?
+    let isBaby: Bool?
+    let species: EvolutionChainSpecies?
 
     enum CodingKeys: String, CodingKey {
         case evolutionDetails = "evolution_details"
@@ -748,17 +747,23 @@ struct Chain: Codable {
 
 // MARK: - EvolutionDetail
 struct EvolutionDetail: Codable {
-    let gender, heldItem: JSONNull?
-    let item: Species?
-    let knownMove, knownMoveType, location, minAffection: JSONNull?
+    let gender: JSONNull?
+    let heldItem: JSONNull?
+    let item: EvolutionChainSpecies?
+    let knownMove: EvolutionChainSpecies? // Si es Species siempre será un enlace a una Species
+    let knownMoveType: EvolutionChainSpecies?
+    let location: EvolutionChainSpecies?
+    let minAffection: Int?
     let minBeauty: JSONNull?
     let minHappiness: Int?
-    let minLevel: JSONNull?
+    let minLevel: Int?
     let needsOverworldRain: Bool?
-    let partySpecies, partyType, relativePhysicalStats: JSONNull?
-    let timeOfDay: String?
-    let tradeSpecies: JSONNull?
-    let trigger: Species?
+    let partySpecies: EvolutionChainSpecies? // Si es Species siempre será un enlace a una Species
+    let partyType: EvolutionChainSpecies? // Si es Species siempre será un enlace a una Species
+    let relativePhysicalStats: JSONNull?
+    let timeOfDay: TimeOfDay?
+    let tradeSpecies: EvolutionChainSpecies?
+    let trigger: EvolutionChainSpecies?
     let turnUpsideDown: Bool?
 
     enum CodingKeys: String, CodingKey {
@@ -781,6 +786,19 @@ struct EvolutionDetail: Codable {
         case trigger
         case turnUpsideDown = "turn_upside_down"
     }
+}
+
+// MARK: - Species
+struct EvolutionChainSpecies: Codable {
+    let name: String?
+    let url: String?
+}
+
+// MARK: - TimeOfDay
+enum TimeOfDay: String, Codable {
+    case day = "day"
+    case empty = ""
+    case night = "night"
 }
 
 // MARK: - Welcome
