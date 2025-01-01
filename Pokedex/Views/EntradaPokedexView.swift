@@ -34,7 +34,7 @@ struct EntradaPokedexView: View {
             CombinedShape(name: $name, num: $number, backgroundColor: $backgroundColor).opacity(0.9)
             
             NavigationLink(
-                destination:MainView(irA: "Detalle"),
+                destination:MainView(pokemon: pokemon, irA: "Detalle"),
                 isActive: $navigateToDetail
             ) {
                 EmptyView()
@@ -43,7 +43,6 @@ struct EntradaPokedexView: View {
         .onTapGesture {
             if teamId != 0 {
                 let name = teamId == 1 ? "Equipo1" : "Equipo2"
-                print("no pigamo: " + name)
                 pokemonTeam.addPokemon(pokemon, to: name)
                 refreshManager.forceRefresh() // Forzamos la actualización
             } else {

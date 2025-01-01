@@ -5,18 +5,19 @@ struct MainView: View {
     @State var showSortFilterView: Bool
     @State var showFilterView: Bool
     @State var teamId: Int
+    @State var pokemon: Pokemon
     @State var irA: String
     @State var selectedTab: Int
     
     
-    init(showSortFilterView: Bool = false, showFilterView: Bool = false, teamId: Int = 0, irA: String) {
+    init(showSortFilterView: Bool = false, showFilterView: Bool = false, pokemon : Pokemon = PokemonType.getAveraged() ,teamId: Int = 0, irA: String) {
         self.showSortFilterView = showSortFilterView
         self.showFilterView = showFilterView
         self.teamId = teamId
+        self.pokemon = pokemon
         self.irA = irA
         self._selectedTab = State(initialValue: Self.getInitialTab(for: irA))
     }
-    @State var pokemon : Pokemon = PokemonType.getAveraged()
     var body: some View {
         VStack(spacing: -100) {
             switch irA {
@@ -30,7 +31,10 @@ struct MainView: View {
                     showFilterView: showFilterView,
                     teamId: 0
                 )
-            
+                
+            case "Detalle":
+                PokemonDetailView(pokemon: pokemon)
+                
             case "TeamsCombate":
                 TeamsCombateView()
             case "Perfil":
