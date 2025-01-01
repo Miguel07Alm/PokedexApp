@@ -126,6 +126,7 @@ import SwiftUI
             }
             
             var teamDamage = 0
+            var i = 0
             for poke in team.pokemons.compactMap({ $0 }) {
                 let (moveName, moveAcc, movePower) = await randomMove(poke: poke)
                 
@@ -134,7 +135,8 @@ import SwiftUI
                 
                 if moveAcc > Int.random(in: 0...99) {
                     teamDamage += movePower
-                    pokemonTeam.addPokemonDamage(named: teamName, poke: poke, damage: movePower)
+                    pokemonTeam.addPokemonDamage(named: teamName, pos: i, damage: movePower)
+                    i+=1
                     pokemonTeam.addToCombatLog("¡El ataque fue exitoso!")
                 } else {
                     pokemonTeam.addToCombatLog("¡El ataque falló!")

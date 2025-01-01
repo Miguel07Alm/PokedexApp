@@ -110,14 +110,10 @@ class PokemonTeam: ObservableObject {
         }
     }
     
-    func addPokemonDamage(named teamName: String, poke: Pokemon, damage: Int) {
+    func addPokemonDamage(named teamName: String, pos: Int, damage: Int) {
         if let index = teams.firstIndex(where: { $0.name == teamName }) {
-            if let pokeIndex = teams[index].pokemons.firstIndex(where: { $0?.id == poke.id }) {
-                teams[index].pokeDamage[pokeIndex] += damage
+                teams[index].pokeDamage[pos] += damage
                 objectWillChange.send()
-            } else {
-                print("Pokemon not found in the team")
-            }
         } else {
             print("Team not found: \(teamName)")
         }
