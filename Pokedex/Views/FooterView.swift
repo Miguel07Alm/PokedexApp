@@ -7,7 +7,8 @@ import SwiftUI
         
         @State var selectedTab: Int
         @State private var combatLog: [String] = []
-        
+        @State private var winnerId: Int = 0
+        @State private var goToWinnerPov: Bool = false
         var onAttackTapped: (() async -> Void)?
         
         
@@ -67,20 +68,31 @@ import SwiftUI
                         
                     case 2: // Combate
                         HStack {
+                            NavigationLink(
+                                destination:MainView(teamId: winnerId, irA: "WinnerPov"),
+                                isActive: $goToWinnerPov
+                            ) {
+                                EmptyView()
+                            }
                             Button(action: {
                                 Task {
+                                    if(winnerId != 0){goToWinnerPov = true}
                                     var fastestTeam = pokemonTeam.isFaster(named: "Equipo1", thanNamed: "Equipo2") ? "Equipo1" : "Equipo2"
                                     var slowestTeam = fastestTeam == "Equipo1" ? "Equipo2" : "Equipo1"
-                                    print("Comienza atacando el \(fastestTeam) ")
+                                    pokemonTeam.addToCombatLog("Comienza atacando el \(fastestTeam) ")
                                     
                                     await atacar(teamName: fastestTeam, enemyTeamName: slowestTeam)
+                                    refreshManager.forceRefresh()
                                     if(pokemonTeam.getTeamHealth(named: slowestTeam) < 1 ){
-                                        print("se mamo el \(slowestTeam)")
+                                        pokemonTeam.addToCombatLog("El \(slowestTeam) fue derrotado!!!")
+                                        winnerId = fastestTeam == "Equipo1" ? 1 : 2
+                                        return
                                     }
                                     await atacar(teamName: slowestTeam, enemyTeamName: fastestTeam)
                                     
                                     if(pokemonTeam.getTeamHealth(named: fastestTeam) < 1 ){
-                                        print("se mamo el \(fastestTeam)")
+                                        pokemonTeam.addToCombatLog("El \(fastestTeam) fue derrotado!!!")
+                                        winnerId = slowestTeam == "Equipo1" ? 1 : 2
                                     }
                                     refreshManager.forceRefresh()
                                 }

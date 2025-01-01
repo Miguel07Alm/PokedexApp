@@ -39,6 +39,8 @@ struct MainView: View {
                 TeamsCombateView()
             case "Perfil":
                 ProfileView()
+            case "WinnerPov":
+                WinnerPovView(teamId: teamId)
             case "Combate":
                 CombateView()
             case "SeleccionarEquipo":

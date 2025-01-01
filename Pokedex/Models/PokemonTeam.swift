@@ -127,7 +127,7 @@ class PokemonTeam: ObservableObject {
             return false
         }
          
-        return ((thisVel > otherVel) ? true : ((thisVel < otherVel) ? false : Bool.random()))
+        return ((thisVel > otherVel) ? true : ((thisVel == otherVel) ?  Bool.random() : false))
                                                     }
     
     func addToCombatLog(_ message: String) {
