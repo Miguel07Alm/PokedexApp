@@ -48,8 +48,9 @@ struct CombateView: View {
         teamMaxHealth[0] = pokemonTeam.getTeamMaxHealth(named: "Equipo1")
         teamMaxHealth[1] = pokemonTeam.getTeamMaxHealth(named: "Equipo2")
         
-        teamHealth[0] = pokemonTeam.getTeamHealth(named: "Equipo1")
-        teamHealth[1] = pokemonTeam.getTeamHealth(named: "Equipo2")
+        teamHealth[0] = pokemonTeam.getTeamHealth(named: "Equipo1") < 0 ? 0 : pokemonTeam.getTeamHealth(named: "Equipo1")
+        
+        teamHealth[1] = pokemonTeam.getTeamHealth(named: "Equipo2") < 0 ? 0 : pokemonTeam.getTeamHealth(named: "Equipo2")
     }
     
     
@@ -125,7 +126,7 @@ struct HealthBar: View {
                 // Red portion (depleted health)
                 Rectangle()
                     .fill(Color.red)
-                    .frame(width: 200 * CGFloat(maxHealth - health) / CGFloat(maxHealth))
+                    .frame(width: 200 * CGFloat(maxHealth - health ) / CGFloat(maxHealth))
                 
                 // Green portion (remaining health)
                 Rectangle()
