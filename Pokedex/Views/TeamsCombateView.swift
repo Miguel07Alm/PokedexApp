@@ -34,6 +34,8 @@ struct TeamsCombateView: View {
                 pokemonTeam.updateMaxHealth(named: "Equipo2")
                 pokemonTeam.setTeamHealth(named: "Equipo1", hp: pokemonTeam.getTeamMaxHealth(named: "Equipo1"))
                 pokemonTeam.setTeamHealth(named: "Equipo2", hp: pokemonTeam.getTeamMaxHealth(named: "Equipo2"))
+                pokemonTeam.clearTeamDamage(named: "Equipo1")
+                pokemonTeam.clearTeamDamage(named: "Equipo2")
                 pokemonTeam.clearCombatLog()
             }
             .background(

@@ -134,6 +134,7 @@ import SwiftUI
                 
                 if moveAcc > Int.random(in: 0...99) {
                     teamDamage += movePower
+                    pokemonTeam.addPokemonDamage(named: teamName, poke: poke, damage: movePower)
                     pokemonTeam.addToCombatLog("¡El ataque fue exitoso!")
                 } else {
                     pokemonTeam.addToCombatLog("¡El ataque falló!")
