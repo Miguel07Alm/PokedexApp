@@ -224,7 +224,8 @@ class PokemonViewModel: ObservableObject {
         }.resume()
     }
     
-    func fetchPokemonEvolutionChain(id: Int, completion: @escaping (Result<PokemonEvolutionChain, Error>) -> Void) {
+    func fetchPokemonEvolutionChain(id: String, completion: @escaping (Result<PokemonEvolutionChain, Error>) -> Void) {
+        print("Hace la petición de la cadena de evoluciones para el ID \(id)")
         let urlStr = "https://pokeapi.co/api/v2/evolution-chain/\(id)"
         
         guard let url = URL(string: urlStr) else {

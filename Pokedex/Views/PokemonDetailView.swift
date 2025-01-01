@@ -189,6 +189,50 @@ struct PokemonDetailView: View {
                 switch result {
                 case .success(let details):
                     pokemonSpecies = details
+                    
+                    // Obtener la cadena de evolución utilizando la URL de la especie
+                    if let evolutionURL = details.evolutionChain?.url {
+                        group.enter()
+                        var pokemonEvolutionID = evolutionURL.split(separator: "/").last;                        pokemonViewModel.fetchPokemonEvolutionChain(id: String(pokemonEvolutionID ?? "-1") ) { result in
+                            defer { group.leave() }
+                            switch result {
+                                case .success(let details):
+                                    evolutionChain = details
+                                    
+                                    // Procesar la cadena evolutiva
+                                    func processChain(_ chain: Chain?) {
+                                        guard let chain = chain else { return }
+                                        
+                                        // Obtener el nombre del Pokémon actual
+                                        if let pokemonName = chain.species?.name {
+                                            group.enter()
+                                            pokemonViewModel.fetchPokemonDetails(id: pokemonName) { result in
+                                                defer { group.leave() }
+                                                switch result {
+                                                case .success(let pokemon):
+                                                    pokemonEvolucion.append(pokemon)
+                                                case .failure(let error):
+                                                    print("Error al obtener el Pokémon \(pokemonName): \(error)")
+                                                }
+                                            }
+                                        }
+                                        
+                                        // Procesar las evoluciones
+                                        chain.evolvesTo?.forEach { nextChain in
+                                            processChain(nextChain)
+                                        }
+                                    }
+                                    
+                                    // Iniciar el procesamiento desde la cadena principal
+                                    processChain(details.chain)
+                                    
+                                case .failure(let error):
+                                    print("Error al obtener detalles de la cadena evolutiva: \(error)")
+                            }
+                        }
+                    } else {
+                        print("Error: URL de cadena de evolución no encontrada en pokemonSpecies")
+                    }
                 case .failure(let error):
                     print("Error al obtener detalles del Pokémon \(pokemon.id): \(error)")
                 }
@@ -208,60 +252,6 @@ struct PokemonDetailView: View {
                 }
             }
             
-            // Fetch de la cadena evolutiva del Pokemon
-            group.enter()
-            pokemonViewModel.fetchPokemonEvolutionChain(id: pokemon.id) { result in
-                defer { group.leave() }
-                switch result {
-                case .success(let details):
-                    evolutionChain = details
-                case .failure(let error):
-                    print("Error al obtener detalles del Pokémon \(pokemon.id): \(error)")
-                }
-            }
-            
-            // Tras recoger la cadena evolutiva hay que buscar todos los objetos pokemon
-            // El pokemon base (primera evolucion está por fuera la estructura)
-            // Ver si se puede acceder al array de segunda evolucion (hay pokemon que solo tienen 1 evolucion)
-            // Si se puede acceder al array de segunda, recorrerlo, añadir los pokemon y tratar de acceder al array de terceras evoluciones (puede no tener tercera)
-            group.enter()
-            pokemonViewModel.fetchPokemonEvolutionChain(id: pokemon.id) { result in
-                defer { group.leave() }
-                switch result {
-                case .success(let details):
-                    evolutionChain = details
-                    
-                    // Procesar la cadena evolutiva
-                    func processChain(_ chain: Chain?) {
-                        guard let chain = chain else { return }
-                        
-                        // Obtener el nombre del Pokémon actual
-                        if let pokemonName = chain.species?.name {
-                            group.enter()
-                            pokemonViewModel.fetchPokemonDetails(id: pokemonName) { result in
-                                defer { group.leave() }
-                                switch result {
-                                case .success(let pokemon):
-                                    pokemonEvolucion.append(pokemon)
-                                case .failure(let error):
-                                    print("Error al obtener el Pokémon \(pokemonName): \(error)")
-                                }
-                            }
-                        }
-                        
-                        // Procesar las evoluciones
-                        chain.evolvesTo.forEach { nextChain in
-                            processChain(nextChain)
-                        }
-                    }
-                    
-                    // Iniciar el procesamiento desde la cadena principal
-                    processChain(details.chain)
-                    
-                case .failure(let error):
-                    print("Error al obtener detalles del Pokémon \(pokemon.id): \(error)")
-                }
-            }
             // Notificación cuando todas las tareas estén completadas
             group.notify(queue: .main) {
                 descripcion = pokemonSpecies?.flavorTextEntries?
@@ -644,7 +634,7 @@ struct CabeceraContenido: View {
         .ignoresSafeArea()
         .onAppear {
             // Llamada asíncrona para cargar los datos
-            pokemonViewModel.fetchPokemonDetails(id: "133") { result in
+            pokemonViewModel.fetchPokemonDetails(id: "charizard") { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let details):
