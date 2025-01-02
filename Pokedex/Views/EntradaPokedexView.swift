@@ -44,6 +44,8 @@ struct EntradaPokedexView: View {
             if teamId != 0 {
                 let name = teamId == 1 ? "Equipo1" : "Equipo2"
                 pokemonTeam.addPokemon(pokemon, to: name)
+                let pos = pokemonTeam.getTeamPos(named: name)
+                if pos < 2{ pokemonTeam.setTeamPos(named: name, pos: pos + 1)  }
                 refreshManager.forceRefresh() // Forzamos la actualización
             } else {
                 navigateToDetail = true

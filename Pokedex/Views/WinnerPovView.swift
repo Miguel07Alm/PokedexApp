@@ -19,6 +19,7 @@ struct WinnerPovView: View {
             }
             DisplayCard(msg: "HP Restante: \(team!.health)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 350, height: 70).font(.system(size: 22))
             Text("") //empuja el footer
+            Text("")
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
@@ -78,7 +79,7 @@ struct Bar3DView: View {
     let currPtos: Int
     let maxPtos: Int
     let color : Color
-    let maxHeight: CGFloat = 200 // Altura máxima fija
+    let maxHeight: CGFloat = 190 // Altura máxima fija
     
     private var barHeight: CGFloat {
         return maxHeight * (CGFloat(currPtos) / CGFloat(maxPtos))
