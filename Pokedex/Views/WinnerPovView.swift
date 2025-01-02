@@ -6,7 +6,7 @@ struct WinnerPovView: View {
     @State var teamId: Int
     
     var body: some View {
-        return HStack(spacing: 25) {
+        return HStack(spacing: -20){
             let team = pokemonTeam.getTeam(named: teamId == 1 ? "Equipo1" : "Equipo2")
             let pos = sortPokemonPositions()
             WinnerPokemonDisplay(team: team!, pos: pos[1], posMaxDmg: pos[0])
@@ -77,32 +77,31 @@ struct Bar3DView: View {
             // Cara frontal
             Rectangle()
                 .fill(Color.red)
-                .frame(width: 100, height: barHeight)
+                .frame(width: 80, height: barHeight)
             
             // Cara lateral derecha (para efecto 3D)
             Path { path in
-                path.move(to: CGPoint(x: 120, y: maxHeight))  // Comienza desde el suelo
-                path.addLine(to: CGPoint(x: 140, y: maxHeight - 20))  // 20 pixels arriba en diagonal
-                path.addLine(to: CGPoint(x: 140, y: maxHeight - barHeight - 20))  // Sube hasta la altura de la barra
-                path.addLine(to: CGPoint(x: 120, y: maxHeight - barHeight))  // Conecta con la barra
+                path.move(to: CGPoint(x: 87, y: maxHeight))  // Comienza desde el suelo, alineado con el borde derecho del rectángulo
+                path.addLine(to: CGPoint(x: 102, y: maxHeight - 16))  // 15 pixels arriba en diagonal
+                path.addLine(to: CGPoint(x: 102, y: maxHeight - barHeight - 16))  // Sube hasta la altura de la barra
+                path.addLine(to: CGPoint(x: 87, y: maxHeight - barHeight))  // Conecta con la barra
             }
             .fill(Color.red.opacity(0.6))
             
             // Cara superior (para efecto 3D)
             Path { path in
-                path.move(to: CGPoint(x: 20, y: maxHeight - barHeight))  // Comienza en la altura de la barra
-                path.addLine(to: CGPoint(x: 40, y: maxHeight - barHeight - 20))  // Diagonal hacia arriba
-                path.addLine(to: CGPoint(x: 140, y: maxHeight - barHeight - 20))  // Línea horizontal
-                path.addLine(to: CGPoint(x: 120, y: maxHeight - barHeight))  // Cierra el path
+                path.move(to: CGPoint(x: 7, y: maxHeight - barHeight))  // Comienza en la altura de la barra
+                path.addLine(to: CGPoint(x: 22, y: maxHeight - barHeight - 16))  // Diagonal hacia arriba
+                path.addLine(to: CGPoint(x: 102, y: maxHeight - barHeight - 16))  // Línea horizontal
+                path.addLine(to: CGPoint(x: 87, y: maxHeight - barHeight))  // Cierra el path
             }
             .fill(Color.red.opacity(0.8))
         }
-        .frame(width: 140, height: maxHeight)  // Aumenté el ancho para acomodar el efecto 3D
+        .frame(width: 95, height: maxHeight)  // Ajustado al nuevo ancho total
     }
 }
 
-
 #Preview {
-    Bar3DView(currPtos: 57, maxPtos: 100)
+    Bar3DView(currPtos: 0, maxPtos: 100)
 }
 
