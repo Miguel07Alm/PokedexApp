@@ -16,8 +16,8 @@ struct WinnerPovView: View {
                 WinnerPokemonDisplay(team: team!, pos: pos[1], posMaxDmg: pos[0], color: Color(red: 0.203, green: 0.62, blue: 0.218))
                 WinnerPokemonDisplay(team: team!, pos: pos[0], posMaxDmg: pos[0], color: Color(hue: 1.0, saturation: 0.724, brightness: 0.752))
                 WinnerPokemonDisplay(team: team!, pos: pos[2], posMaxDmg: pos[0], color: Color(hue: 0.552, saturation: 0.744, brightness: 0.564))
-            }
-            DisplayCard(msg: "HP Restante: \(team!.health)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 350, height: 70).font(.system(size: 22))
+            }.offset(y: -15)
+            DisplayCard(msg: "HP Restante: \(team!.health)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 350, height: 70).font(.system(size: 22)).offset(y: -15)
             Text("") //empuja el footer
             Text("")
         }
@@ -58,19 +58,26 @@ struct WinnerPokemonDisplay: View {
     @State var pos : Int
     @State var posMaxDmg : Int
     @State var color : Color
+    
+    private var barHeight: CGFloat {
+        return 190 * (CGFloat(team.pokeDamage[pos]) / CGFloat(team.pokeDamage[posMaxDmg]))
+    }
+    
     var body: some View {
-        VStack {
-            Spacer()
-            let dmg = team.pokeDamage[pos]
-            DisplayCard(msg: "\(dmg)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 50, height: 30)
-            WebImage(url: URL(string: team.pokemons[pos]?.sprites.other?.showdown?.frontDefault ?? "")!)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 100, height: 100)
-                .cornerRadius(20)
-                .padding()
-            Bar3DView(currPtos: dmg, maxPtos: team.pokeDamage[posMaxDmg], color: color)
-            DisplayCard(msg: team.pokemons[pos]!.name, color: color).frame(width: 120, height: 30)
+        let dmg = team.pokeDamage[pos]
+        ZStack {
+            VStack {
+                Spacer()
+                Bar3DView(currPtos: dmg, maxPtos: team.pokeDamage[posMaxDmg], color: color)
+                DisplayCard(msg: team.pokemons[pos]!.name, color: color).frame(width: 120, height: 30)
+            }
+            VStack {
+                DisplayCard(msg: "\(dmg)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 50, height: 30).offset(y: -10)
+                WebImage(url: URL(string: team.pokemons[pos]?.sprites.other?.showdown?.frontDefault ?? "")!)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+            }.offset(y:CGFloat(-barHeight - 16 / 2) + CGFloat(105))
         }.frame(alignment: .bottomLeading)
     }
 }
@@ -109,7 +116,7 @@ struct Bar3DView: View {
             }
             .fill(color.opacity(0.8)).offset(y: -(maxHeight - barHeight) )
         }
-        .frame(width: 95, height:  barHeight - 27, alignment: .bottomLeading).offset(x: -5)  // Ajustado al nuevo ancho total
+        .frame(width: 95, height:  barHeight, alignment: .bottomLeading).offset(x: -5)  // Ajustado al nuevo ancho total
     }
 }
 
