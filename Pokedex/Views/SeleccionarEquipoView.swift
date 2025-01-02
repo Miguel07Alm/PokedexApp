@@ -25,7 +25,7 @@ struct SeleccionarEquipoView: View {
                         }) {
                             if (nil != pokemonTeam.getTeam(named: name)?.pokemons[i]) {
                                 ImagenPokemonSeleccionado(
-                                    img: pokemonTeam.getTeam(named: name)?.pokemons[i]?.sprites.other?.officialArtwork?.frontDefault ?? "",
+                                    img: pokemonTeam.getTeam(named: name)?.pokemons[i]?.sprites.other?.officialArtwork?.frontDefault ?? pokemonTeam.getTeam(named: name)?.pokemons[i]?.sprites.frontDefault ?? "",
                                     isSelected: pokemonTeam.getTeamPos(named: name) == i
                                 )
                             } else {

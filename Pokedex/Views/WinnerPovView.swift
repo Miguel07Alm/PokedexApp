@@ -16,8 +16,8 @@ struct WinnerPovView: View {
                 WinnerPokemonDisplay(team: team!, pos: pos[1], posMaxDmg: pos[0], color: Color(red: 0.203, green: 0.62, blue: 0.218))
                 WinnerPokemonDisplay(team: team!, pos: pos[0], posMaxDmg: pos[0], color: Color(hue: 1.0, saturation: 0.724, brightness: 0.752))
                 WinnerPokemonDisplay(team: team!, pos: pos[2], posMaxDmg: pos[0], color: Color(hue: 0.552, saturation: 0.744, brightness: 0.564))
-            }.offset(y: -15)
-            DisplayCard(msg: "HP Restante: \(team!.health)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 350, height: 70).font(.system(size: 22)).offset(y: -15)
+            }.offset(y: -5)
+            DisplayCard(msg: "HP Restante: \(team!.health)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 350, height: 70).font(.system(size: 22)).offset(y: -5)
             Text("") //empuja el footer
             Text("")
         }
@@ -69,11 +69,11 @@ struct WinnerPokemonDisplay: View {
             }
             VStack {
                 DisplayCard(msg: "\(dmg)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 50, height: 30).offset(y: -10)
-                WebImage(url: URL(string: team.pokemons[pos]?.sprites.other?.showdown?.frontDefault ?? "")!)
+                WebImage(url: URL(string: team.pokemons[pos]?.sprites.other?.showdown?.frontDefault ?? team.pokemons[pos]?.sprites.frontDefault ?? "")!)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 100, height: 100)
-            }.offset(y:CGFloat(-barHeight - 16 / 2) + CGFloat(105))
+            }.offset(y:CGFloat(-barHeight - 16 / 2) + CGFloat(95))
         }.frame(alignment: .bottomLeading)
     }
 }

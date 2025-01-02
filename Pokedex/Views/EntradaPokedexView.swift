@@ -21,7 +21,7 @@ struct EntradaPokedexView: View {
         
         _name = State(initialValue: pokemon.name.capitalizedFirstLetter())
         _number = State(initialValue: String(format: "%04d", pokemon.id))
-        _image = State(initialValue: pokemon.sprites.other?.officialArtwork?.frontDefault ?? "")
+        _image = State(initialValue: pokemon.sprites.other?.officialArtwork?.frontDefault ?? pokemon.sprites.frontDefault ?? "")
         _backgroundColor = State(initialValue: [
             pokemon.types.first?.type.name ?? "normal",
             pokemon.types.last?.type.name ?? (pokemon.types.first?.type.name ?? "normal")

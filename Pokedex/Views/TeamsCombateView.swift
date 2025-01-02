@@ -7,46 +7,60 @@ struct TeamsCombateView: View {
     @State private var teamIsNil = false
     
     var body: some View {
-        NavigationView {
+        VStack(spacing: -50) {
             ZStack {
-                Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647)
-                    .ignoresSafeArea()
-
-                VStack(spacing: 100) {
-                    VStack(spacing: 30){
-                        teamView(teamId: 1)
-                        
-                        VersusIcon().frame(width: 450)
-                        
-                        teamView(teamId: 2)
-                    }
-                    HStack {
-                        if(!teamIsNil){
-                            NavigationLink(destination: MainView(irA: "Combate")) {
-                                Text("")
-                            }
-                            .buttonStyle(BotonConfirmarGrande())
-                        }
-                    }
+                Rectangle()
+                    .frame(height: 210)
+                    .foregroundColor(.white)
+                HStack {
+                    Image("PokeballEquipo").resizable().frame(width: 50, height: 50)
+                    Text("COMBATE").font(.system(size: 40))
+                    Image("PokeballEquipo").resizable().frame(width: 50, height: 50)
                 }
-            }.onAppear(){
-                pokemonTeam.updateMaxHealth(named: "Equipo1")
-                pokemonTeam.updateMaxHealth(named: "Equipo2")
-                pokemonTeam.setTeamHealth(named: "Equipo1", hp: pokemonTeam.getTeamMaxHealth(named: "Equipo1"))
-                pokemonTeam.setTeamHealth(named: "Equipo2", hp: pokemonTeam.getTeamMaxHealth(named: "Equipo2"))
-                pokemonTeam.clearTeamDamage(named: "Equipo1")
-                pokemonTeam.clearTeamDamage(named: "Equipo2")
-                pokemonTeam.clearCombatLog()
             }
-            .background(
-                NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 1, irA: "SeleccionarEquipo"), isActive: $navigateToTeam1) { EmptyView() }
-            )
-            .background(
-                NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 2, irA: "SeleccionarEquipo"), isActive: $navigateToTeam2) { EmptyView() }
-            )
-        }
-        .navigationViewStyle(StackNavigationViewStyle())
-        .navigationBarBackButtonHidden(true)
+
+            NavigationView {
+                ZStack {
+                    Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647)
+                        .ignoresSafeArea()
+                    
+                    VStack(spacing: 100) {
+                        VStack(spacing: 30){
+                            teamView(teamId: 1)
+                            
+                            VersusIcon().frame(width: 450)
+                            
+                            teamView(teamId: 2)
+                        }
+                        HStack {
+                            if(!teamIsNil){
+                                NavigationLink(destination: MainView(irA: "Combate")) {
+                                    Text("")
+                                }
+                                .buttonStyle(BotonConfirmarGrande())
+                            }
+                        }
+                    }.offset(y: -20)
+                }.onAppear(){
+                    pokemonTeam.updateMaxHealth(named: "Equipo1")
+                    pokemonTeam.updateMaxHealth(named: "Equipo2")
+                    pokemonTeam.setTeamHealth(named: "Equipo1", hp: pokemonTeam.getTeamMaxHealth(named: "Equipo1"))
+                    pokemonTeam.setTeamHealth(named: "Equipo2", hp: pokemonTeam.getTeamMaxHealth(named: "Equipo2"))
+                    pokemonTeam.clearTeamDamage(named: "Equipo1")
+                    pokemonTeam.clearTeamDamage(named: "Equipo2")
+                    pokemonTeam.clearCombatLog()
+                }
+                .background(
+                    NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 1, irA: "SeleccionarEquipo"), isActive: $navigateToTeam1) { EmptyView() }
+                )
+                .background(
+                    NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 2, irA: "SeleccionarEquipo"), isActive: $navigateToTeam2) { EmptyView() }
+                )
+            }
+            .navigationViewStyle(StackNavigationViewStyle())
+            .navigationBarBackButtonHidden(true)
+            .cornerRadius(48)
+        }.ignoresSafeArea()
     }
     
     private func teamView(teamId: Int) -> some View {
@@ -63,7 +77,7 @@ struct TeamsCombateView: View {
                 }) {
                     if let team = pokemonTeam.getTeam(named: name),
                        nil != team.pokemons[i] {
-                        ImagenPokemonSeleccionado(img: team.pokemons[i]?.sprites.other?.officialArtwork?.frontDefault ?? "", isSelected: false)
+                        ImagenPokemonSeleccionado(img: team.pokemons[i]?.sprites.other?.officialArtwork?.frontDefault ?? team.pokemons[i]?.sprites.frontDefault ?? "", isSelected: false)
                     } else {
                         ImagenPokemonNoSeleccionado(isSelected: false).onAppear(){
                             teamIsNil =  true

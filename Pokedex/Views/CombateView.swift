@@ -61,7 +61,7 @@ struct CombateView: View {
             ForEach(0..<3, id: \.self) { i in
                 if let team = pokemonTeam.getTeam(named: name),
                    let pokemon = team.pokemons[i] {
-                    let sprite = teamId == 1 ? pokemon.sprites.other?.showdown?.frontDefault : pokemon.sprites.other?.showdown?.backDefault
+                    let sprite = teamId == 1 ? (pokemon.sprites.other?.showdown?.frontDefault ?? team.pokemons[i]?.sprites.frontDefault) : (pokemon.sprites.other?.showdown?.backDefault ?? pokemon.sprites.backDefault)
                     PokemonDisplay(img: URL(string: sprite ?? "")!)
                         .offset(
                             x: CGFloat(i - 1) * 45 + (teamId == 1 ? 60 : -60),
