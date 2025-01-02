@@ -160,6 +160,15 @@ struct PokemonDisplay: View {
     }
 }
 
+struct DisplayPokeName: View {
+    let name: String
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)).foregroundStyle(Color(red: 0.92, green: 0.92, blue: 0.92))
+            Text(name.capitalizedFirstLetter())
+        }
+    }
+}
 #Preview {
     CombateView()
 }
