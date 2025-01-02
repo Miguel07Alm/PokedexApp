@@ -7,21 +7,11 @@ struct WinnerPovView: View {
     
     var body: some View {
         return HStack(spacing: 25) {
-            let name = teamId == 1 ? "Equipo1" : "Equipo2"
-            let team = pokemonTeam.getTeam(named: name)
+            let team = pokemonTeam.getTeam(named: teamId == 1 ? "Equipo1" : "Equipo2")
             let pos = sortPokemonPositions()
-            WinnerPokemonDisplay(
-                img: URL(string: team?.pokemons[pos[1]]?.sprites.other?.showdown?.frontDefault ?? "")!,
-                dmg: team?.pokeDamage[pos[1]] ?? 0
-            )
-            WinnerPokemonDisplay(
-                img: URL(string: team?.pokemons[pos[0]]?.sprites.other?.showdown?.frontDefault ?? "")!,
-                dmg: team?.pokeDamage[pos[0]] ?? 0
-            )
-            WinnerPokemonDisplay(
-                img: URL(string: team?.pokemons[pos[2]]?.sprites.other?.showdown?.frontDefault ?? "")!,
-                dmg: team?.pokeDamage[pos[2]] ?? 0
-            )
+            WinnerPokemonDisplay(team: team!, pos: pos[1], posMaxDmg: pos[0])
+            WinnerPokemonDisplay(team: team!, pos: pos[0], posMaxDmg: pos[0])
+            WinnerPokemonDisplay(team: team!, pos: pos[2], posMaxDmg: pos[0])
         }
         .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
         .ignoresSafeArea()
@@ -54,22 +44,72 @@ struct WinnerPovView: View {
 }
 
 struct WinnerPokemonDisplay: View {
-    @State var img: URL
-    @State var dmg: Int
-    
+    @StateObject private var pokemonTeam = PokemonTeam.shared
+    @State var team : Team
+    @State var pos : Int
+    @State var posMaxDmg : Int
     var body: some View {
         VStack {
-            WebImage(url: img)
+            WebImage(url: URL(string: team.pokemons[pos]?.sprites.other?.showdown?.frontDefault ?? "")!)
                 .resizable()
                 .scaledToFit()
                 .cornerRadius(20)
                 .padding()
             
+            let dmg = team.pokeDamage[pos]
             Text("\(dmg)")
+            Bar3DView(currPtos: dmg, maxPtos: team.pokeDamage[posMaxDmg])
         }.frame(height: 525)
     }
 }
     
+struct Bar3DView: View {
+    let currPtos: Int
+    let maxPtos: Int
+    let maxHeight: CGFloat = 300 // Altura máxima fija
+    
+    private var barHeight: CGFloat {
+        return maxHeight * (CGFloat(currPtos) / CGFloat(maxPtos))
+    }
+    
+    var body: some View {
+        ZStack {
+            // Cara lateral derecha (para efecto 3D)
+            Path { path in
+                path.move(to: CGPoint(x: 100, y: 0))
+                path.addLine(to: CGPoint(x: 120, y: 20))
+                path.addLine(to: CGPoint(x: 120, y: barHeight + 20))
+                path.addLine(to: CGPoint(x: 100, y: barHeight))
+                path.closeSubpath()
+            }
+            .fill(Color.red.opacity(0.6))
+            
+            // Cara frontal
+            Rectangle()
+                .fill(Color.red)
+                .frame(width: 100, height: barHeight)
+            
+            // Cara superior (para efecto 3D)
+            Path { path in
+                path.move(to: CGPoint(x: 0, y: 0))
+                path.addLine(to: CGPoint(x: 20, y: 20))
+                path.addLine(to: CGPoint(x: 120, y: 20))
+                path.addLine(to: CGPoint(x: 100, y: 0))
+                path.closeSubpath()
+            }
+            .fill(Color.red.opacity(0.8))
+        }
+        .frame(width: 120, height: maxHeight, alignment: .bottom)
+    }
+}
+
+struct Bar3DView_Previews: PreviewProvider {
+    static var previews: some View {
+        Bar3DView(currPtos: 75, maxPtos: 100)
+            .previewLayout(.sizeThatFits)
+            .padding()
+    }
+}
 #Preview {
     WinnerPovView(teamId: 1)
 }
