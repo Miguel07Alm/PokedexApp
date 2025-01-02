@@ -60,6 +60,7 @@ struct WinnerPokemonDisplay: View {
     @State var color : Color
     var body: some View {
         VStack {
+            Spacer()
             let dmg = team.pokeDamage[pos]
             DisplayCard(msg: "\(dmg)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 50, height: 30)
             WebImage(url: URL(string: team.pokemons[pos]?.sprites.other?.showdown?.frontDefault ?? "")!)
@@ -68,10 +69,9 @@ struct WinnerPokemonDisplay: View {
                 .frame(width: 100, height: 100)
                 .cornerRadius(20)
                 .padding()
-            
             Bar3DView(currPtos: dmg, maxPtos: team.pokeDamage[posMaxDmg], color: color)
             DisplayCard(msg: team.pokemons[pos]!.name, color: color).frame(width: 120, height: 30)
-        }
+        }.frame(alignment: .bottomLeading)
     }
 }
     
@@ -99,8 +99,7 @@ struct Bar3DView: View {
                 path.addLine(to: CGPoint(x: 102, y: maxHeight - barHeight - 16))  // Sube hasta la altura de la barra
                 path.addLine(to: CGPoint(x: 87, y: maxHeight - barHeight))  // Conecta con la barra
             }
-            .fill(color.opacity(0.6))
-            
+            .fill(color.opacity(0.6)).offset(y: -(maxHeight - barHeight))
             // Cara superior (para efecto 3D)
             Path { path in
                 path.move(to: CGPoint(x: 7, y: maxHeight - barHeight))  // Comienza en la altura de la barra
@@ -108,9 +107,9 @@ struct Bar3DView: View {
                 path.addLine(to: CGPoint(x: 102, y: maxHeight - barHeight - 16))  // Línea horizontal
                 path.addLine(to: CGPoint(x: 87, y: maxHeight - barHeight))  // Cierra el path
             }
-            .fill(color.opacity(0.8))
+            .fill(color.opacity(0.8)).offset(y: -(maxHeight - barHeight) )
         }
-        .frame(width: 95, height: maxHeight).offset(x: -5)  // Ajustado al nuevo ancho total
+        .frame(width: 95, height:  barHeight - 27, alignment: .bottomLeading).offset(x: -5)  // Ajustado al nuevo ancho total
     }
 }
 
@@ -127,9 +126,9 @@ struct DisplayCard: View {
 }
 
 #Preview {
-    Image("trofeo").resizable().frame(width: 250, height: 250)
-    Bar3DView(currPtos: 85, maxPtos: 100, color: Color(hue: 0.552, saturation: 0.744, brightness: 0.564))
+    //Image("trofeo").resizable().frame(width: 250, height: 250)
+    Bar3DView(currPtos: 72, maxPtos: 100, color: Color(hue: 0.552, saturation: 0.744, brightness: 0.564))
     
-    DisplayCard(msg: "crabominable", color: Color(red: 0.7333333333333333, green: 0.5176470588235295, blue: 0.5176470588235295)) .frame(width: 120, height: 30)
+   // DisplayCard(msg: "crabominable", color: Color(red: 0.7333333333333333, green: 0.5176470588235295, blue: 0.5176470588235295)) .frame(width: 120, height: 30)
 }
 
