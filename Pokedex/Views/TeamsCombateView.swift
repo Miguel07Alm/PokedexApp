@@ -4,7 +4,7 @@ struct TeamsCombateView: View {
     @StateObject private var pokemonTeam = PokemonTeam.shared
     @State private var navigateToTeam1 = false
     @State private var navigateToTeam2 = false
-    @State private var teamIsNil = false
+    @State private var teamIsNil = true
     
     var body: some View {
         VStack(spacing: -50) {
@@ -38,17 +38,22 @@ struct TeamsCombateView: View {
                                     Text("")
                                 }
                                 .buttonStyle(BotonConfirmarGrande())
+                                .onAppear(){
+                                    
+                                    pokemonTeam.updateMaxHealth(named: "Equipo1")
+                                    pokemonTeam.updateMaxHealth(named: "Equipo2")
+                                    pokemonTeam.setTeamHealth(named: "Equipo1", hp: pokemonTeam.getTeamMaxHealth(named: "Equipo1"))
+                                    pokemonTeam.setTeamHealth(named: "Equipo2", hp: pokemonTeam.getTeamMaxHealth(named: "Equipo2"))
+                                    pokemonTeam.clearTeamDamage(named: "Equipo1")
+                                    pokemonTeam.clearTeamDamage(named: "Equipo2")
+                                    pokemonTeam.clearCombatLog()
+                                    print("APARECI")
+                                }
                             }
                         }
                     }.offset(y: -20)
                 }.onAppear(){
-                    pokemonTeam.updateMaxHealth(named: "Equipo1")
-                    pokemonTeam.updateMaxHealth(named: "Equipo2")
-                    pokemonTeam.setTeamHealth(named: "Equipo1", hp: pokemonTeam.getTeamMaxHealth(named: "Equipo1"))
-                    pokemonTeam.setTeamHealth(named: "Equipo2", hp: pokemonTeam.getTeamMaxHealth(named: "Equipo2"))
-                    pokemonTeam.clearTeamDamage(named: "Equipo1")
-                    pokemonTeam.clearTeamDamage(named: "Equipo2")
-                    pokemonTeam.clearCombatLog()
+                    teamIsNil = false
                 }
                 .background(
                     NavigationLink(destination: MainView(showSortFilterView: false, showFilterView: false, teamId: 1, irA: "SeleccionarEquipo"), isActive: $navigateToTeam1) { EmptyView() }
