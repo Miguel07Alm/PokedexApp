@@ -76,26 +76,29 @@ import SwiftUI
                             }
                             Button(action: {
                                 Task {
-                                    if(winnerId != 0){goToWinnerPov = true}
+                                    if(winnerId != 0){
+                                        goToWinnerPov = true
+                                        return
+                                    }
                                     var fastestTeam = pokemonTeam.isFaster(named: "Equipo1", thanNamed: "Equipo2") ? "Equipo1" : "Equipo2"
                                     var slowestTeam = fastestTeam == "Equipo1" ? "Equipo2" : "Equipo1"
                                     pokemonTeam.addToCombatLog("Comienza atacando el \(fastestTeam) ")
                                     
                                     await atacar(teamName: fastestTeam, enemyTeamName: slowestTeam)
+                                    print("Rapido ataca")
                                     refreshManager.forceRefresh()
                                     if(pokemonTeam.getTeamHealth(named: slowestTeam) < 1 ){
                                         pokemonTeam.addToCombatLog("El \(slowestTeam) fue derrotado!!!")
                                         winnerId = fastestTeam == "Equipo1" ? 1 : 2
-                                        
-                                    }else{
-                                        await atacar(teamName: slowestTeam, enemyTeamName: fastestTeam)
-                                        
-                                        if(pokemonTeam.getTeamHealth(named: fastestTeam) < 1 ){
-                                            pokemonTeam.addToCombatLog("El \(fastestTeam) fue derrotado!!!")
-                                            winnerId = slowestTeam == "Equipo1" ? 1 : 2
-                                        }
-                                        refreshManager.forceRefresh()
+                                        return
                                     }
+                                    await atacar(teamName: slowestTeam, enemyTeamName: fastestTeam)
+                                    print("lento ataca")
+                                    if(pokemonTeam.getTeamHealth(named: fastestTeam) < 1 ){
+                                        pokemonTeam.addToCombatLog("El \(fastestTeam) fue derrotado!!!")
+                                        winnerId = slowestTeam == "Equipo1" ? 1 : 2
+                                    }
+                                    refreshManager.forceRefresh() 
                                 }
                             }) {
                                 Text("")

@@ -37,17 +37,13 @@ struct WinnerPovView: View {
                 pos[2] = pos[1]
                 pos[1] = pos[0]
                 pos[0] = i
-                print(pos[0])
             } else if pos[1] == -1 || dmg > team.pokeDamage[pos[1]]{
                 pos[2] = pos[1]
                 pos[1] = i
-                print(pos[1])
             } else if pos[2] == -1 {
                 pos[2] = i
-                print(pos[2])
             }
         }
-        print(pos)
         return pos
     }
 }
