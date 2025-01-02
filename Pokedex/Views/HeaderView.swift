@@ -28,13 +28,31 @@ struct HeaderView: View {
                             .foregroundColor(Color(red: 0.7215686274509804, green: 0.7215686274509804, blue: 0.7215686274509804))
                     }
                     
-                    TextField("   Buscar", text: .constant(""))
-                        .scrollContentBackground(.hidden)
-                        .background(Color(red: 0.7215686274509804, green: 0.7215686274509804, blue: 0.7215686274509804))
-                        .cornerRadius(30)
-                    
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(Color(red: 0.7215686274509804, green: 0.7215686274509804, blue: 0.7215686274509804))
+                    ZStack(alignment: .trailing) {
+                               TextField("Buscar", text: $filterState.search)                                  .frame(height: 32)
+                                   .textInputAutocapitalization(.never)
+                                   .padding(EdgeInsets(top: 0, leading: 6, bottom: 0, trailing: 6))
+                                   .background(Color(red: 0.7215686274509804, green: 0.7215686274509804, blue: 0.7215686274509804))
+                                   .cornerRadius(30)
+                                   .overlay(
+                                    RoundedRectangle(cornerRadius: 30) .stroke(lineWidth: 0.5).fill(Color(red: 0.7215686274509804, green: 0.7215686274509804, blue: 0.7215686274509804))
+                                   )
+                               if filterState.search.isEmpty {
+                                    Image(systemName: "magnifyingglass")
+                                       .foregroundColor(.white)
+                                       .padding(.trailing, 10)
+                               } else {
+                                   Button {
+                                       filterState.search = ""
+                                   } label: {
+                                       Image(systemName: "xmark.circle.fill")
+                                           .foregroundColor(.white)
+                                           .padding(.trailing, 10)
+                                   }
+                               }
+                           }
+                           .padding(.horizontal, 10)
+                        
                     
                     Button(action: {
                         withAnimation {
@@ -57,19 +75,35 @@ struct HeaderView: View {
                         ForEach(Array(filterState.selectedTypes), id: \.self) { type in
                             HStack(spacing: 8) {
                                 Text(PokemonType.typesToSpanish[type] ?? type.capitalized) // Nombre del tipo en español
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 8)
-                                    .background(PokemonType.getColor(for: type)) // Fondo del chip con color del tipo
-                                    .cornerRadius(20)
-                                    .foregroundColor(.white)
                                 
+                                Text("X")
+                                    .font(.caption)
                              
                             }
-                            .padding(.trailing, 8).onTapGesture {
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(PokemonType.getColor(for: type)) // Fondo del chip con color del tipo
+                            .cornerRadius(20)
+                            .foregroundColor(.white).onTapGesture {
                                 filterState.selectedTypes.remove(type)
                             }
                         }
-                    }
+                        ForEach(Array(filterState.selectedRegions), id: \.self) { region in
+                            HStack(spacing: 8) {
+                                Text(region) // Nombre del tipo en español
+                                
+                                Text("X")
+                                    .font(.caption)
+                             
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(.black)
+                            .cornerRadius(20)
+                            .foregroundColor(.white).onTapGesture {
+                                filterState.selectedRegions.remove(region)
+                            }
+                        }                    }
                 }
                 .padding(.horizontal)
                 .offset(CGSize(width: 0, height: 22.5))
