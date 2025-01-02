@@ -241,15 +241,9 @@ class PokemonViewModel: ObservableObject {
             return
         }
 
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 5 // Set the timeout to 5 seconds
+        let request = URLRequest(url: url)
 
         self.session.dataTask(with: request) { data, response, error in
-            if let error = error as NSError?, error.code == NSURLErrorTimedOut {
-                completion(.failure(NetworkError.timeout))
-                return
-            }
-
             if let error = error {
                 completion(.failure(NetworkError.other(error)))
                 return
@@ -278,14 +272,9 @@ class PokemonViewModel: ObservableObject {
             completion(.failure(NetworkError.badURL))
             return
         }
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 5 // Set the timeout to 5 seconds
+        let request = URLRequest(url: url)
 
         self.session.dataTask(with: request) { data, response, error in
-            if let error = error as NSError?, error.code == NSURLErrorTimedOut {
-                completion(.failure(NetworkError.timeout))
-                return
-            }
             if let error = error {
                 completion(.failure(NetworkError.other(error)))
                 return
@@ -316,14 +305,9 @@ class PokemonViewModel: ObservableObject {
             completion(.failure(NetworkError.badURL))
             return
         }
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 5 // Set the timeout to 5 seconds
+        let request = URLRequest(url: url)
 
         self.session.dataTask(with: request) { data, response, error in
-            if let error = error as NSError?, error.code == NSURLErrorTimedOut {
-                completion(.failure(NetworkError.timeout))
-                return
-            }
             if let error = error {
                 completion(.failure(NetworkError.other(error)))
                 return
@@ -352,14 +336,9 @@ class PokemonViewModel: ObservableObject {
               completion(.failure(NetworkError.badURL))
               return
           }
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 5 // Set the timeout to 5 seconds
+        let request = URLRequest(url: url)
 
           self.session.dataTask(with: request) { data, response, error in
-            if let error = error as NSError?, error.code == NSURLErrorTimedOut {
-                completion(.failure(NetworkError.timeout))
-                return
-            }
               if let error = error {
                   completion(.failure(NetworkError.other(error)))
                   return
@@ -388,14 +367,9 @@ class PokemonViewModel: ObservableObject {
               completion(.failure(NetworkError.badURL))
               return
           }
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 5 // Set the timeout to 5 seconds
+        let request = URLRequest(url: url)
 
           self.session.dataTask(with: request) { data, response, error in
-            if let error = error as NSError?, error.code == NSURLErrorTimedOut {
-                completion(.failure(NetworkError.timeout))
-                return
-            }
               if let error = error {
                   completion(.failure(NetworkError.other(error)))
                   return
@@ -423,14 +397,9 @@ class PokemonViewModel: ObservableObject {
               completion(.failure(NetworkError.badURL))
               return
           }
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 5 // Set the timeout to 5 seconds
+        let request = URLRequest(url: url)
 
           self.session.dataTask(with: request) { data, response, error in
-            if let error = error as NSError?, error.code == NSURLErrorTimedOut {
-                completion(.failure(NetworkError.timeout))
-                return
-            }
               if let error = error {
                   completion(.failure(NetworkError.other(error)))
                   return
@@ -457,5 +426,4 @@ enum NetworkError: Error {
     case badData
     case badURL
     case other(Error)
-    case timeout
 }
