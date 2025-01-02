@@ -6,13 +6,17 @@ struct WinnerPovView: View {
     @State var teamId: Int
     
     var body: some View {
-        return HStack(spacing: -20){
+        VStack{
             let team = pokemonTeam.getTeam(named: teamId == 1 ? "Equipo1" : "Equipo2")
-            let pos = sortPokemonPositions()
-            WinnerPokemonDisplay(team: team!, pos: pos[1], posMaxDmg: pos[0])
-            WinnerPokemonDisplay(team: team!, pos: pos[0], posMaxDmg: pos[0])
-            WinnerPokemonDisplay(team: team!, pos: pos[2], posMaxDmg: pos[0])
+            HStack(spacing: -20){
+                let pos = sortPokemonPositions()
+                WinnerPokemonDisplay(team: team!, pos: pos[1], posMaxDmg: pos[0], color: Color.green)
+                WinnerPokemonDisplay(team: team!, pos: pos[0], posMaxDmg: pos[0], color: Color.red)
+                WinnerPokemonDisplay(team: team!, pos: pos[2], posMaxDmg: pos[0], color: Color.blue)
+            }
+            DisplayCard(msg: "HP Restante: \(team!.health)", color: Color.gray).frame(width: 350, height: 100).font(.system(size: 20))
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
         .ignoresSafeArea()
     }
@@ -48,6 +52,7 @@ struct WinnerPokemonDisplay: View {
     @State var team : Team
     @State var pos : Int
     @State var posMaxDmg : Int
+    @State var color : Color
     var body: some View {
         VStack {
             WebImage(url: URL(string: team.pokemons[pos]?.sprites.other?.showdown?.frontDefault ?? "")!)
@@ -57,15 +62,17 @@ struct WinnerPokemonDisplay: View {
                 .padding()
             
             let dmg = team.pokeDamage[pos]
-            Text("\(dmg)")
-            Bar3DView(currPtos: dmg, maxPtos: team.pokeDamage[posMaxDmg])
-        }.frame(height: 525)
+            DisplayCard(msg: "\(dmg)", color: Color.gray).frame(width: 50, height: 30)
+            Bar3DView(currPtos: dmg, maxPtos: team.pokeDamage[posMaxDmg], color: color)
+            DisplayCard(msg: team.pokemons[pos]!.name, color: color).frame(width: 120, height: 30)
+        }
     }
 }
     
 struct Bar3DView: View {
     let currPtos: Int
     let maxPtos: Int
+    let color : Color
     let maxHeight: CGFloat = 200 // Altura máxima fija
     
     private var barHeight: CGFloat {
@@ -76,7 +83,7 @@ struct Bar3DView: View {
         ZStack(alignment: .bottom) {
             // Cara frontal
             Rectangle()
-                .fill(Color.red)
+                .fill(color)
                 .frame(width: 80, height: barHeight)
             
             // Cara lateral derecha (para efecto 3D)
@@ -86,7 +93,7 @@ struct Bar3DView: View {
                 path.addLine(to: CGPoint(x: 102, y: maxHeight - barHeight - 16))  // Sube hasta la altura de la barra
                 path.addLine(to: CGPoint(x: 87, y: maxHeight - barHeight))  // Conecta con la barra
             }
-            .fill(Color.red.opacity(0.6))
+            .fill(color.opacity(0.6))
             
             // Cara superior (para efecto 3D)
             Path { path in
@@ -95,13 +102,26 @@ struct Bar3DView: View {
                 path.addLine(to: CGPoint(x: 102, y: maxHeight - barHeight - 16))  // Línea horizontal
                 path.addLine(to: CGPoint(x: 87, y: maxHeight - barHeight))  // Cierra el path
             }
-            .fill(Color.red.opacity(0.8))
+            .fill(color.opacity(0.8))
         }
-        .frame(width: 95, height: maxHeight)  // Ajustado al nuevo ancho total
+        .frame(width: 95, height: maxHeight).offset(x: -5)  // Ajustado al nuevo ancho total
+    }
+}
+
+struct DisplayCard: View {
+    let msg: String
+    let color : Color
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)).foregroundStyle(color)
+            Text(msg.capitalizedFirstLetter())
+        }
     }
 }
 
 #Preview {
-    Bar3DView(currPtos: 0, maxPtos: 100)
+    Bar3DView(currPtos: 85, maxPtos: 100, color: Color.red)
+    DisplayCard(msg: "crabominable", color: Color.red)
 }
 
