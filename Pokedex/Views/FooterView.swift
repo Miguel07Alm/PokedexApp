@@ -86,15 +86,16 @@ import SwiftUI
                                     if(pokemonTeam.getTeamHealth(named: slowestTeam) < 1 ){
                                         pokemonTeam.addToCombatLog("El \(slowestTeam) fue derrotado!!!")
                                         winnerId = fastestTeam == "Equipo1" ? 1 : 2
-                                        return
+                                        
+                                    }else{
+                                        await atacar(teamName: slowestTeam, enemyTeamName: fastestTeam)
+                                        
+                                        if(pokemonTeam.getTeamHealth(named: fastestTeam) < 1 ){
+                                            pokemonTeam.addToCombatLog("El \(fastestTeam) fue derrotado!!!")
+                                            winnerId = slowestTeam == "Equipo1" ? 1 : 2
+                                        }
+                                        refreshManager.forceRefresh()
                                     }
-                                    await atacar(teamName: slowestTeam, enemyTeamName: fastestTeam)
-                                    
-                                    if(pokemonTeam.getTeamHealth(named: fastestTeam) < 1 ){
-                                        pokemonTeam.addToCombatLog("El \(fastestTeam) fue derrotado!!!")
-                                        winnerId = slowestTeam == "Equipo1" ? 1 : 2
-                                    }
-                                    refreshManager.forceRefresh()
                                 }
                             }) {
                                 Text("")
