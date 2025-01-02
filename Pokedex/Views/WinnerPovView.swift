@@ -6,16 +6,19 @@ struct WinnerPovView: View {
     @State var teamId: Int
     
     var body: some View {
-        VStack{
+        VStack {
+            Text("").frame(height: 50)
             let team = pokemonTeam.getTeam(named: teamId == 1 ? "Equipo1" : "Equipo2")
             Text("¡HA GANADO EL \(team!.name.uppercased())!").font(.title)
-            HStack(spacing: -20){
+            Image("trofeo").resizable().frame(width: 150, height: 150)
+            HStack(spacing: 1){
                 let pos = sortPokemonPositions()
-                WinnerPokemonDisplay(team: team!, pos: pos[1], posMaxDmg: pos[0], color: Color(red: 0.3686274509803922, green: 0.6196078431372549, blue: 0.3764705882352941))
-                WinnerPokemonDisplay(team: team!, pos: pos[0], posMaxDmg: pos[0], color: Color(red: 0.7333333333333333, green: 0.5176470588235295, blue: 0.5176470588235295))
-                WinnerPokemonDisplay(team: team!, pos: pos[2], posMaxDmg: pos[0], color: Color(red: 0.40784313725490196, green: 0.5137254901960784, blue: 0.5411764705882353))
+                WinnerPokemonDisplay(team: team!, pos: pos[1], posMaxDmg: pos[0], color: Color(red: 0.203, green: 0.62, blue: 0.218))
+                WinnerPokemonDisplay(team: team!, pos: pos[0], posMaxDmg: pos[0], color: Color(hue: 1.0, saturation: 0.724, brightness: 0.752))
+                WinnerPokemonDisplay(team: team!, pos: pos[2], posMaxDmg: pos[0], color: Color(hue: 0.552, saturation: 0.744, brightness: 0.564))
             }
-            DisplayCard(msg: "HP Restante: \(team!.health)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 350, height: 100).font(.system(size: 22))
+            DisplayCard(msg: "HP Restante: \(team!.health)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 350, height: 70).font(.system(size: 22))
+            Text("") //empuja el footer
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
@@ -56,6 +59,8 @@ struct WinnerPokemonDisplay: View {
     @State var color : Color
     var body: some View {
         VStack {
+            let dmg = team.pokeDamage[pos]
+            DisplayCard(msg: "\(dmg)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 50, height: 30)
             WebImage(url: URL(string: team.pokemons[pos]?.sprites.other?.showdown?.frontDefault ?? "")!)
                 .resizable()
                 .scaledToFit()
@@ -63,8 +68,6 @@ struct WinnerPokemonDisplay: View {
                 .cornerRadius(20)
                 .padding()
             
-            let dmg = team.pokeDamage[pos]
-            DisplayCard(msg: "\(dmg)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 50, height: 30)
             Bar3DView(currPtos: dmg, maxPtos: team.pokeDamage[posMaxDmg], color: color)
             DisplayCard(msg: team.pokemons[pos]!.name, color: color).frame(width: 120, height: 30)
         }
@@ -123,7 +126,9 @@ struct DisplayCard: View {
 }
 
 #Preview {
-    Bar3DView(currPtos: 85, maxPtos: 100, color: Color.red)
-    DisplayCard(msg: "crabominable", color: Color(red: 0.7333333333333333, green: 0.5176470588235295, blue: 0.5176470588235295)).frame(width: 120, height: 30)
+    Image("trofeo").resizable().frame(width: 250, height: 250)
+    Bar3DView(currPtos: 85, maxPtos: 100, color: Color(hue: 0.552, saturation: 0.744, brightness: 0.564))
+    
+    DisplayCard(msg: "crabominable", color: Color(red: 0.7333333333333333, green: 0.5176470588235295, blue: 0.5176470588235295)) .frame(width: 120, height: 30)
 }
 
