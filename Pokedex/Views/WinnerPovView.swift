@@ -55,8 +55,9 @@ struct WinnerPokemonDisplay: View {
     @State var posMaxDmg : Int
     @State var color : Color
     
+    let maxHeight: CGFloat = 190
     private var barHeight: CGFloat {
-        return 190 * (CGFloat(team.pokeDamage[pos]) / CGFloat(team.pokeDamage[posMaxDmg]))
+        return maxHeight * (CGFloat(team.pokeDamage[pos]) / CGFloat(team.pokeDamage[posMaxDmg]))
     }
     
     var body: some View {
@@ -64,7 +65,7 @@ struct WinnerPokemonDisplay: View {
         ZStack {
             VStack {
                 Spacer()
-                Bar3DView(currPtos: dmg, maxPtos: team.pokeDamage[posMaxDmg], color: color)
+                Bar3DView(maxHeight: maxHeight, barHeight: barHeight, color: color)
                 DisplayCard(msg: team.pokemons[pos]!.name, color: color).frame(width: 120, height: 30)
             }
             VStack {
@@ -73,20 +74,15 @@ struct WinnerPokemonDisplay: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 100, height: 100)
-            }.offset(y:CGFloat(-barHeight - 16 / 2) + CGFloat(95))
+            }.offset(y:CGFloat(-barHeight - 16 / 2) + CGFloat(105))
         }.frame(alignment: .bottomLeading)
     }
 }
     
 struct Bar3DView: View {
-    let currPtos: Int
-    let maxPtos: Int
+    let maxHeight: CGFloat // Altura máxima fija
+    let barHeight: CGFloat
     let color : Color
-    let maxHeight: CGFloat = 190 // Altura máxima fija
-    
-    private var barHeight: CGFloat {
-        return maxHeight * (CGFloat(currPtos) / CGFloat(maxPtos))
-    }
     
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -127,11 +123,3 @@ struct DisplayCard: View {
         }
     }
 }
-
-#Preview {
-    //Image("trofeo").resizable().frame(width: 250, height: 250)
-    Bar3DView(currPtos: 72, maxPtos: 100, color: Color(hue: 0.552, saturation: 0.744, brightness: 0.564))
-    
-   // DisplayCard(msg: "crabominable", color: Color(red: 0.7333333333333333, green: 0.5176470588235295, blue: 0.5176470588235295)) .frame(width: 120, height: 30)
-}
-
