@@ -12,34 +12,34 @@ struct CombateView: View {
     @StateObject private var refreshManager = RefreshManager.shared
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 30) {
-                Text("")
-                VStack {
-                    HealthBar(maxHealth: teamMaxHealth[0], health: teamHealth[0])
-                    ZStack {
-                        Image("RingCombate")
-                            .resizable()
-                            .frame(width: 400, height: 400)
-                        
-                        VStack(spacing: 50) {
-                            teamView(teamId: 1)
-                            teamView(teamId: 2)
-                        }
+        ScrollView{
+            VStack {
+                Text("").frame(height: 75)
+                HealthBar(maxHealth: teamMaxHealth[0], health: teamHealth[0])
+                ZStack {
+                    Image("RingCombate")
+                        .resizable()
+                        .frame(width: 400, height: 400)
+                    
+                    VStack(spacing: 50) {
+                        teamView(teamId: 1)
+                        teamView(teamId: 2)
                     }
-                    HealthBar(maxHealth: teamMaxHealth[1], health: teamHealth[1])
                 }
+                HealthBar(maxHealth: teamMaxHealth[1], health: teamHealth[1])
                 
                 if(showLog){
                     CombatLog(title: "Registro de Combate", messages: combatLog)
                         .padding()
                 }else{
-                    VersusNames()
+                    VersusNames().offset(y:55)
+                  //  Text("").frame(height: 157)
                 }
             }
         }
-        .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
+        .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647).ignoresSafeArea())
         .ignoresSafeArea()
+        .frame(width: .infinity, height: .infinity)
         .onAppear(perform: updateView)
         .onChange(of: refreshManager.refreshFlag) { _ in
             updateView()
