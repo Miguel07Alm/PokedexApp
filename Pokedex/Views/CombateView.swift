@@ -8,25 +8,27 @@ struct CombateView: View {
     @State private var combatLog: [String] = []
     @State var teamHealth: [Int] = [0, 0]
     @State var teamMaxHealth: [Int] = [0, 0]
-    @State private var onAttackTapped: (() async -> Void)?
     @StateObject private var refreshManager = RefreshManager.shared
 
     var body: some View {
         ScrollView {
-            VStack {
-                HealthBar(maxHealth: teamMaxHealth[0], health: teamHealth[0])
-                ZStack {
-                    Image("RingCombate")
-                        .resizable()
-                        .frame(width: 400, height: 400)
-                    
-                    VStack(spacing: 50) {
-                        teamView(teamId: 1)
-                        teamView(teamId: 2)
+            VStack(spacing: 30) {
+                Text("")
+                VStack {
+                    HealthBar(maxHealth: teamMaxHealth[0], health: teamHealth[0])
+                    ZStack {
+                        Image("RingCombate")
+                            .resizable()
+                            .frame(width: 400, height: 400)
+                        
+                        VStack(spacing: 50) {
+                            teamView(teamId: 1)
+                            teamView(teamId: 2)
+                        }
                     }
+                    HealthBar(maxHealth: teamMaxHealth[1], health: teamHealth[1])
                 }
-                HealthBar(maxHealth: teamMaxHealth[1], health: teamHealth[1])
-                
+                VersusNames()
                 CombatLog(title: "Registro de Combate", messages: combatLog)
                     .padding()
             }
@@ -145,6 +147,50 @@ struct HealthBar: View {
     }
 }
 
+struct VersusNames: View {
+    var body: some View {
+        HStack(spacing: 20){
+            DisplayTeamNames(teamId: 1)
+            // VS Circle
+            ZStack {
+                Circle()
+                    .fill(Color(red: 239/255, green: 83/255, blue: 96/255))
+                    .frame(width: 60, height: 60)
+                
+                Text("VS")
+                    .foregroundColor(.white)
+                    .font(.system(size: 22, weight: .bold))
+                    .overlay {
+                        Circle().stroke(Color.white, lineWidth: 4)
+                            .frame(width: 60, height: 60)
+                    }
+            }
+            .padding(.horizontal, -1) // Adjust circle overlap with lines
+            DisplayTeamNames(teamId: 2)
+        }
+    }
+}
+
+struct DisplayTeamNames: View {
+    @StateObject private var pokemonTeam = PokemonTeam.shared
+    let teamId : Int
+
+    var body: some View {
+        let teamName = teamId == 1 ? "Equipo1" : "Equipo2"
+        VStack(spacing:  10){
+            ForEach(0..<3, id: \.self) { i in
+                if let team = pokemonTeam.getTeam(named: teamName),
+                   let pokemon = team.pokemons[i] {
+                    ZStack {
+                        RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)).foregroundStyle(Color.white)
+                        Text(pokemon.name.capitalizedFirstLetter())
+                    }.frame(width: 120, height: 25)
+                }
+            }
+        }
+    }
+}
+
 struct PokemonDisplay: View {
     let img: URL
     
@@ -157,16 +203,6 @@ struct PokemonDisplay: View {
                 .padding()
         }
         .frame(width: 125, height: 125)
-    }
-}
-
-struct DisplayPokeName: View {
-    let name: String
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)).foregroundStyle(Color(red: 0.92, green: 0.92, blue: 0.92))
-            Text(name.capitalizedFirstLetter())
-        }
     }
 }
 #Preview {

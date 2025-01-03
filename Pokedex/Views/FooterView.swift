@@ -8,9 +8,7 @@ import SwiftUI
         @State var selectedTab: Int
         @State private var combatLog: [String] = []
         @State private var winnerId: Int = 0
-        @State private var goToWinnerPov: Bool = false
-        var onAttackTapped: (() async -> Void)?
-        
+        @State private var goToWinnerPov: Bool = false        
         
         // Closures opcionales para manejar las acciones
         var onRegisterTapped: (() -> Void)?
