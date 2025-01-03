@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		350612272D25BAF800523E25 /* WinnerPovView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 350612262D25BAF800523E25 /* WinnerPovView.swift */; };
 		350612282D25BAF800523E25 /* WinnerPovView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 350612262D25BAF800523E25 /* WinnerPovView.swift */; };
+		351F34512D285AB900063A2A /* CombatLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351F34502D285AB900063A2A /* CombatLogView.swift */; };
+		351F34522D285AB900063A2A /* CombatLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351F34502D285AB900063A2A /* CombatLogView.swift */; };
 		3524A1182D1EB1DC005BAB91 /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3524A1172D1EB1DC005BAB91 /* RefreshManager.swift */; };
 		3524A1192D1EB1DC005BAB91 /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3524A1172D1EB1DC005BAB91 /* RefreshManager.swift */; };
 		3524A1282D1EC90F005BAB91 /* CombateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3524A1272D1EC90F005BAB91 /* CombateView.swift */; };
@@ -72,6 +74,7 @@
 /* Begin PBXFileReference section */
 		350612262D25BAF800523E25 /* WinnerPovView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinnerPovView.swift; sourceTree = "<group>"; };
 		351649392CF623200083E7F6 /* SDWebImageSwiftUI-master */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "SDWebImageSwiftUI-master"; sourceTree = "<group>"; };
+		351F34502D285AB900063A2A /* CombatLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombatLogView.swift; sourceTree = "<group>"; };
 		3524A1172D1EB1DC005BAB91 /* RefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshManager.swift; sourceTree = "<group>"; };
 		3524A1272D1EC90F005BAB91 /* CombateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombateView.swift; sourceTree = "<group>"; };
 		3531E0752D2711FD0071AAF3 /* PokemonRegion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonRegion.swift; sourceTree = "<group>"; };
@@ -236,6 +239,7 @@
 				355F8D962D1B045C00E2D758 /* TeamsCombateView.swift */,
 				3524A1272D1EC90F005BAB91 /* CombateView.swift */,
 				350612262D25BAF800523E25 /* WinnerPovView.swift */,
+				351F34502D285AB900063A2A /* CombatLogView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -390,6 +394,7 @@
 				35A9D5562CF61D1D00D7B680 /* InitialView.swift in Sources */,
 				35A9D5572CF61D1D00D7B680 /* PokemonSortFilterView.swift in Sources */,
 				35A9D5582CF61D1D00D7B680 /* ProfileView.swift in Sources */,
+				351F34512D285AB900063A2A /* CombatLogView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,6 +431,7 @@
 				35C3D5852CECEB3C0022495F /* PokemonSortFilterView.swift in Sources */,
 				3597CB962CFF7AB700D6B6A4 /* ImagePicker.swift in Sources */,
 				35C3D5862CECEB3C0022495F /* ProfileView.swift in Sources */,
+				351F34522D285AB900063A2A /* CombatLogView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
