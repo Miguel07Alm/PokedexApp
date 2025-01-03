@@ -8,6 +8,7 @@ struct CombateView: View {
     @State private var combatLog: [String] = []
     @State var teamHealth: [Int] = [0, 0]
     @State var teamMaxHealth: [Int] = [0, 0]
+    @State var showLog = false
     @StateObject private var refreshManager = RefreshManager.shared
 
     var body: some View {
@@ -28,9 +29,13 @@ struct CombateView: View {
                     }
                     HealthBar(maxHealth: teamMaxHealth[1], health: teamHealth[1])
                 }
-                VersusNames()
-                CombatLog(title: "Registro de Combate", messages: combatLog)
-                    .padding()
+                
+                if(showLog){
+                    CombatLog(title: "Registro de Combate", messages: combatLog)
+                        .padding()
+                }else{
+                    VersusNames()
+                }
             }
         }
         .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
@@ -38,6 +43,7 @@ struct CombateView: View {
         .onAppear(perform: updateView)
         .onChange(of: refreshManager.refreshFlag) { _ in
             updateView()
+            showLog = true
         }
     }
     
