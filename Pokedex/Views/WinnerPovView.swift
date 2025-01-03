@@ -7,10 +7,10 @@ struct WinnerPovView: View {
     
     var body: some View {
         VStack {
-            Text("").frame(height: 50)
+            Text("").frame(height: 40)
             let team = pokemonTeam.getTeam(named: teamId == 1 ? "Equipo1" : "Equipo2")
             Text("¡HA GANADO EL \(team!.name.uppercased())!").font(.title)
-            Image("trofeo").resizable().frame(width: 150, height: 150)
+            Image("trofeo").resizable().frame(width: 145, height: 145).offset(y: -20)
             HStack(spacing: 1){
                 let pos = sortPokemonPositions()
                 WinnerPokemonDisplay(team: team!, pos: pos[1], posMaxDmg: pos[0], color: Color(red: 0.203, green: 0.62, blue: 0.218), rankImg: "2Rank")
@@ -57,12 +57,16 @@ struct WinnerPokemonDisplay: View {
     @State var rankImg : String
     
     let maxHeight: CGFloat = 190
+    
+    private var dmg: Int {
+        return team.pokeDamage[pos]
+    }
     private var barHeight: CGFloat {
-        return maxHeight * (CGFloat(team.pokeDamage[pos]) / CGFloat(team.pokeDamage[posMaxDmg]))
+        return maxHeight * (CGFloat(dmg == 0 ? 1 : dmg) / CGFloat(team.pokeDamage[posMaxDmg]))
     }
     
+
     var body: some View {
-        let dmg = team.pokeDamage[pos]
         ZStack {
             VStack {
                 Spacer()
@@ -71,7 +75,7 @@ struct WinnerPokemonDisplay: View {
             }
             VStack {
                 ZStack{
-                    Circle().fill(Color.white.opacity(0.85)).frame(width: 80, height: 80)
+                    Circle().fill(Color(hex: "#75bbc9").opacity(0.7)).frame(width: 80, height: 80)
                     Image(rankImg).resizable().frame(width: 75, height: 75).offset(y: 2)
                 }.offset(y: 5)
                 
@@ -130,4 +134,8 @@ struct DisplayCard: View {
             Text(msg.capitalizedFirstLetter())
         }
     }
+}
+
+#Preview{
+    Color(hex: "#75bbc9")
 }
