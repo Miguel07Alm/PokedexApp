@@ -62,7 +62,7 @@ struct WinnerPokemonDisplay: View {
         return team.pokeDamage[pos]
     }
     private var barHeight: CGFloat {
-        return maxHeight * (CGFloat(dmg == 0 ? 1 : dmg) / CGFloat(team.pokeDamage[posMaxDmg]))
+        return maxHeight * (CGFloat(dmg == 0 ? 5 : dmg) / CGFloat(team.pokeDamage[posMaxDmg]))
     }
     
 
