@@ -124,25 +124,28 @@ struct HealthBar: View {
         
     var body: some View {
         ZStack(alignment: .leading) {
+            
+            Image("HealthBc").resizable().frame(width: 350, height: 40).offset(x: -15)
             // Background
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color.black.opacity(0.6))
-                .frame(width: 200, height: 20)
+                .frame(width: 300, height: 20)
             
             // Health bar
             HStack(spacing: 0) {
                 // Red portion (depleted health)
                 Rectangle()
                     .fill(Color.red)
-                    .frame(width: 200 * CGFloat(maxHealth - health ) / CGFloat(maxHealth))
+                    .frame(width: 300 * CGFloat(maxHealth - health ) / CGFloat(maxHealth))
                 
                 // Green portion (remaining health)
                 Rectangle()
                     .fill(Color.green)
-                    .frame(width: 200 * CGFloat(health) / CGFloat(maxHealth))
+                    .frame(width: 300 * CGFloat(health) / CGFloat(maxHealth))
             }
             .frame(height: 16)
             .padding(.horizontal, 2)
+            .offset(x: +15)
             
             // HP Label
             Text("HP: \(health)/\(maxHealth)")
@@ -153,6 +156,67 @@ struct HealthBar: View {
     }
 }
 
+struct HealthBarView: View {
+        let currentHealth: Int
+       let maxHealth: Int
+       
+       // Animation state
+       @State private var animatedValue: Double = 0
+       
+       var body: some View {
+           HStack(spacing: 4) {
+               // HP Label
+               Text("HP")
+                   .font(.system(size: 16, weight: .bold))
+                   .foregroundColor(.white)
+                   .padding(8)
+                   .background(
+                       Circle()
+                           .fill(Color(.sRGB, red: 0.2, green: 0.2, blue: 0.2, opacity: 1))
+                   )
+               
+               // Health Bar Container
+               GeometryReader { geometry in
+                   ZStack(alignment: .leading) {
+                       // Striped Background (outside the health bar)
+                       HStack(spacing: 0) {
+                           ForEach(0..<20) { index in
+                               Rectangle()
+                                   .fill(index % 2 == 0 ?
+                                       Color(.sRGB, red: 0.3, green: 0.3, blue: 0.3, opacity: 1) :
+                                       Color(.sRGB, red: 0.4, green: 0.4, blue: 0.4, opacity: 1))
+                                   .frame(width: geometry.size.width / 20)
+                           }
+                       }
+                       
+                       // Health Bar Background (Red for depleted health)
+                       Rectangle()
+                           .fill(
+                               Color(.sRGB, red: 0.8, green: 0.2, blue: 0.2, opacity: 1)
+                           )
+                           .padding(2) // Add padding to show the striped background
+                       
+                       // Current Health (Green)
+                       Rectangle()
+                           .fill(
+                               LinearGradient(
+                                   gradient: Gradient(colors: [
+                                       Color(.sRGB, red: 0.2, green: 1, blue: 0.2, opacity: 1),
+                                       Color(.sRGB, red: 0.1, green: 0.8, blue: 0.1, opacity: 1)
+                                   ]),
+                                   startPoint: .top,
+                                   endPoint: .bottom
+                               )
+                           )
+                           .frame(width: (geometry.size.width - 4) * CGFloat(animatedValue))
+                           .padding(2) // Match padding with background
+                   }
+               }
+               .frame(height: 24)
+               .clipShape(RoundedRectangle(cornerRadius: 12))
+           }
+       }
+   }
 struct VersusNames: View {
     var body: some View {
         HStack(spacing: 20){
@@ -212,5 +276,8 @@ struct PokemonDisplay: View {
     }
 }
 #Preview {
+    @State var a = 100
     CombateView()
+   // HealthBar(maxHealth: 100, health: 100)
+    //HealthBarView(currentHealth: 10, maxHealth: 100)
 }
