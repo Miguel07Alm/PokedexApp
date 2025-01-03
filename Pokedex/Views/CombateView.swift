@@ -106,7 +106,7 @@ struct CombatLog: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(height: 200)
+            .frame(height: 400)
             .background(Color.white.opacity(0.9))
             .cornerRadius(12)
             .padding(8)
@@ -156,72 +156,11 @@ struct HealthBar: View {
                 .font(.system(size: 15, weight: .bold))
                 .foregroundColor(.white)
                 .padding(.horizontal, 6)
-                .offset(x: teamId == 1 ? 57 : 222)
+                .offset(x: teamId == 1 ? 57 : 220)
         }.offset(x: teamId == 1 ? -17 : 17)
     }
 }
 
-struct HealthBarView: View {
-        let currentHealth: Int
-       let maxHealth: Int
-       
-       // Animation state
-       @State private var animatedValue: Double = 0
-       
-       var body: some View {
-           HStack(spacing: 4) {
-               // HP Label
-               Text("HP")
-                   .font(.system(size: 16, weight: .bold))
-                   .foregroundColor(.white)
-                   .padding(8)
-                   .background(
-                       Circle()
-                           .fill(Color(.sRGB, red: 0.2, green: 0.2, blue: 0.2, opacity: 1))
-                   )
-               
-               // Health Bar Container
-               GeometryReader { geometry in
-                   ZStack(alignment: .leading) {
-                       // Striped Background (outside the health bar)
-                       HStack(spacing: 0) {
-                           ForEach(0..<20) { index in
-                               Rectangle()
-                                   .fill(index % 2 == 0 ?
-                                       Color(.sRGB, red: 0.3, green: 0.3, blue: 0.3, opacity: 1) :
-                                       Color(.sRGB, red: 0.4, green: 0.4, blue: 0.4, opacity: 1))
-                                   .frame(width: geometry.size.width / 20)
-                           }
-                       }
-                       
-                       // Health Bar Background (Red for depleted health)
-                       Rectangle()
-                           .fill(
-                               Color(.sRGB, red: 0.8, green: 0.2, blue: 0.2, opacity: 1)
-                           )
-                           .padding(2) // Add padding to show the striped background
-                       
-                       // Current Health (Green)
-                       Rectangle()
-                           .fill(
-                               LinearGradient(
-                                   gradient: Gradient(colors: [
-                                       Color(.sRGB, red: 0.2, green: 1, blue: 0.2, opacity: 1),
-                                       Color(.sRGB, red: 0.1, green: 0.8, blue: 0.1, opacity: 1)
-                                   ]),
-                                   startPoint: .top,
-                                   endPoint: .bottom
-                               )
-                           )
-                           .frame(width: (geometry.size.width - 4) * CGFloat(animatedValue))
-                           .padding(2) // Match padding with background
-                   }
-               }
-               .frame(height: 24)
-               .clipShape(RoundedRectangle(cornerRadius: 12))
-           }
-       }
-   }
 struct VersusNames: View {
     var body: some View {
         HStack(spacing: 20){
