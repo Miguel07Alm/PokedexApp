@@ -70,16 +70,17 @@ struct WinnerPokemonDisplay: View {
                 DisplayCard(msg: team.pokemons[pos]!.name, color: color).frame(width: 120, height: 30)
             }
             VStack {
-                Image(rankImg).resizable().frame(width: 75, height: 75).offset(y: 10)
+                ZStack{
+                    Circle().fill(Color.white.opacity(0.85)).frame(width: 80, height: 80)
+                    Image(rankImg).resizable().frame(width: 75, height: 75).offset(y: 2)
+                }.offset(y: 5)
+                
                 WebImage(url: URL(string: team.pokemons[pos]?.sprites.other?.showdown?.frontDefault ?? team.pokemons[pos]?.sprites.frontDefault ?? "")!)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 100, height: 100)
                 if(dmg != 0){
-                    ZStack{
-                        DisplayCard(msg: "", color: Color.white).frame(width: 50, height: 30)
-                        DisplayCard(msg: "\(dmg)", color: color.opacity(0.50)).frame(width: 50, height: 30)
-                    }.offset(x: -2, y: 2)
+                    DisplayCard(msg: "\(dmg)", color: Color.white.opacity(0.50)).frame(width: 50, height: 30).offset(x: -2, y: 2)
                 }
             }.offset(y:CGFloat(-barHeight - 16 / 2) + CGFloat(95))
         }.frame(alignment: .bottomLeading)
