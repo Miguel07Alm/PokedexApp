@@ -15,7 +15,7 @@ struct CombateView: View {
         ScrollView{
             VStack {
                 Text("").frame(height: 60)
-                HealthBar(maxHealth: teamMaxHealth[0], health: teamHealth[0])
+                HealthBar(teamId: 1, maxHealth: teamMaxHealth[0], health: teamHealth[0])
                 ZStack {
                     Image("RingCombate")
                         .resizable()
@@ -26,7 +26,7 @@ struct CombateView: View {
                         teamView(teamId: 2)
                     }
                 }
-                HealthBar(maxHealth: teamMaxHealth[1], health: teamHealth[1])
+                HealthBar(teamId: 2, maxHealth: teamMaxHealth[1], health: teamHealth[1])
                 
                 if(showLog){
                     CombatLog(title: "Registro de Combate", messages: combatLog)
@@ -118,14 +118,15 @@ struct CombatLog: View {
 }
 
 struct HealthBar: View {
+    let teamId : Int
     let maxHealth: Int
     let health: Int
         
     var body: some View {
         ZStack(alignment: .leading) {
             
-            Image("HealthBc").resizable().frame(width: 350, height: 40)
-            
+            Image("HealthBc").resizable().frame(width: 350, height: 40).scaleEffect(x: teamId == 1 ? 1 : -1, y: 1) // Invertir en el eje X
+
             // Health bar
             HStack(spacing: 0) {
                 // Red portion (depleted health)
@@ -142,21 +143,21 @@ struct HealthBar: View {
             .frame(height: 18)
             .padding(.horizontal, 2)
             .cornerRadius(100)
-            .offset(x: 55)
+            .offset(x: teamId == 1 ? 55 : 15)
             
             // HP Label
             Text("HP")
                 .font(.system(size: 22, weight: .bold))
                 .foregroundColor(.white)
                 .padding(.horizontal, 6)
-                .offset(x: 12)
-            
+                .offset(x: teamId == 1 ? 12 : 297)
+
             Text("\(health)/\(maxHealth)")
                 .font(.system(size: 15, weight: .bold))
                 .foregroundColor(.white)
                 .padding(.horizontal, 6)
-                .offset(x: 57)
-        }
+                .offset(x: teamId == 1 ? 57 : 222)
+        }.offset(x: teamId == 1 ? -17 : 17)
     }
 }
 
