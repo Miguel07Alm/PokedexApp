@@ -8,7 +8,8 @@ import SwiftUI
         @State var selectedTab: Int
         @State private var combatLog: [String] = []
         @State private var winnerId: Int = 0
-        @State private var goToWinnerPov: Bool = false        
+        @State private var goToWinnerPov: Bool = false
+        @State private var turno  = 1
         
         // Closures opcionales para manejar las acciones
         var onRegisterTapped: (() -> Void)?
@@ -80,7 +81,9 @@ import SwiftUI
                                     }
                                     var fastestTeam = pokemonTeam.isFaster(named: "Equipo1", thanNamed: "Equipo2") ? "Equipo1" : "Equipo2"
                                     var slowestTeam = fastestTeam == "Equipo1" ? "Equipo2" : "Equipo1"
-                                    pokemonTeam.addToCombatLog("Comienza atacando el \(fastestTeam) ")
+                                    pokemonTeam.addToCombatLog("Turno \(turno)")
+                                    pokemonTeam.addToCombatLog("Comienza atacando el \(fastestTeam)")
+                                    pokemonTeam.addToCombatLog("")
                                     
                                     await atacar(teamName: fastestTeam, enemyTeamName: slowestTeam)
                                     print("Rapido ataca")
@@ -96,7 +99,8 @@ import SwiftUI
                                         pokemonTeam.addToCombatLog("El \(fastestTeam) fue derrotado!!!")
                                         winnerId = slowestTeam == "Equipo1" ? 1 : 2
                                     }
-                                    refreshManager.forceRefresh() 
+                                    turno += 1
+                                    refreshManager.forceRefresh()
                                 }
                             }) {
                                 Text("")
@@ -131,8 +135,7 @@ import SwiftUI
             var i = 0
             for poke in team.pokemons.compactMap({ $0 }) {
                 let (moveName, moveAcc, movePower) = await randomMove(poke: poke)
-                
-                pokemonTeam.addToCombatLog("Pokémon \(poke.name) usa \(moveName)")
+                pokemonTeam.addToCombatLog("\(poke.name.capitalizedFirstLetter()) usa \(moveName.capitalizedFirstLetter())")
                 pokemonTeam.addToCombatLog("Precisión: \(moveAcc) | Daño: \(movePower)")
                 
                 if moveAcc > Int.random(in: 0...99) {
@@ -143,9 +146,11 @@ import SwiftUI
                 } else {
                     pokemonTeam.addToCombatLog("¡El ataque falló!")
                 }
+                pokemonTeam.addToCombatLog("")
             }
-            pokemonTeam.addToCombatLog("Daño total del equipo \(teamName): \(teamDamage)")
+            pokemonTeam.addToCombatLog("Daño total del \(teamName): \(teamDamage)")
             pokemonTeam.setTeamHealth(named: enemyTeamName, hp: (pokemonTeam.getTeamHealth(named: enemyTeamName) - teamDamage))
+            pokemonTeam.addToCombatLog("")
         }
         
         private func randomMove(poke: Pokemon) async -> (name: String, accuracy: Int, power: Int) {
