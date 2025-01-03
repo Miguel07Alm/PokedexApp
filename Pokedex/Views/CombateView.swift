@@ -31,6 +31,8 @@ struct CombateView: View {
                 if(showLog){
                     CombatLog(title: "Registro de Combate", messages: combatLog)
                         .padding()
+                    Text("")
+                    Text("")
                 }else{
                     VersusNames().offset(y:20)
                 }
