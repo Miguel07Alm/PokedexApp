@@ -61,7 +61,7 @@ struct CombatLogView: View {
             ForEach(parts.indices, id: \.self) { index in
                 if index == 0 { // Nombre del Pokémon
                     Text(String(parts[index]))
-                        .foregroundColor(Color(red: 0.4, green: 0.6, blue: 1.0))
+                        .foregroundColor(Color(hue: 0.611, saturation: 0.664, brightness: 0.439))
                         .font(.system(.body, design: .monospaced))
                 } else if index == 2 { // Nombre del movimiento
                     Text(String(parts[index]))
@@ -132,33 +132,38 @@ struct CombatLogView: View {
     }
     
     private func precisionColor(_ precision: Int) -> Color {
-        let normalizedPrecision = Double(min(max(precision, 0), 100)) / 100.0
+        // Normalizar el valor entre 30 y 100
+        let clampedPrecision = min(max(precision, 30), 100)
+        let normalizedPrecision = (Double(clampedPrecision) - 30.0) / (100.0 - 30.0)
+        
         return Color(
-            red: 1.0 - normalizedPrecision,
-            green: normalizedPrecision,
-            blue: 0.0
+            red: 1.0 - normalizedPrecision,  // Rojo disminuye con mayor precisión
+            green: normalizedPrecision,     // Verde aumenta con mayor precisión
+            blue: 0.0                       // Azul siempre es 0
         )
     }
     
+    
     private func damageColor(_ damage: Int) -> Color {
-        let normalizedDamage = Double(min(max(damage, 0), 150)) / 150.0
+        let clampedDamage = max(damage, 30)  // Mínimo 30
+        let normalizedDamage = Double(min(clampedDamage, 150)) / 150.0
         return Color(
-            red: normalizedDamage,
-            green: 1.0 - normalizedDamage,
-            blue: 1.0 - normalizedDamage
+            red: 1.0,                         // Siempre rojo máximo
+            green: 1.0 - normalizedDamage,    // Verde disminuye con más daño
+            blue: 0.0                         // Azul siempre 0
         )
     }
     
     private func totalDamageColor(_ damage: Int) -> Color {
-        let normalizedDamage = Double(min(max(damage, 0), 400)) / 400.0
+        let clampedDamage = max(damage, 100) // Mínimo 100
+        let normalizedDamage = Double(min(clampedDamage, 400)) / 400.0
         return Color(
-            red: normalizedDamage,
-            green: 1.0 - normalizedDamage,
-            blue: 1.0 - normalizedDamage
+            red: 1.0,                         // Siempre rojo máximo
+            green: 1.0 - normalizedDamage,    // Verde disminuye con más daño total
+            blue: 0.0                         // Azul siempre 0
         )
     }
 }
-
 
 #Preview {
     CombatLogView(messages: ["get cemelmaned"])
