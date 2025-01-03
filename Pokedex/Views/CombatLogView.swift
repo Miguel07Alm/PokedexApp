@@ -38,7 +38,7 @@ struct CombatLogView: View {
                         } else {
                             Text(message)
                                 .font(.system(.body, design: .monospaced))
-                                .foregroundColor(.secondary)
+                                .foregroundColor(Color(hue: 0.611, saturation: 0.0, brightness: 0.091))
                         }
                     }
                 }
@@ -61,7 +61,7 @@ struct CombatLogView: View {
             ForEach(parts.indices, id: \.self) { index in
                 if index == 0 { // Nombre del Pokémon
                     Text(String(parts[index]))
-                        .foregroundColor(Color(hue: 0.611, saturation: 0.664, brightness: 0.439))
+                        .foregroundColor(Color(hue: 0.611, saturation: 0.824, brightness: 0.86))
                         .font(.system(.body, design: .monospaced))
                 } else if index == 2 { // Nombre del movimiento
                     Text(String(parts[index]))
@@ -69,7 +69,7 @@ struct CombatLogView: View {
                         .font(.system(.body, design: .monospaced))
                 } else {
                     Text(String(parts[index]))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Color(hue: 0.611, saturation: 0.0, brightness: 0.091))
                         .font(.system(.body, design: .monospaced))
                 }
                 if index < parts.count - 1 {
@@ -89,7 +89,7 @@ struct CombatLogView: View {
                 let precisionStr = precisionPart.split(separator: ": ")[1]
                 if let precision = Int(precisionStr) {
                     Text("Precisión: ")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Color(hue: 0.611, saturation: 0.0, brightness: 0.091))
                         .font(.system(.body, design: .monospaced))
                     Text("\(precision)")
                         .foregroundColor(precisionColor(precision))
@@ -98,7 +98,7 @@ struct CombatLogView: View {
             }
             
             Text(" | ")
-                .foregroundColor(.secondary)
+                .foregroundColor(Color(hue: 0.611, saturation: 0.0, brightness: 0.091))
                 .font(.system(.body, design: .monospaced))
             
             // Daño
@@ -107,7 +107,7 @@ struct CombatLogView: View {
                 let damageStr = damagePart.split(separator: ": ")[1]
                 if let damage = Int(damageStr) {
                     Text("Daño: ")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Color(hue: 0.611, saturation: 0.0, brightness: 0.091))
                         .font(.system(.body, design: .monospaced))
                     Text("\(damage)")
                         .foregroundColor(damageColor(damage))
@@ -121,7 +121,7 @@ struct CombatLogView: View {
         let parts = message.split(separator: ": ")
         return HStack(spacing: 4) {
             Text(String(parts[0]) + ": ")
-                .foregroundColor(.secondary)
+                .foregroundColor(Color(hue: 0.611, saturation: 0.0, brightness: 0.091))
                 .font(.system(.body, design: .monospaced))
             if let damage = Int(parts[1]) {
                 Text("\(damage)")
