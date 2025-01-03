@@ -42,17 +42,20 @@ struct CombatLogView: View {
                         }
                     }
                 }
+                .padding(8) // Añadimos padding interno al contenido del contenedor blanco
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .frame(height: 400)
             .background(Color.white.opacity(0.9))
             .cornerRadius(12)
-            .padding(8)
+            .padding(8) // Añadimos padding externo al contenedor blanco
         }
         .padding()
         .background(Color.gray.opacity(0.1))
         .cornerRadius(16)
     }
+
+
     
     private func formatMoveMessage(_ message: String) -> some View {
         let parts = message.split(separator: " ")
