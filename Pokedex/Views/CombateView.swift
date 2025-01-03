@@ -14,7 +14,7 @@ struct CombateView: View {
     var body: some View {
         ScrollView{
             VStack {
-                Text("").frame(height: 75)
+                Text("").frame(height: 60)
                 HealthBar(maxHealth: teamMaxHealth[0], health: teamHealth[0])
                 ZStack {
                     Image("RingCombate")
@@ -32,8 +32,7 @@ struct CombateView: View {
                     CombatLog(title: "Registro de Combate", messages: combatLog)
                         .padding()
                 }else{
-                    VersusNames().offset(y:55)
-                  //  Text("").frame(height: 157)
+                    VersusNames().offset(y:20)
                 }
             }
         }
@@ -125,33 +124,38 @@ struct HealthBar: View {
     var body: some View {
         ZStack(alignment: .leading) {
             
-            Image("HealthBc").resizable().frame(width: 350, height: 40).offset(x: -15)
-            // Background
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color.black.opacity(0.6))
-                .frame(width: 300, height: 20)
+            Image("HealthBc").resizable().frame(width: 350, height: 40)
             
             // Health bar
             HStack(spacing: 0) {
                 // Red portion (depleted health)
                 Rectangle()
                     .fill(Color.red)
-                    .frame(width: 300 * CGFloat(maxHealth - health ) / CGFloat(maxHealth))
+                    .frame(width: 275 * CGFloat(maxHealth - health ) / CGFloat(maxHealth))
+
                 
                 // Green portion (remaining health)
                 Rectangle()
                     .fill(Color.green)
-                    .frame(width: 300 * CGFloat(health) / CGFloat(maxHealth))
+                    .frame(width: 275 * CGFloat(health) / CGFloat(maxHealth))
             }
-            .frame(height: 16)
+            .frame(height: 18)
             .padding(.horizontal, 2)
-            .offset(x: +15)
+            .cornerRadius(100)
+            .offset(x: 55)
             
             // HP Label
-            Text("HP: \(health)/\(maxHealth)")
-                .font(.system(size: 12, weight: .bold))
+            Text("HP")
+                .font(.system(size: 22, weight: .bold))
                 .foregroundColor(.white)
                 .padding(.horizontal, 6)
+                .offset(x: 12)
+            
+            Text("\(health)/\(maxHealth)")
+                .font(.system(size: 15, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.horizontal, 6)
+                .offset(x: 57)
         }
     }
 }
