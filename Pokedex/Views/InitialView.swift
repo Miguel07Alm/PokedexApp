@@ -8,7 +8,7 @@ struct InitialView: View {
     var body: some View {
         ZStack {
             NavigationStack {
-                LoginView()
+                LoginView().environmentObject(ViewModel())
             }
             .opacity(showAnimation ? 0 : 1) // Muestra LoginView solo cuando termina la animación
 
