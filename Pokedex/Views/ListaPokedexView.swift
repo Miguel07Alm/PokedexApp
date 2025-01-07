@@ -3,7 +3,9 @@ import Combine
 import Foundation
 
 struct ListaPokedexView: View {
+    #if v2
     @StateObject private var pokemonTeam = PokemonTeam.shared
+    #endif
     @StateObject var pokemonViewModel = PokemonViewModel()
     @Binding var showSortFilterView: Bool
     @Binding var showFilterView: Bool

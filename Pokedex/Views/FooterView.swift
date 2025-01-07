@@ -1,7 +1,9 @@
 import SwiftUI
 
     struct FooterView: View {
+        #if v2
         @StateObject private var pokemonTeam = PokemonTeam.shared
+        #endif
         @StateObject var pokemonViewModel = PokemonViewModel()
         @StateObject private var refreshManager = RefreshManager.shared
         
@@ -64,7 +66,7 @@ import SwiftUI
                         }
                         .offset(CGSize(width: 0, height: 35))
                     #endif
-                        
+                    #if v2
                     case 2: // Combate
                         HStack {
                             NavigationLink(
@@ -117,6 +119,7 @@ import SwiftUI
                             .buttonStyle(BotonConfirmarGrande())
                         }
                         .offset(CGSize(width: 0, height: 35))
+                        #endif
                     default:
                         Text("La cagÜe")
                     }
@@ -124,7 +127,7 @@ import SwiftUI
             }
             .ignoresSafeArea()
         }
-        
+    #if v2
         private func atacar(teamName: String, enemyTeamName : String) async {
             guard let team = pokemonTeam.getTeam(named: teamName) else {
                 pokemonTeam.addToCombatLog("\(teamName) no encontrado")
@@ -182,6 +185,7 @@ import SwiftUI
                 }
             }
         }
+        #endif
     }
 
  

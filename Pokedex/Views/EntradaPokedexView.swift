@@ -1,7 +1,9 @@
 import SwiftUI
 
 struct EntradaPokedexView: View {
+    #if v2
     @ObservedObject private var pokemonTeam = PokemonTeam.shared
+    #endif
     @ObservedObject private var refreshManager = RefreshManager.shared
     @State private var pokemon: Pokemon
     @State private var teamId: Int
@@ -42,11 +44,13 @@ struct EntradaPokedexView: View {
         }
         .onTapGesture {
             if teamId != 0 {
+#if v2
                 let name = teamId == 1 ? "Equipo1" : "Equipo2"
                 pokemonTeam.addPokemon(pokemon, to: name)
                 let pos = pokemonTeam.getTeamPos(named: name)
                 if pos < 2{ pokemonTeam.setTeamPos(named: name, pos: pos + 1)  }
                 refreshManager.forceRefresh() // Forzamos la actualización
+                #endif
             } else {
                 navigateToDetail = true
             }

@@ -11,7 +11,9 @@ struct PokedexView: View {
     @State var showSortFilterView: Bool
     @State var showFilterView: Bool
     @State var teamId: Int
+#if v2
     @StateObject private var pokemonTeam = PokemonTeam.shared
+#endif
     @StateObject private var refreshManager = RefreshManager.shared
     @StateObject var filterState = PokemonFilterState()
 
@@ -21,8 +23,11 @@ struct PokedexView: View {
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView,
                 filterState: filterState)
+            #if v2
             if(teamId != 0){
-                SeleccionarEquipoView(teamId: teamId).id(refreshManager.refreshFlag)            }
+                SeleccionarEquipoView(teamId: teamId).id(refreshManager.refreshFlag)
+            }
+            #endif
             ListaPokedexView(
                 showSortFilterView: $showSortFilterView,
                 showFilterView: $showFilterView,

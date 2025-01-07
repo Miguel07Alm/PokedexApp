@@ -34,11 +34,11 @@ struct MainView: View {
                 
             case "Detalle":
                 PokemonDetailView(pokemon: pokemon)
-                
-            case "TeamsCombate":
-                TeamsCombateView()
             case "Perfil":
                 ProfileView()
+#if v2
+            case "TeamsCombate":
+                TeamsCombateView()
             case "WinnerPov":
                 WinnerPovView(teamId: teamId)
             case "Combate":
@@ -49,6 +49,7 @@ struct MainView: View {
                     showFilterView: showFilterView,
                     teamId: teamId
                 )
+#endif
             default:
                 Text("la cague")
             }
@@ -65,10 +66,12 @@ struct MainView: View {
         switch irA {
         case "Login", "Registro":
             return 0
+            #if v2
         case "Combate":
             return 2
         case "SeleccionarEquipo":
             return 3
+            #endif
         default:
             return 1
         }
