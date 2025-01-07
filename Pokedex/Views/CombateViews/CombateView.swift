@@ -162,16 +162,45 @@ struct DisplayTeamNames: View {
 
     var body: some View {
         let teamName = teamId == 1 ? "Equipo1" : "Equipo2"
-        VStack(spacing:  10){
+        VStack(spacing: 10) {
             ForEach(0..<3, id: \.self) { i in
                 if let team = pokemonTeam.getTeam(named: teamName),
                    let pokemon = team.pokemons[i] {
-                    ZStack {
-                        RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)).foregroundStyle(Color.white)
-                        Text(pokemon.name.capitalizedFirstLetter())
-                    }.frame(width: 120, height: 25)
+                    ScrollingNameView(name: pokemon.name)
+                        .frame(width: 120, height: 25)
                 }
             }
+        }
+    }
+}
+
+struct ScrollingNameView: View {
+    let name: String
+    @State private var offset: CGFloat = 0
+    @State private var shouldAnimate = false
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerSize: CGSize(width: 25, height: 25))
+                .foregroundStyle(Color.white)
+            
+            GeometryReader { geometry in
+                Text(name.capitalizedFirstLetter())
+                    .lineLimit(1)
+                    .fixedSize()
+                    .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
+                    .offset(x: shouldAnimate ? offset : 0)
+                    .onAppear {
+                        let textWidth = name.widthOfString(usingFont: .systemFont(ofSize: 17))
+                        if textWidth > geometry.size.width {
+                            shouldAnimate = true
+                            withAnimation(Animation.linear(duration: Double(textWidth / 30)).repeatForever()) {
+                                offset = -textWidth + geometry.size.width
+                            }
+                        }
+                    }
+            }
+            .mask(RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)))
         }
     }
 }
