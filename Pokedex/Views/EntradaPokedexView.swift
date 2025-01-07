@@ -98,12 +98,13 @@ struct ImagenPokemon: View {
 
 // Línea vertical
 struct VerticalLine: View {
+    @Binding var name: String
     var body: some View {
         Path { path in
             path.move(to: CGPoint(x: 0, y: 15))     // Empezamos después del corte
             path.addLine(to: CGPoint(x: 10, y: 0))   // Diagonal superior
-            path.addLine(to: CGPoint(x: 10, y: 110)) // Línea vertical derecha
-            path.addLine(to: CGPoint(x: 0, y: 110))  // Línea inferior
+            path.addLine(to: CGPoint(x: 10, y: name.count > 12 ? 90 : 110)) // Línea vertical derecha
+            path.addLine(to: CGPoint(x: 0, y: name.count > 12 ? 90 : 110))  // Línea inferior
             path.addLine(to: CGPoint(x: 0, y: 15))   // Cerramos el path
         }
     }
@@ -137,7 +138,7 @@ struct CurvedBottom: View {
     var body: some View {
         ZStack {
             BottomRoundedRectangle()
-                .frame(width: 150, height: 40)
+                .frame(width: 150, height: name.count > 12 ? 60 : 40)
             
             Text(name)
                 .font(.system(size: 23, weight: .medium))
@@ -188,14 +189,14 @@ struct CombinedShape: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             CurvedBottom(name: $name)
-                .offset(y: 110)
+                .offset(y: name.count > 12 ? 90 : 110)
                 .foregroundStyle(PokemonType.getGradient(for: backgroundColor,firstColorProportion: 1))
             
             SmallRectangle(num: $num)
-                .offset(x: 80, y: 80)
+                .offset(x: 80, y: name.count > 12 ? 60 : 80)
                 .foregroundStyle(PokemonType.getGradient(for: backgroundColor,firstColorProportion: 4))
             
-            VerticalLine()
+            VerticalLine(name: $name)
                 .offset(x: 140, y: 0)
                 .foregroundStyle(PokemonType.getGradient(for: backgroundColor,firstColorProportion: 100))
         }

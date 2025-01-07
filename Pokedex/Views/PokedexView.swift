@@ -47,7 +47,7 @@ struct PokedexView_Previews: PreviewProvider {
     struct PokedexPreviewWrapper: View {
         @State var showSortFilterView = false
         @State var showFilterView = false
-        @State var teamId = 1
+        @State var teamId = 0
         var body: some View {
             PokedexView(
                 showSortFilterView: showSortFilterView,
