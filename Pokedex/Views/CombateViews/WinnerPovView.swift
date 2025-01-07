@@ -71,7 +71,9 @@ struct WinnerPokemonDisplay: View {
             VStack {
                 Spacer()
                 Bar3DView(maxHeight: maxHeight, barHeight: barHeight, color: color)
-                DisplayCard(msg: team.pokemons[pos]!.name, color: color).frame(width: 120, height: 30)
+                DisplayName(msg: team.pokemons[pos]!.name, color: color)
+                    .frame(width: 120, height: 30)
+                    .clipped()
             }
             VStack {
                 ZStack{
@@ -124,10 +126,50 @@ struct Bar3DView: View {
     }
 }
 
+struct DisplayName: View {
+    let msg: String
+    let color: Color
+    @State private var offset: CGFloat = 0
+    @State private var shouldAnimate = false
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerSize: CGSize(width: 25, height: 25))
+                .foregroundStyle(color)
+            
+            GeometryReader { geometry in
+                Text(msg.capitalizedFirstLetter())
+                    .lineLimit(1)
+                    .fixedSize()
+                    .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
+                    .offset(x: shouldAnimate ? offset : 0)
+                    .onAppear {
+                        let textWidth = msg.widthOfString(usingFont: .systemFont(ofSize: 17))
+                        if textWidth > geometry.size.width {
+                            shouldAnimate = true
+                            withAnimation(Animation.linear(duration: Double(textWidth / 30)).repeatForever()) {
+                                offset = -textWidth + geometry.size.width
+                            }
+                        }
+                    }
+            }
+            .mask(RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)))
+        }
+    }
+}
+
+extension String {
+    func widthOfString(usingFont font: UIFont) -> CGFloat {
+        let fontAttributes = [NSAttributedString.Key.font: font]
+        let size = self.size(withAttributes: fontAttributes)
+        return size.width
+    }
+}
+
 struct DisplayCard: View {
     let msg: String
     let color : Color
-
+    
     var body: some View {
         ZStack {
             RoundedRectangle(cornerSize: CGSize(width: 25, height: 25)).foregroundStyle(color)
@@ -136,6 +178,4 @@ struct DisplayCard: View {
     }
 }
 
-#Preview{
-    Color(hex: "#75bbc9")
-}
+
