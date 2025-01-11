@@ -4,11 +4,14 @@ struct InitialView: View {
     @State private var rotationAngle: Double = 0
     @State private var verticalOffset: CGFloat = -300
     @State private var showAnimation = true // Controla la visibilidad de la animación
+    
+    // ViewModel
+    @EnvironmentObject var viewModel: ViewModel
 
     var body: some View {
         ZStack {
             NavigationStack {
-                LoginView().environmentObject(ViewModel())
+                LoginView().environmentObject(viewModel)
             }
             .opacity(showAnimation ? 0 : 1) // Muestra LoginView solo cuando termina la animación
 

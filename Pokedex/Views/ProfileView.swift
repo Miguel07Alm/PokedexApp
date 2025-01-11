@@ -142,6 +142,10 @@ struct ProfileView: View {
                     .shadow(radius: 3)
                     .padding(.horizontal, 40)
                 }
+                #if v2
+
+                #endif
+
             }
         }
         .onAppear {
@@ -159,7 +163,7 @@ struct ProfileView: View {
             ImagePicker(sourceType: .photoLibrary) {
                 imageSeleccionada in
                 selectedImage = imageSeleccionada  // Asigna la imagen seleccionada al state
-                
+
             }.onDisappear {
                 if let image = selectedImage {
                     viewModel.updateProfileImage(newImage: image)

@@ -39,6 +39,9 @@ struct TeamsCombateView: View {
                                 }
                                 .buttonStyle(BotonConfirmarGrande())
                                 .onAppear(){
+                                    // Aqui pasar contador de pokemon
+                                    
+                                    
                                     
                                     pokemonTeam.updateMaxHealth(named: "Equipo1")
                                     pokemonTeam.updateMaxHealth(named: "Equipo2")
