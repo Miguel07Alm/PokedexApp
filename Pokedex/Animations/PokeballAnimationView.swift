@@ -14,7 +14,6 @@ struct PokeballTransitionView: View {
                 // Background color with fade
                 Color.black
                     .opacity(backgroundOpacity)
-                    .animation(.easeInOut(duration: 0.5), value: backgroundOpacity)
                 
                 // Centered pokeball container
                 ZStack {
@@ -62,10 +61,8 @@ struct PokeballTransitionView: View {
     
     private func animateTransition() {
         // Initial fade in and close pokeball
-        withAnimation(.easeInOut(duration: 0.5)) {
-            backgroundOpacity = 1.0
-            isClosing = true
-        }
+        backgroundOpacity = 1.0
+        isClosing = true
         
         // Start spinning after parts meet
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
