@@ -62,4 +62,3 @@ struct InitialView: View {
 #Preview {
     InitialView()
 }
-

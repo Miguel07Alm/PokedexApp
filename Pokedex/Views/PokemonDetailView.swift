@@ -166,6 +166,7 @@ struct PokemonDetailView: View {
                                     EntradaPokedexView(pokemon: pokemon, teamId: 0)
                                 }
                             }
+                            Spacer()
                         }
                     }.ignoresSafeArea()
                 }.background(colorFondo).edgesIgnoringSafeArea(.bottom).ignoresSafeArea().cornerRadius(48)
