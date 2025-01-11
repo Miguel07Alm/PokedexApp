@@ -18,13 +18,10 @@ struct MainView: View {
         self.irA = irA
         self._selectedTab = State(initialValue: Self.getInitialTab(for: irA))
     }
+    
     var body: some View {
         VStack(spacing: -100) {
             switch irA {
-            case "Login":
-                LoginView()
-            case "Registro":
-                RegisterView()
             case "Pokedex":
                 PokedexView(
                     showSortFilterView: showSortFilterView,
@@ -64,8 +61,6 @@ struct MainView: View {
 
     static func getInitialTab(for irA: String) -> Int {
         switch irA {
-        case "Login", "Registro":
-            return 0
             #if v2
         case "Combate":
             return 2

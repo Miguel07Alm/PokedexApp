@@ -12,11 +12,10 @@ struct PokedexApp: App {
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
     @State var teamId: Int = 0
-    
 
     var body: some Scene {
         WindowGroup {
-            InitialView()
+            InitialView().environmentObject(ViewModel())
         }
     }
 }
