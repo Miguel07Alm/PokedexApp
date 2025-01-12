@@ -11,7 +11,7 @@ struct MainView: View {
     @State private var isTransitioning = true
     @State private var viewAppeared = false
     @State private var showRottomAnimation = true
-    
+    @State private var destinationOpacity = 0.0 // Controlamos la opacidad de la pantalla destino
 
     init(showSortFilterView: Bool = false, showFilterView: Bool = false, pokemon: Pokemon = PokemonType.getAveraged(), teamId: Int = 0, irA: String) {
         self.showSortFilterView = showSortFilterView
@@ -25,22 +25,24 @@ struct MainView: View {
     var body: some View {
         ZStack {
             destinationView
-                .opacity(isTransitioning ? 0 : 1)
-            
+                .opacity(destinationOpacity) // La opacidad de la vista de destino depende de la variable destinationOpacity
+
             VStack {
                 Spacer()
                 FooterView(selectedTab: selectedTab)
             }
-           
+
             if showRottomAnimation {
                 RottomPushingAnimationView(onAnimationComplete: {
-                     showRottomAnimation = false
+                    withAnimation(.easeIn(duration: 0.5)) {
+                        showRottomAnimation = false // Fade out la animación de Rottom
+                    }
+                    withAnimation(.easeIn(duration: 0.5)) {
+                        destinationOpacity = 1.0 // Fade in la vista de destino después de la animación de Rottom
+                    }
                 })
+                .transition(.opacity) // Transición de opacidad para la animación de Rottom
             }
-            else if isTransitioning {
-                   PokeballTransitionView(isPresented: $isTransitioning, destination: AnyView(destinationView))
-                        .zIndex(1)
-                }
         }
         .ignoresSafeArea()
         .navigationBarBackButtonHidden()
@@ -48,7 +50,6 @@ struct MainView: View {
             if viewAppeared {
                 resetTransitionAndStartAnimation()
             } else {
-               
                 startTransitionAndNavigation()
                 viewAppeared = true
             }
@@ -58,10 +59,10 @@ struct MainView: View {
     private func resetTransitionAndStartAnimation() {
         isTransitioning = true
         showRottomAnimation = true
+        destinationOpacity = 0.0 // Empezamos con la opacidad de la pantalla destino en 0
         startTransitionAndNavigation()
     }
-    
-    
+
     private var destinationView: some View {
         Group {
             switch irA {
@@ -93,26 +94,23 @@ struct MainView: View {
                 Text("la cague")
             }
         }
-        .transition(.opacity)
-        
+        .transition(.opacity) // Transición de opacidad para la pantalla destino
     }
-    
+
     private func startTransitionAndNavigation() {
-         DispatchQueue.main.async {
-             showRottomAnimation = true
-             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                 isTransitioning = true
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
-                    withAnimation(.easeIn(duration: 0.5)) {
-                         isTransitioning = false
-                     }
+        DispatchQueue.main.async {
+            showRottomAnimation = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                withAnimation(.easeOut(duration: 0.5)) {
+                    isTransitioning = false // Suavizamos la transición al final
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     selectedTab = Self.getInitialTab(for: irA)
                 }
             }
         }
     }
-    
+
     static func getInitialTab(for irA: String) -> Int {
         switch irA {
         case "Login", "Registro":
@@ -128,7 +126,6 @@ struct MainView: View {
         }
     }
 }
-
 
 #Preview {
     @State var showSortFilterView: Bool = false

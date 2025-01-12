@@ -33,6 +33,7 @@ struct CombateView: View {
                         .padding()
                     Text("")
                     Text("")
+                    Spacer(minLength: 100)
                 }else{
                     VersusNames().offset(y:20)
                 }

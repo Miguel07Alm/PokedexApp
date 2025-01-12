@@ -63,5 +63,7 @@ struct InitialView: View {
 
 
 #Preview {
-    InitialView()
+    @Previewable @EnvironmentObject var viewModel: ViewModel
+    
+    InitialView().environmentObject(viewModel)
 }

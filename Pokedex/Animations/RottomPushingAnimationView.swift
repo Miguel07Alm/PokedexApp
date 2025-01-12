@@ -42,8 +42,8 @@ struct RottomPushingAnimationView: View {
     }
 
     func animateStep1() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            withAnimation(.easeInOut(duration: 1)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            withAnimation(.easeInOut(duration: 0.5)) {
                 horizontalOffset = 0
             }
             animateStep2()
@@ -51,16 +51,16 @@ struct RottomPushingAnimationView: View {
     }
 
     func animateStep2() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            withAnimation(Animation.linear(duration: 2).repeatCount(1, autoreverses: false)) {
-                rotationAngle = 720
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            withAnimation(Animation.linear(duration: 1).repeatCount(1, autoreverses: false)) {
+                rotationAngle = 360
             }
             animateStep3()
         }
     }
 
     func animateStep3() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             withAnimation(.easeInOut(duration: 1)) {
                 verticalOffset = -UIScreen.main.bounds.height
             }
@@ -73,7 +73,7 @@ struct RottomPushingAnimationView: View {
             withAnimation(.easeOut(duration: 1)) {
                 showAnimation = false
             }
-            onAnimationComplete() // Llamamos a la acción al finalizar
+            onAnimationComplete()
         }
     }
 }

@@ -20,6 +20,7 @@ struct WinnerPovView: View {
             DisplayCard(msg: "HP Restante: \(team!.health)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 350, height: 70).font(.system(size: 22)).offset(y: -5)
             Text("") //empuja el footer
             Text("")
+            Spacer(minLength: 100)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(red: 0.7529411764705882, green: 0.8588235294117647, blue: 0.8588235294117647))
