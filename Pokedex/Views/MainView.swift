@@ -12,6 +12,10 @@ struct MainView: View {
     @State private var viewAppeared = false
 
     init(showSortFilterView: Bool = false, showFilterView: Bool = false, pokemon: Pokemon = PokemonType.getAveraged(), teamId: Int = 0, irA: String) {
+    @State private var isTransitioning = true
+    @State private var viewAppeared = false
+
+    init(showSortFilterView: Bool = false, showFilterView: Bool = false, pokemon: Pokemon = PokemonType.getAveraged(), teamId: Int = 0, irA: String) {
         self.showSortFilterView = showSortFilterView
         self.showFilterView = showFilterView
         self.teamId = teamId
@@ -21,6 +25,7 @@ struct MainView: View {
     }
 
     
+
     var body: some View {
         ZStack {
             destinationView
@@ -68,6 +73,7 @@ struct MainView: View {
             case "Perfil":
                 ProfileView()
             #if v2
+            #if v2
             case "TeamsCombate":
                 TeamsCombateView()
             case "WinnerPov":
@@ -80,6 +86,7 @@ struct MainView: View {
                     showFilterView: showFilterView,
                     teamId: teamId
                 )
+            #endif
             #endif
             default:
                 Text("la cague")
@@ -96,9 +103,34 @@ struct MainView: View {
             }
             selectedTab = Self.getInitialTab(for: irA)
         }
+        .transition(.opacity)
+
+    }
+
+    private func startTransitionAndNavigation() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            withAnimation(.easeIn(duration: 1)) {
+                isTransitioning = false
+            }
+            selectedTab = Self.getInitialTab(for: irA)
+        }
     }
     
+    
     static func getInitialTab(for irA: String) -> Int {
+          switch irA {
+          case "Login", "Registro":
+              return 0
+          #if v2
+          case "Combate":
+              return 2
+          case "SeleccionarEquipo":
+              return 3
+          #endif
+          default:
+              return 1
+          }
+      }
           switch irA {
           case "Login", "Registro":
               return 0
@@ -118,6 +150,8 @@ struct MainView: View {
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
     @State var teamId: Int = 1
+    @State var irA: String = "Login"
+
     @State var irA: String = "Login"
 
     MainView(showSortFilterView: showSortFilterView, showFilterView: showFilterView, teamId: teamId, irA: irA)
