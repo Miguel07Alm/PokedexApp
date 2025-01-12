@@ -179,7 +179,7 @@ struct PokemonDetailView: View {
                                 VStack {
                                     Text("Descripción").font(.title)
 
-                                    Text("\(descripcion)").frame(width: 320)
+                                    Text("\(getFirstLine(of: descripcion))").frame(width: 320, alignment: .leading)
                                 }.padding()
                             }
 
@@ -194,21 +194,17 @@ struct PokemonDetailView: View {
                                         Text(abilities[0].nombre).font(.title3)
                                             .frame(
                                                 width: 320, alignment: .leading)
-                                        Text(abilities[0].descripcion).frame(
-                                            width: 320, alignment: .leading)
+                                        Text(getFirstLine(of: abilities[0].descripcion))
+                                            .frame(width: 320, alignment: .leading)
                                     }
                                     if abilities.count > 1 {
                                         Text("")
                                         Text(abilities[1].nombre).font(.title3)
                                             .frame(
                                                 width: 320, alignment: .leading)
-                                        Text(abilities[1].descripcion).frame(
-                                            width: 320, alignment: .leading)
+                                        Text(getFirstLine(of: abilities[1].descripcion))
+                                            .frame(width: 320, alignment: .leading)
                                     }
-                                    //Text("Electricidad estática").frame(width: 320, alignment: .leading).font(.title3).multilineTextAlignment(.leading)
-                                    //Text("Puede paralizar al mínimo contacto.").frame(width: 320, alignment: .leading)
-                                    //Text("Pararrayos").padding(.top, 15.0).frame(width: 320, alignment: .leading).font(.title3)
-                                    //Text("Atrae y neutraliza movimientos de tipo Eléctrico y sube el At. Esp.").frame(width: 320, alignment: .leading)
                                 }.padding()
                             }
 
@@ -279,6 +275,7 @@ struct PokemonDetailView: View {
                                         pokemon: pokemon, teamId: 0)
                                 }
                             }
+                            Spacer(minLength: 100)
                         }
                     }.ignoresSafeArea()
                 }.background(colorFondo).edgesIgnoringSafeArea(.bottom)
@@ -413,6 +410,14 @@ struct PokemonDetailView: View {
                 isLoading = false  // Indica que la carga ha finalizado
             }
         }.ignoresSafeArea()
+    }
+    private func getFirstLine(of text: String) -> String {
+        if let firstDotIndex = text.firstIndex(of: ".") {
+            let substring = text[..<firstDotIndex]
+            return String(substring)
+        } else {
+            return text
+        }
     }
 }
 
@@ -644,10 +649,13 @@ class AudioPlayer: NSObject, ObservableObject {
         }
 
         // Check if the URL is valid
-        URLSession.shared.dataTask(with: url) {
+        var urlRequest = URLRequest(url: url)
+        urlRequest.timeoutInterval = 5 // Establece el tiempo de espera a 5 segundos
+        
+        let task = URLSession.shared.dataTask(with: urlRequest) {
             [weak self] _, response, error in
             if let error = error {
-                print("Error fetching Pokémon cry: \(error)")
+                print("Error fetching Pokémon cry: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     self?.playFallbackSound()
                 }
@@ -668,7 +676,8 @@ class AudioPlayer: NSObject, ObservableObject {
             DispatchQueue.main.async {
                 self?.startPlayback(with: url)
             }
-        }.resume()
+        }
+        task.resume()
     }
 
     private func startPlayback(with url: URL) {
@@ -682,7 +691,7 @@ class AudioPlayer: NSObject, ObservableObject {
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
             print("Failed to set up audio session: \(error)")
-            playFallbackSound()
+            playFallbackSoundError() // LLamar a la funcion que ejecutara el fallback en caso de error
             return
         }
 
@@ -709,7 +718,7 @@ class AudioPlayer: NSObject, ObservableObject {
         guard
             let fallbackUrl = URL(
                 string:
-                    "https://drive.google.com/file/d/1FdZyx_Oh-qKSQwG78Adp7GYDTFOH3s2I/view?usp=sharing"
+                    "https://kappa.vgmsite.com/soundtracks/pokemon-red-green-blue-yellow/ldxsdtgipv/11.%20Level-Up%21.mp3"
             )
         else {
             print("Invalid fallback URL")
@@ -717,6 +726,10 @@ class AudioPlayer: NSObject, ObservableObject {
         }
 
         startPlayback(with: fallbackUrl)
+    }
+    
+    private func playFallbackSoundError(){
+        playFallbackSound()
     }
 
     override func observeValue(
@@ -746,8 +759,14 @@ class AudioPlayer: NSObject, ObservableObject {
                 print("Player item is ready to play")
             case .unknown:
                 print("Player item is not yet ready")
+               DispatchQueue.main.async { [weak self] in
+                    self?.playFallbackSound()
+                }
             @unknown default:
                 print("Unknown player item status")
+                  DispatchQueue.main.async { [weak self] in
+                    self?.playFallbackSound()
+                }
             }
         }
     }
