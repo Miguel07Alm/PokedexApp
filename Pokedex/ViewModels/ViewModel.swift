@@ -93,10 +93,43 @@ class ViewModel: ObservableObject {
         user.password = newPassword
         saveChanges()
     }
-    
+
     func updateProfileImage(newImage: UIImage) {
         guard let user = authenticatedUser else { return }
         user.profileImage = newImage.pngData()
+    }
+
+    // Pokemon
+    func isFavorite(namePokemon: String, pokedexNumber: Int) -> Bool {
+        guard let user = authenticatedUser else { return false }
+        return user.favoritePokemons?.contains(where: {
+            ($0 as? PokemonEntity)?.name == namePokemon
+                && ($0 as? PokemonEntity)?.pokedexNumber == Int16(pokedexNumber)
+        }) ?? false
+    }
+    
+    func toggleFavorite(namePokemon: String, pokedexNumber: Int) {
+        guard let user = authenticatedUser else {
+            print("No hay usuario autenticado.")
+            return
+        }
+        if let existingPokemon = (user.favoritePokemons as? Set<PokemonEntity>)?
+            .first(
+                where: {
+                    $0.name == namePokemon && $0.pokedexNumber == pokedexNumber
+                })
+        {
+            // Eliminar de favoritos
+            user.removeFromFavoritePokemons(existingPokemon)
+            gestorCoreData.contexto.delete(existingPokemon)
+        } else {
+            // Añadir a favoritos
+            let newPokemon = PokemonEntity(context: gestorCoreData.contexto)
+            newPokemon.name = namePokemon
+            newPokemon.pokedexNumber = Int16(pokedexNumber)
+            user.addToFavoritePokemons(newPokemon)
+        }
+        saveChanges()
     }
 
     // Guardar cambios en el contexto
