@@ -7,55 +7,67 @@ struct PokeballTransitionView: View {
     @State private var isSpinning = false
     @State private var isOpening = false
     @State private var backgroundOpacity = 0.0
-    
+    @State private var showTransition = true
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Background color with fade
-                Color.black
-                    .opacity(backgroundOpacity)
-                
-                // Centered pokeball container
-                ZStack {
-                    // Top semicircle (white)
-                    Semicircle(color: .white)
-                        .frame(width: 300, height: 300)
-                        .rotation3DEffect(.degrees(180), axis: (1, 0, 0))
-                        .offset(y: isClosing ? 0 : -geometry.size.height)
-                        .rotationEffect(.degrees(isSpinning ? 360 : 0))
-                        .offset(y: isOpening ? -geometry.size.height : 0)
+                if showTransition {
+                    // Background color with fade
+                    Color.black
+                        .opacity(backgroundOpacity)
                     
-                    // Bottom semicircle (red) with button and line
+                    // Centered pokeball container
                     ZStack {
-                        // Red semicircle
-                        Semicircle(color: .red)
+                        // Top semicircle (white)
+                        Semicircle(color: .white)
+                            .fill(color: .white) // Añadimos .fill(color:) aquí
                             .frame(width: 300, height: 300)
+                            .rotation3DEffect(.degrees(180), axis: (1, 0, 0))
+                            .offset(y: isClosing ? 0 : -geometry.size.height)
+                            .rotationEffect(.degrees(isSpinning ? 360 : 0))
+                            .offset(y: isOpening ? -geometry.size.height : 0)
                         
-                        // Black line on the flat part
-                        Rectangle()
-                            .frame(width: 300, height: 8)
-                            .foregroundColor(.black)
-                            .offset(y: 0)
-                        
-                        // Pokeball button
-                        Circle()
-                            .fill(.white)
-                            .frame(width: 60, height: 60)
-                            .overlay(
-                                Circle()
-                                    .stroke(.black, lineWidth: 6)
-                            )
-                            .offset(y: 0)
+                        // Bottom semicircle (red) with button and line
+                        ZStack {
+                            // Red semicircle
+                            Semicircle(color: .red)
+                                .fill(color: .red) // Añadimos .fill(color:) aquí
+                                .frame(width: 300, height: 300)
+                            
+                            // Black line on the flat part
+                            Rectangle()
+                                .frame(width: 300, height: 8)
+                                .foregroundColor(.black)
+                                .offset(y: 0)
+                            
+                            // Pokeball button
+                            Circle()
+                                .fill(.white)
+                                .frame(width: 60, height: 60)
+                                .overlay(
+                                    Circle()
+                                        .stroke(.black, lineWidth: 6)
+                                )
+                                .offset(y: 0)
+                        }
+                        .offset(y: isClosing ? 0 : geometry.size.height)
+                        .rotationEffect(.degrees(isSpinning ? 360 : 0))
+                        .offset(y: isOpening ? geometry.size.height : 0)
                     }
-                    .offset(y: isClosing ? 0 : geometry.size.height)
-                    .rotationEffect(.degrees(isSpinning ? 360 : 0))
-                    .offset(y: isOpening ? geometry.size.height : 0)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                   
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }.ignoresSafeArea()
-            .onAppear {
-                animateTransition()
-            }
+             }.transition(.opacity)
+                .ignoresSafeArea()
+                .onAppear {
+                        animateTransition()
+                    }
+        }
+         .onChange(of: isPresented) { newValue in
+             if !newValue {
+                 showTransition = false
+             }
         }
     }
     
@@ -77,11 +89,13 @@ struct PokeballTransitionView: View {
                     isOpening = true
                     backgroundOpacity = 0.0
                 }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+                    isPresented = false
+                }
             }
         }
     }
 }
-
 
 
 struct Semicircle: Shape {
@@ -97,65 +111,10 @@ struct Semicircle: Shape {
         path.closeSubpath()
         return path
     }
-    
-    var body: some View {
+}
+
+extension Shape {
+    func fill(color: Color) -> some View {
         self.fill(color)
-    }
-}
-
-struct TransitionModifier: ViewModifier {
-    @Binding var isPresented: Bool
-    var destination: () -> AnyView
-    @State private var isShowingTransition = false
-    @State private var isShowingDestination = false
-    
-    func body(content: Content) -> some View {
-        ZStack {
-            content
-                .opacity(isShowingDestination ? 0 : 1)
-            
-            if isShowingTransition {
-                PokeballTransitionView(
-                    isPresented: $isShowingTransition,
-                    destination: destination()
-                )
-            }
-            
-            if isShowingDestination {
-                destination()
-            }
-        }
-        .onChange(of: isPresented) { newValue in
-            if newValue {
-                isShowingTransition = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                    isShowingDestination = true
-                    isShowingTransition = false
-                    isPresented = false
-                }
-            }
-        }
-    }
-}
-
-extension View {
-    func pokeballTransition<Destination: View>(
-        isPresented: Binding<Bool>,
-        destination: @escaping () -> Destination
-    ) -> some View {
-        self.modifier(TransitionModifier(
-            isPresented: isPresented,
-            destination: { AnyView(destination()) }
-        ))
-    }
-}
-
-// Preview provider
-struct PokeballTransitionView_Previews: PreviewProvider {
-    static var previews: some View {
-        PokeballTransitionView(
-            isPresented: .constant(true),
-            destination: AnyView(Color.blue)
-        )
     }
 }

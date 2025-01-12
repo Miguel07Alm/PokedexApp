@@ -10,10 +10,8 @@ struct MainView: View {
     @State var selectedTab: Int
     @State private var isTransitioning = true
     @State private var viewAppeared = false
-
-    init(showSortFilterView: Bool = false, showFilterView: Bool = false, pokemon: Pokemon = PokemonType.getAveraged(), teamId: Int = 0, irA: String) {
-    @State private var isTransitioning = true
-    @State private var viewAppeared = false
+    @State private var showRottomAnimation = true
+    
 
     init(showSortFilterView: Bool = false, showFilterView: Bool = false, pokemon: Pokemon = PokemonType.getAveraged(), teamId: Int = 0, irA: String) {
         self.showSortFilterView = showSortFilterView
@@ -23,9 +21,7 @@ struct MainView: View {
         self.irA = irA
         self._selectedTab = State(initialValue: Self.getInitialTab(for: irA))
     }
-
     
-
     var body: some View {
         ZStack {
             destinationView
@@ -35,11 +31,16 @@ struct MainView: View {
                 Spacer()
                 FooterView(selectedTab: selectedTab)
             }
-            
-            if isTransitioning {
-                PokeballTransitionView(isPresented: $isTransitioning, destination: AnyView(destinationView))
-                    .zIndex(1)
+           
+            if showRottomAnimation {
+                RottomPushingAnimationView(onAnimationComplete: {
+                     showRottomAnimation = false
+                })
             }
+            else if isTransitioning {
+                   PokeballTransitionView(isPresented: $isTransitioning, destination: AnyView(destinationView))
+                        .zIndex(1)
+                }
         }
         .ignoresSafeArea()
         .navigationBarBackButtonHidden()
@@ -47,6 +48,7 @@ struct MainView: View {
             if viewAppeared {
                 resetTransitionAndStartAnimation()
             } else {
+               
                 startTransitionAndNavigation()
                 viewAppeared = true
             }
@@ -54,11 +56,12 @@ struct MainView: View {
     }
     
     private func resetTransitionAndStartAnimation() {
-          isTransitioning = true
-            startTransitionAndNavigation()
-      }
-
-
+        isTransitioning = true
+        showRottomAnimation = true
+        startTransitionAndNavigation()
+    }
+    
+    
     private var destinationView: some View {
         Group {
             switch irA {
@@ -72,8 +75,7 @@ struct MainView: View {
                 PokemonDetailView(pokemon: pokemon)
             case "Perfil":
                 ProfileView()
-            #if v2
-            #if v2
+#if v2
             case "TeamsCombate":
                 TeamsCombateView()
             case "WinnerPov":
@@ -86,73 +88,53 @@ struct MainView: View {
                     showFilterView: showFilterView,
                     teamId: teamId
                 )
-            #endif
-            #endif
+#endif
             default:
                 Text("la cague")
             }
         }
         .transition(.opacity)
-
-    }
-
-    private func startTransitionAndNavigation() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            withAnimation(.easeIn(duration: 1)) {
-                isTransitioning = false
-            }
-            selectedTab = Self.getInitialTab(for: irA)
-        }
-        .transition(.opacity)
-
-    }
-
-    private func startTransitionAndNavigation() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            withAnimation(.easeIn(duration: 1)) {
-                isTransitioning = false
-            }
-            selectedTab = Self.getInitialTab(for: irA)
-        }
+        
     }
     
+    private func startTransitionAndNavigation() {
+         DispatchQueue.main.async {
+             showRottomAnimation = true
+             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                 isTransitioning = true
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+                    withAnimation(.easeIn(duration: 0.5)) {
+                         isTransitioning = false
+                     }
+                    selectedTab = Self.getInitialTab(for: irA)
+                }
+            }
+        }
+    }
     
     static func getInitialTab(for irA: String) -> Int {
-          switch irA {
-          case "Login", "Registro":
-              return 0
-          #if v2
-          case "Combate":
-              return 2
-          case "SeleccionarEquipo":
-              return 3
-          #endif
-          default:
-              return 1
-          }
-      }
-          switch irA {
-          case "Login", "Registro":
-              return 0
-          #if v2
-          case "Combate":
-              return 2
-          case "SeleccionarEquipo":
-              return 3
-          #endif
-          default:
-              return 1
-          }
-      }
+        switch irA {
+        case "Login", "Registro":
+            return 0
+#if v2
+        case "Combate":
+            return 2
+        case "SeleccionarEquipo":
+            return 3
+#endif
+        default:
+            return 1
+        }
+    }
 }
+
 
 #Preview {
     @State var showSortFilterView: Bool = false
     @State var showFilterView: Bool = false
     @State var teamId: Int = 1
-    @State var irA: String = "Login"
-
-    @State var irA: String = "Login"
-
+    @State var irA: String = "Pokedex"
+    
     MainView(showSortFilterView: showSortFilterView, showFilterView: showFilterView, teamId: teamId, irA: irA)
 }
