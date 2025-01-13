@@ -107,7 +107,7 @@ class ViewModel: ObservableObject {
                 && ($0 as? PokemonEntity)?.pokedexNumber == Int16(pokedexNumber)
         }) ?? false
     }
-    
+
     func toggleFavorite(namePokemon: String, pokedexNumber: Int) {
         guard let user = authenticatedUser else {
             print("No hay usuario autenticado.")
@@ -130,6 +130,44 @@ class ViewModel: ObservableObject {
             user.addToFavoritePokemons(newPokemon)
         }
         saveChanges()
+    }
+
+    func incrementPokemonUsage(namePokemon: String, pokedexNumber: Int) {
+        // Buscar si ya existe el Pokémon en el array de pokemons
+        if let existingPokemon = pokemonsArray.first(where: {
+            $0.name == namePokemon && $0.pokedexNumber == pokedexNumber
+        }) {
+            // Si existe, incrementar el contador de uso
+            existingPokemon.usageCount += 1
+            print(
+                "El contador de uso de \(namePokemon) ha sido incrementado a \(existingPokemon.usageCount)."
+            )
+        } else {
+            // Si no existe, crear un nuevo Pokémon con contador inicial de 1
+            let newPokemon = PokemonEntity(context: gestorCoreData.contexto)
+            newPokemon.name = namePokemon
+            newPokemon.pokedexNumber = Int16(pokedexNumber)
+            newPokemon.usageCount = 1  // Inicializar el contador en 1
+            pokemonsArray.append(newPokemon)  // Añadir al array de pokemons
+            print(
+                "Se ha creado el Pokémon \(namePokemon) con un contador de uso inicial de \(newPokemon.usageCount)."
+            )
+        }
+        // Guardar los cambios en Core Data
+        saveChanges()
+    }
+
+    func getAllPokemonUsageCounts() -> [(
+        name: String, pokedexNumber: Int, usageCount: Int
+    )] {
+        // Crear un array de tuplas que contengan el nombre, número y contador de uso
+        return pokemonsArray.map { pokemon in
+            (
+                name: pokemon.name ?? "Desconocido",
+                pokedexNumber: Int(pokemon.pokedexNumber),
+                usageCount: Int(pokemon.usageCount)
+            )
+        }
     }
 
     // Guardar cambios en el contexto

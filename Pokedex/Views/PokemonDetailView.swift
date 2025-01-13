@@ -69,6 +69,7 @@ struct PokemonDetailView: View {
                                     Spacer()
                                     Button {
                                         // Accion
+                                        print("Name: \(pokemon.name) Id: \(pokemon.id)")
                                         viewModel.toggleFavorite(
                                             namePokemon: pokemon.name,
                                             pokedexNumber: pokemon.id)

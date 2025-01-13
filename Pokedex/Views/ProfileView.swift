@@ -158,6 +158,11 @@ struct ProfileView: View {
                     selectedImage = nil
                 }
             }
+            let allPokemonUsageCounts = viewModel.getAllPokemonUsageCounts()
+            for pokemon in allPokemonUsageCounts {
+                print("\(pokemon.name) (#\(pokemon.pokedexNumber)) ha sido utilizado \(pokemon.usageCount) veces.")
+            }
+
         }
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(sourceType: .photoLibrary) {

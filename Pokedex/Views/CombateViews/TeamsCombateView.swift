@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct TeamsCombateView: View {
+    @EnvironmentObject var viewModel: ViewModel
+    
     @StateObject private var pokemonTeam = PokemonTeam.shared
     @State private var navigateToTeam1 = false
     @State private var navigateToTeam2 = false
@@ -39,10 +41,6 @@ struct TeamsCombateView: View {
                                 }
                                 .buttonStyle(BotonConfirmarGrande())
                                 .onAppear(){
-                                    // Aqui pasar contador de pokemon
-                                    
-                                    
-                                    
                                     pokemonTeam.updateMaxHealth(named: "Equipo1")
                                     pokemonTeam.updateMaxHealth(named: "Equipo2")
                                     pokemonTeam.setTeamHealth(named: "Equipo1", hp: pokemonTeam.getTeamMaxHealth(named: "Equipo1"))
@@ -51,6 +49,19 @@ struct TeamsCombateView: View {
                                     pokemonTeam.clearTeamDamage(named: "Equipo2")
                                     pokemonTeam.clearCombatLog()
                                     print("APARECI")
+                                    
+                                    // Contador de seleccion pokemon
+                                    let allTeams = pokemonTeam.getAllTeams()
+                                    
+                                    for team in allTeams {
+                                        
+                                        for (index, pokemon) in team.pokemons.enumerated() {
+                                            if let pokemon = pokemon {
+                                                print("Pokemon \(index + 1): \(pokemon.name) and \(pokemon.id)")
+                                                viewModel.incrementPokemonUsage(namePokemon: pokemon.name, pokedexNumber: pokemon.id)
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
