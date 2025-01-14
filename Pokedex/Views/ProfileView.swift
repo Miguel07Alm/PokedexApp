@@ -10,8 +10,9 @@ struct ProfileView: View {
     @State private var selectedImage: UIImage? = nil
     @State private var showImagePicker: Bool = false
 
-//    @State private var mostUsedPokemon: String? = nil
     @StateObject private var pokemonViewModel = PokemonViewModel()
+    @State private var pokemonMoreUsed: URL? = nil
+    @State private var numBattle: Int = 0
 
     var body: some View {
         ZStack {
@@ -117,49 +118,57 @@ struct ProfileView: View {
                 .font(.title2)
                 .foregroundColor(.red)
 
-            Image("Perfil")  // Reemplaza con tu imagen de Pokémon favorito
-                .resizable()
-                .scaledToFit()
-                .frame(width: 80, height: 80)
+            AsyncImage(url: pokemonMoreUsed) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 120, height: 120)
+            } placeholder: {
+                ProgressView()
+            }
 
             HStack {
                 Text("Numero de batallas:")
                     .foregroundColor(.gray)
-                Text("X")
+                Text(String(numBattle))
                     .foregroundColor(.black)
                     .bold()
             }
 
             VStack(spacing: 10) {
-                BattleResultView(
-                    team1: "Equipo 1", result: "W-D", team2: "Equipo 2")
-                BattleResultView(
-                    team1: "Equipo 1", result: "D-W", team2: "Equipo 2")
-                BattleResultView(
-                    team1: "Equipo 1", result: "D-W", team2: "Equipo 2")
-                BattleResultView(
-                    team1: "Equipo 1", result: "D-W", team2: "Equipo 2")
-            }
-        }.onAppear {
-            var mostUsedPokemon: String = viewModel.getMostUsedPokemon()?.name ?? ""
-            print("MostUsedPokemon: \(mostUsedPokemon)")
-            var pokemonMoreUsed: Pokemon? = nil
+                let battleHistory = viewModel.getBattleHistory()
 
-            pokemonViewModel.fetchPokemonDetails(id: mostUsedPokemon) { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(let details):
-                        pokemonMoreUsed = details
-                    case .failure(let error):
-                        print("Error fetching details: \(error)")
+                if battleHistory.isEmpty {
+                    Text("No hay batallas en el historial.")
+                } else {
+                    ForEach(0..<battleHistory.count, id: \.self) { index in
+                        let battleData = battleHistory[index]
+
+                        BattleResultView(
+                            team1: battleData.team1Pokemons,
+                            result: battleData.battle.winner,
+                            team2: battleData.team2Pokemons
+                        )
                     }
                 }
             }
-            
-            var imageName = pokemonMoreUsed?.sprites.other?.officialArtwork?
-                .frontDefault ?? ""
-            
-            print("ImageName: \(imageName)")
+
+        }.onAppear {
+
+            let pokemon =
+                viewModel.getMostUsedPokemon()
+
+            let pokemonName = pokemon?.name ?? "bulbasaur"
+            numBattle = pokemon?.usageCount ?? 0
+
+            Task {
+                if let url = await urlFromPokemon(pokemonName) {
+                    pokemonMoreUsed = url
+                } else {
+                    print("No se pudo obtener la URL del Pokémon")
+                }
+            }
+
         }
         .padding(.horizontal, 20)
     }
@@ -227,19 +236,35 @@ struct ProfileView: View {
 }
 
 struct BattleResultView: View {
-    var team1: String
-    var result: String
-    var team2: String
+    var team1: [PokemonEntity]
+    var result: Int16
+    var team2: [PokemonEntity]
+
+    // Propiedades de estado para almacenar las URLs de cada equipo
+    @State private var team1URLs: [URL?] = []
+    @State private var team2URLs: [URL?] = []
 
     var body: some View {
         HStack {
-            Text(team1)
-                .font(.subheadline)
-                .foregroundColor(.black)
+            HStack {
+                ForEach(team1URLs.indices, id: \.self) { index in
+                    if let url = team1URLs[index] {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 25, height: 25)
+                        } placeholder: {
+                            ProgressView()
+                        }
+                    }
+
+                }
+            }
 
             Spacer()
 
-            Text(result)
+            Text(result == 1 ? "W-D" : "D-W")
                 .font(.subheadline)
                 .bold()
                 .foregroundColor(.white)
@@ -250,15 +275,70 @@ struct BattleResultView: View {
 
             Spacer()
 
-            Text(team2)
-                .font(.subheadline)
-                .foregroundColor(.black)
+            HStack {
+                ForEach(team2URLs.indices, id: \.self) { index in
+                    if let url = team2URLs[index] {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 25, height: 25)
+                        } placeholder: {
+                            ProgressView()
+                        }
+                    }
+
+                }
+            }
         }
         .padding()
         .background(Color.white)
         .cornerRadius(10)
         .shadow(radius: 2)
         .padding(.horizontal, 30)
+        .onAppear {
+            for pokemon in team1 {
+                Task {
+                    if let url = await urlFromPokemon(pokemon.name ?? "ditto") {
+                        team1URLs.append(url)
+                    } else {
+                        print("No se pudo obtener la URL del Pokémon")
+                    }
+                }
+            }
+
+            for pokemon in team2 {
+                Task {
+                    if let url = await urlFromPokemon(pokemon.name ?? "ditto") {
+                        team2URLs.append(url)
+                    } else {
+                        print("No se pudo obtener la URL del Pokémon")
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+func urlFromPokemon(_ pokemonID: String) async -> URL? {
+    return await withCheckedContinuation { continuation in
+        PokemonViewModel().fetchPokemonDetails(id: pokemonID) { result in
+            switch result {
+            case .success(let details):
+                let imageName =
+                    details.sprites.other?.officialArtwork?.frontDefault
+                    ?? ""
+                let url = URL(string: imageName)
+                //                print("URL: \(String(describing: url))")
+                continuation.resume(returning: url)  // Retornamos la URL obtenida
+            case .failure(let error):
+                print(
+                    "Error al obtener los detalles del Pokémon: \(error.localizedDescription)"
+                )
+                continuation.resume(returning: nil)  // Retornamos nil en caso de error
+            }
+        }
     }
 }
 

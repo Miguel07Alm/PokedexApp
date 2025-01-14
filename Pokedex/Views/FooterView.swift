@@ -136,7 +136,7 @@ struct FooterView: View {
                                             if let team2 = viewModel.createTeam(name: "Equipo2", pokemons: team2Pokemons) {
                                                 print("Equipo2 creado con ID: \(team2.id?.uuidString ?? "sin id")")
                                                 
-                                                if let battle = viewModel.createBattle(equipo1: team1, equipo2: team2) {
+                                                if let battle = viewModel.createBattle(equipo1: team1, equipo2: team2, winner: winnerId) {
                                                     print("Batalla creada con ID: \(battle.idBatalla?.uuidString ?? "sin id")")
                                                 }
                                             }
