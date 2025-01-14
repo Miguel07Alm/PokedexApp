@@ -39,7 +39,6 @@ class PokemonFilterState: ObservableObject, Equatable {
 
 }
 class PokemonViewModel: ObservableObject {
-    @EnvironmentObject var viewModel: ViewModel
     
     let session: URLSession
 
