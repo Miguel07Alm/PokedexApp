@@ -211,6 +211,19 @@ class ViewModel: ObservableObject {
         }
     }
 
+    func getMostUsedPokemon() -> (
+        name: String, pokedexNumber: Int, usageCount: Int
+    )? {
+        let pokemonUsageCounts = getAllPokemonUsageCounts()
+
+        // Encontrar el Pokémon con el mayor valor de usageCount
+        let mostUsedPokemon = pokemonUsageCounts.max {
+            $0.usageCount < $1.usageCount
+        }
+
+        return mostUsedPokemon
+    }
+
     func createTeam(name: String, pokemons: [PokemonEntity]) -> TeamEntity? {
         // 1) Crear la instancia de TeamEntity
         let newTeam = TeamEntity(context: gestorCoreData.contexto)
@@ -327,22 +340,24 @@ class ViewModel: ObservableObject {
 
     func getPokemonsForTeam(team: TeamEntity) -> [PokemonEntity] {
         // 1) Crear un fetch request para Team_PokemonEntity
-        let fetchRequest: NSFetchRequest<Team_PokemonEntity> = Team_PokemonEntity.fetchRequest()
+        let fetchRequest: NSFetchRequest<Team_PokemonEntity> =
+            Team_PokemonEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "equipo == %@", team)
-        
+
         do {
             // 2) Hacer el fetch de todas las asociaciones de ese equipo
             let teamPokemons = try gestorCoreData.contexto.fetch(fetchRequest)
-            
+
             // 3) Extraer los pokémon de las relaciones y devolverlos
             return teamPokemons.compactMap { $0.pokemon }
         } catch {
-            print("Error al obtener pokémon para el equipo \(team.nombre ?? "Desconocido"): \(error)")
+            print(
+                "Error al obtener pokémon para el equipo \(team.nombre ?? "Desconocido"): \(error)"
+            )
             return []
         }
     }
 
-    
     // Guardar cambios en el contexto
     func saveChanges() {
         do {

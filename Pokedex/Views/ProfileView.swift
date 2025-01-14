@@ -10,6 +10,9 @@ struct ProfileView: View {
     @State private var selectedImage: UIImage? = nil
     @State private var showImagePicker: Bool = false
 
+//    @State private var mostUsedPokemon: String? = nil
+    @StateObject private var pokemonViewModel = PokemonViewModel()
+
     var body: some View {
         ZStack {
             // Fondo de color
@@ -25,9 +28,12 @@ struct ProfileView: View {
                     usernamePasswordSection
 
                     // Sección de batallas
-                    battleSection
+                    #if v2
+                        battleSection
+                    #endif
+
                 }
-                .padding(.bottom, 20)
+                .padding(.vertical, 150)
             }
         }
         .onAppear(perform: loadUserData)
@@ -105,6 +111,7 @@ struct ProfileView: View {
     }
 
     var battleSection: some View {
+
         VStack(spacing: 20) {
             Text("Batalla")
                 .font(.title2)
@@ -124,18 +131,46 @@ struct ProfileView: View {
             }
 
             VStack(spacing: 10) {
-                BattleResultView(team1: "Equipo 1", result: "W-D", team2: "Equipo 2")
-                BattleResultView(team1: "Equipo 1", result: "D-W", team2: "Equipo 2")
-                BattleResultView(team1: "Equipo 1", result: "D-W", team2: "Equipo 2")
-                BattleResultView(team1: "Equipo 1", result: "D-W", team2: "Equipo 2")
+                BattleResultView(
+                    team1: "Equipo 1", result: "W-D", team2: "Equipo 2")
+                BattleResultView(
+                    team1: "Equipo 1", result: "D-W", team2: "Equipo 2")
+                BattleResultView(
+                    team1: "Equipo 1", result: "D-W", team2: "Equipo 2")
+                BattleResultView(
+                    team1: "Equipo 1", result: "D-W", team2: "Equipo 2")
             }
+        }.onAppear {
+            var mostUsedPokemon: String = viewModel.getMostUsedPokemon()?.name ?? ""
+            print("MostUsedPokemon: \(mostUsedPokemon)")
+            var pokemonMoreUsed: Pokemon? = nil
+
+            pokemonViewModel.fetchPokemonDetails(id: mostUsedPokemon) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let details):
+                        pokemonMoreUsed = details
+                    case .failure(let error):
+                        print("Error fetching details: \(error)")
+                    }
+                }
+            }
+            
+            var imageName = pokemonMoreUsed?.sprites.other?.officialArtwork?
+                .frontDefault ?? ""
+            
+            print("ImageName: \(imageName)")
         }
         .padding(.horizontal, 20)
     }
 
     // MARK: - Reusable Editable Field
 
-    func editableField(icon: String, title: String, value: Binding<String>, isEditing: Binding<Bool>, isSecure: Bool = false, action: @escaping () -> Void) -> some View {
+    func editableField(
+        icon: String, title: String, value: Binding<String>,
+        isEditing: Binding<Bool>, isSecure: Bool = false,
+        action: @escaping () -> Void
+    ) -> some View {
         HStack {
             Image(systemName: icon)
                 .foregroundColor(.gray)
@@ -163,8 +198,10 @@ struct ProfileView: View {
                 }
                 isEditing.wrappedValue.toggle()
             }) {
-                Image(systemName: isEditing.wrappedValue ? "checkmark" : "pencil")
-                    .foregroundColor(.pink)
+                Image(
+                    systemName: isEditing.wrappedValue ? "checkmark" : "pencil"
+                )
+                .foregroundColor(.pink)
             }
         }
         .padding()
@@ -193,15 +230,15 @@ struct BattleResultView: View {
     var team1: String
     var result: String
     var team2: String
-    
+
     var body: some View {
         HStack {
             Text(team1)
                 .font(.subheadline)
                 .foregroundColor(.black)
-            
+
             Spacer()
-            
+
             Text(result)
                 .font(.subheadline)
                 .bold()
@@ -210,9 +247,9 @@ struct BattleResultView: View {
                 .padding(.vertical, 5)
                 .background(Color.red)
                 .cornerRadius(5)
-            
+
             Spacer()
-            
+
             Text(team2)
                 .font(.subheadline)
                 .foregroundColor(.black)
@@ -230,4 +267,3 @@ struct BattleHistoryView_Previews: PreviewProvider {
         ProfileView().environmentObject(ViewModel())
     }
 }
-

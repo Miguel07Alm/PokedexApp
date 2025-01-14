@@ -142,15 +142,6 @@ struct FooterView: View {
                                             }
                                             
                                         }
-                                        
-                                        
-                                        
-                                        if let team2 = viewModel.createTeam(name: "Equipo2", pokemons: team2Pokemons) {
-                                            print("Equipo2 creado con ID: \(team2.id?.uuidString ?? "sin id")")
-                                        }
-                                        
-                                        
-                                        
                                         return
                                     }
                                     var fastestTeam =
