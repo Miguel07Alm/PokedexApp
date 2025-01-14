@@ -179,8 +179,11 @@ struct PokemonDetailView: View {
                                 ).frame(width: 350).opacity(0.65)
                                 VStack {
                                     Text("Descripción").font(.title)
-
-                                    Text("\(getFirstLine(of: descripcion))").frame(width: 320, alignment: .leading)
+                                    if descripcion.isEmpty {
+                                        Text("No se encontró información sobre el Pokemon").frame(width: 320, alignment: .leading)
+                                    } else {
+                                        Text("\(getFirstLine(of: descripcion))").frame(width: 320, alignment: .leading)
+                                    }
                                 }.padding()
                             }
 
@@ -195,16 +198,26 @@ struct PokemonDetailView: View {
                                         Text(abilities[0].nombre).font(.title3)
                                             .frame(
                                                 width: 320, alignment: .leading)
-                                        Text(getFirstLine(of: abilities[0].descripcion))
-                                            .frame(width: 320, alignment: .leading)
+                                        if abilities[0].descripcion.isEmpty {
+                                            Text("No se encontró información sobre la habilidad")
+                                                .frame(width: 320, alignment: .leading)
+                                        } else {
+                                            Text(getFirstLine(of: abilities[0].descripcion))
+                                                .frame(width: 320, alignment: .leading)
+                                        }
                                     }
                                     if abilities.count > 1 {
                                         Text("")
                                         Text(abilities[1].nombre).font(.title3)
                                             .frame(
                                                 width: 320, alignment: .leading)
-                                        Text(getFirstLine(of: abilities[1].descripcion))
-                                            .frame(width: 320, alignment: .leading)
+                                        if abilities[1].descripcion.isEmpty {
+                                            Text("No se encontró información sobre la habilidad")
+                                                .frame(width: 320, alignment: .leading)
+                                        } else {
+                                            Text(getFirstLine(of: abilities[1].descripcion))
+                                                .frame(width: 320, alignment: .leading)
+                                        }
                                     }
                                 }.padding()
                             }
@@ -413,13 +426,15 @@ struct PokemonDetailView: View {
         }.ignoresSafeArea()
     }
     private func getFirstLine(of text: String) -> String {
-        if let firstDotIndex = text.firstIndex(of: ".") {
-            let substring = text[..<firstDotIndex]
+        let cleanText = text.replacingOccurrences(of: "\n", with: " ")
+        
+        if let firstDotIndex = cleanText.firstIndex(of: ".") {
+            let substring = cleanText[..<firstDotIndex]
             return String(substring)
-        } else {
-            return text
         }
+        return cleanText
     }
+
 }
 
 struct CabeceraConNombre: View {

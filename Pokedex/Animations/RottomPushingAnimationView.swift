@@ -42,8 +42,8 @@ struct RottomPushingAnimationView: View {
     }
 
     func animateStep1() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            withAnimation(.easeInOut(duration: 0.5)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { // Reducir el retraso inicial
+            withAnimation(.easeInOut(duration: 0.3)) { // Reducir duración
                 horizontalOffset = 0
             }
             animateStep2()
@@ -51,17 +51,17 @@ struct RottomPushingAnimationView: View {
     }
 
     func animateStep2() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            withAnimation(Animation.linear(duration: 1).repeatCount(1, autoreverses: false)) {
-                rotationAngle = 360
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { // Reducir retraso
+            withAnimation(Animation.linear(duration: 0.5).repeatCount(1, autoreverses: false)) { // Reducir duración
+                rotationAngle = 180
             }
             animateStep3()
         }
     }
 
     func animateStep3() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            withAnimation(.easeInOut(duration: 1)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { // Reducir retraso
+            withAnimation(.easeInOut(duration: 0.5)) { // Reducir duración
                 verticalOffset = -UIScreen.main.bounds.height
             }
             animateStep4()
@@ -69,8 +69,8 @@ struct RottomPushingAnimationView: View {
     }
 
     func animateStep4() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            withAnimation(.easeOut(duration: 1)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { // Reducir retraso
+            withAnimation(.easeOut(duration: 0.3)) { // Reducir duración
                 showAnimation = false
             }
             onAnimationComplete()

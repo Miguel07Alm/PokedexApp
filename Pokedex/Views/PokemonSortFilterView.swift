@@ -107,12 +107,15 @@ struct PokemonSortFilterView: View {
                                     
                                     if (option.title == "LEGENDARIOS") {
                                         filterState.showLegendaries.toggle()
+                                        isFilterShow = false;
                                     }
                                     if (option.title == "SINGULARES") {
                                         filterState.showSingulares.toggle()
+                                        isFilterShow = false;
                                     }
                                     if (option.title == "FAVORITO") {
                                         filterState.showFavorites.toggle()
+                                        isFilterShow = false;
                                     }
                                     
                                 }) {
@@ -148,13 +151,9 @@ struct PokemonSortFilterView: View {
                                 typeIconsView
                         }
                        if filterState.selectedFilters.contains("región") {
-                           Text("Regiones")
-                               .font(.headline)
-                               .padding(.leading)
-                               .frame(maxWidth: .infinity, alignment: .leading)
-                                regionIconsView
+                           regionIconsView.offset(y:20)
                         }
-                    }.offset(y:125)
+                    }.offset(y:60)
                     
                 }
             }
@@ -199,6 +198,7 @@ struct PokemonSortFilterView: View {
                                     }
                                     filterState.selectedTypes.insert(type)
                                 }
+                                isFilterShow = false;
                             }
                         }
                     }
@@ -265,6 +265,7 @@ struct PokemonSortFilterView: View {
                            } else {
                                filterState.selectedRegions.insert(region.name)
                            }
+                           isFilterShow = false;
                        }
                    }
                }

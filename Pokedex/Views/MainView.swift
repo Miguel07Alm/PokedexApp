@@ -100,11 +100,11 @@ struct MainView: View {
     private func startTransitionAndNavigation() {
         DispatchQueue.main.async {
             showRottomAnimation = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                withAnimation(.easeOut(duration: 0.5)) {
-                    isTransitioning = false // Suavizamos la transición al final
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.3) { // Sincronizar con la animación más rápida
+                withAnimation(.easeOut(duration: 0.3)) { // Reducir duración
+                    isTransitioning = false
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { // Ajustar el tiempo para la selección de pestañas
                     selectedTab = Self.getInitialTab(for: irA)
                 }
             }
