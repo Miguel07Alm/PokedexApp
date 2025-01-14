@@ -72,6 +72,40 @@ struct HeaderView: View {
                 // Filter chips
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
+                        if (filterState.showLegendaries) {
+                            HStack(spacing: 8) {
+                                Text("Legendarios")
+                                
+                                Text("X")
+                                    .font(.caption)
+                             
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(.black)
+                            .cornerRadius(20)
+                            .foregroundColor(.white).onTapGesture {
+                                filterState.showLegendaries = false;
+                                filterState.selectedFilters.remove("legendarios")
+                            }
+                        }
+                        if (filterState.showSingulares) {
+                            HStack(spacing: 8) {
+                                Text("Singulares")
+                                
+                                Text("X")
+                                    .font(.caption)
+                             
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(.black)
+                            .cornerRadius(20)
+                            .foregroundColor(.white).onTapGesture {
+                                filterState.showSingulares = false;
+                                filterState.selectedFilters.remove("singulares")
+                            }
+                        }
                         ForEach(Array(filterState.selectedTypes), id: \.self) { type in
                             HStack(spacing: 8) {
                                 Text(PokemonType.typesToSpanish[type] ?? type.capitalized) // Nombre del tipo en español

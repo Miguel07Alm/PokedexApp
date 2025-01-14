@@ -205,7 +205,7 @@ class PokemonViewModel: ObservableObject {
                     return pokemonName.contains(searchLowercased) || searchLowercased.contains(pokemonName)
                 }
             }
-        print("LENGTH FILTERED POKEMON: \(filteredPokemon.count)")
+        //print("LENGTH FILTERED POKEMON: \(filteredPokemon.count)")
 
             return filteredPokemon
         }
