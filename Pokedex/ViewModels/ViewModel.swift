@@ -172,6 +172,20 @@ class ViewModel: ObservableObject {
         }
         saveChanges()
     }
+    
+    func getAllFavoritePokemons() -> [PokemonEntity] {
+        guard let user = authenticatedUser else {
+            print("No hay usuario autenticado.")
+            return []
+        }
+        
+        // Convertir la relación favoritePokemons a un array de PokemonEntity
+        let favoritePokemons = (user.favoritePokemons as? Set<PokemonEntity>) ?? []
+        
+        // Devolver el array de favoritos
+        return Array(favoritePokemons)
+    }
+
 
     func incrementPokemonUsage(namePokemon: String, pokedexNumber: Int) {
         // Buscar si ya existe el Pokémon en el array de pokemons

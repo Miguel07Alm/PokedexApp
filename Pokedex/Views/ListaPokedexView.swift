@@ -6,6 +6,7 @@ struct ListaPokedexView: View {
     #if v2
         @StateObject private var pokemonTeam = PokemonTeam.shared
     #endif
+    @EnvironmentObject var viewModel: ViewModel
     @StateObject var pokemonViewModel = PokemonViewModel()
     @Binding var showSortFilterView: Bool
     @Binding var showFilterView: Bool
@@ -117,7 +118,7 @@ struct ListaPokedexView: View {
         cancellables.removeAll()
 
         let filteredPokemons = pokemonViewModel.applyFiltersAndSort(
-            pokemons: pokemones, filterState: filterState)
+            pokemons: pokemones, filterState: filterState, viewModel: viewModel)
         self.filteredAndSortedPokemon = filteredPokemons
 //        print("LENGTH FILTERED POKEMON: \(filteredAndSortedPokemon.count)")
 

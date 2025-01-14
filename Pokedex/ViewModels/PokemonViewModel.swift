@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 enum PokemonSortOption {
     case id
@@ -38,13 +39,15 @@ class PokemonFilterState: ObservableObject, Equatable {
 
 }
 class PokemonViewModel: ObservableObject {
-
+    @EnvironmentObject var viewModel: ViewModel
+    
     let session: URLSession
 
     init(session: URLSession = URLSession.shared) {
         self.session = session
     }
-    func applyFiltersAndSort(pokemons: [Pokemon], filterState: PokemonFilterState) -> [Pokemon] {
+    
+    func applyFiltersAndSort(pokemons: [Pokemon], filterState: PokemonFilterState, viewModel: ViewModel) -> [Pokemon] {
             var filteredPokemons = pokemons
 
             // Apply filters
@@ -56,7 +59,8 @@ class PokemonViewModel: ObservableObject {
                 showLegendaries: filterState.showLegendaries,
                 showSingulares: filterState.showSingulares,
                 selectedFilters: filterState.selectedFilters,
-                selectedRegions: filterState.selectedRegions
+                selectedRegions: filterState.selectedRegions,
+                viewModel: viewModel
             )
 
             // Apply sorting
@@ -126,7 +130,7 @@ class PokemonViewModel: ObservableObject {
         }
 
         // Function to handle all filtering options
-    func filterPokemon(_ pokemons: [Pokemon], search: String, selectedTypes: Set<String>, showFavorites: Bool = false, showLegendaries: Bool = false, showSingulares: Bool = false, selectedFilters: Set<String>, selectedRegions: Set<String>) -> [Pokemon] {
+    func filterPokemon(_ pokemons: [Pokemon], search: String, selectedTypes: Set<String>, showFavorites: Bool = false, showLegendaries: Bool = false, showSingulares: Bool = false, selectedFilters: Set<String>, selectedRegions: Set<String>, viewModel: ViewModel) -> [Pokemon] {
             var filteredPokemon = pokemons
 
             if !selectedTypes.isEmpty {
@@ -144,14 +148,9 @@ class PokemonViewModel: ObservableObject {
                   }
               }
 
-            // Filter favorites (you'll need to implement a way to track favorites)
-            // TODO: AQUI ANASS IMPLEMENTA LOS FAVORITOS
             if showFavorites {
-                filteredPokemon = filteredPokemon.filter { pokemon in
-                    // Implement your favorite checking logic here
-                    // For example: UserDefaults.standard.bool(forKey: "favorite_\(pokemon.id)")
-                    return true
-                }
+                let pokemonsFavoriteIDs: [Int] = viewModel.getAllFavoritePokemons().map { Int($0.pokedexNumber) }
+                filteredPokemon = filteredPokemon.filter { pokemonsFavoriteIDs.contains($0.id) }
             }
 
             if showLegendaries {
