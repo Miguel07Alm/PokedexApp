@@ -3,6 +3,7 @@ import SwiftUI
 struct FooterView: View {
     #if v2
         @StateObject private var pokemonTeam = PokemonTeam.shared
+        @EnvironmentObject var viewModel: ViewModel
     #endif
     @StateObject var pokemonViewModel = PokemonViewModel()
     @StateObject private var refreshManager = RefreshManager.shared
@@ -94,6 +95,53 @@ struct FooterView: View {
                                 Task {
                                     if winnerId != 0 {
                                         goToWinnerPov = true
+                                        print("WinnerID: \(winnerId)")
+                                        // Historial de Batalla
+                                        var team1Pokemons: [PokemonEntity] = []
+                                        var team2Pokemons: [PokemonEntity] = []
+                                        
+                                        if let equipo1 = pokemonTeam.getTeam(named: "Equipo1") {
+                                            for (index, maybePokemon) in equipo1.pokemons.enumerated() {
+                                                guard let pokemon = maybePokemon else {
+                                                    print("No hay Pokémon en el slot \(index) del Equipo1.")
+                                                    continue
+                                                }
+                                                // Ahora puedes acceder a pokemon.name, pokemon.id, etc.
+                                                print("Pokémon en posición \(index): \(pokemon.name) (ID: \(pokemon.id))")
+                                                let pokemonEntity: PokemonEntity = viewModel.createPokemon(name: pokemon.name, pokedexNumber: pokemon.id)!
+                                                team1Pokemons.append(pokemonEntity)
+                                            }
+                                        } else {
+                                            print("No se encontró el equipo 'Equipo1' en pokemonTeam.")
+                                        }
+                                        
+                                        if let equipo2 = pokemonTeam.getTeam(named: "Equipo2") {
+                                            for (index, maybePokemon) in equipo2.pokemons.enumerated() {
+                                                guard let pokemon = maybePokemon else {
+                                                    print("No hay Pokémon en el slot \(index) del Equipo2.")
+                                                    continue
+                                                }
+                                                // Ahora puedes acceder a pokemon.name, pokemon.id, etc.
+                                                print("Pokémon en posición \(index): \(pokemon.name) (ID: \(pokemon.id))")
+                                                let pokemonEntity: PokemonEntity = viewModel.createPokemon(name: pokemon.name, pokedexNumber: pokemon.id)!
+                                                team2Pokemons.append(pokemonEntity)
+                                            }
+                                        } else {
+                                            print("No se encontró el equipo 'Equipo1' en pokemonTeam.")
+                                        }
+                                        
+                                        if let team1 = viewModel.createTeam(name: "Equipo1", pokemons: team1Pokemons) {
+                                            print("Equipo1 creado con ID: \(team1.id?.uuidString ?? "sin id")")
+                                            
+                                            if let team2 = viewModel.createTeam(name: "Equipo2", pokemons: team2Pokemons) {
+                                                print("Equipo2 creado con ID: \(team2.id?.uuidString ?? "sin id")")
+                                                
+                                                if let battle = viewModel.createBattle(equipo1: team1, equipo2: team2, winner: winnerId) {
+                                                    print("Batalla creada con ID: \(battle.idBatalla?.uuidString ?? "sin id")")
+                                                }
+                                            }
+                                            
+                                        }
                                         return
                                     }
                                     var fastestTeam =

@@ -162,8 +162,8 @@
 			children = (
 				3574C31D2D089CB20041EE41 /* SeleccionarEquipoView.swift */,
 				355F8D962D1B045C00E2D758 /* TeamsCombateView.swift */,
-				3524A1272D1EC90F005BAB91 /* CombateView.swift */,
 				350612262D25BAF800523E25 /* WinnerPovView.swift */,
+				3524A1272D1EC90F005BAB91 /* CombateView.swift */,
 				351F34502D285AB900063A2A /* CombatLogView.swift */,
 			);
 			path = CombateViews;

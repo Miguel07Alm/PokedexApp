@@ -1,16 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23231" systemVersion="24B91" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="BattleEntity" representedClassName="BattleEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="idBatalla" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="idUsuario" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="team1" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="team2" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="winner" optional="YES" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <relationship name="equipo1" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TeamEntity"/>
+        <relationship name="equipo2" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TeamEntity"/>
+        <relationship name="usuario" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserEntity"/>
+    </entity>
     <entity name="PokemonEntity" representedClassName="PokemonEntity" syncable="YES" codeGenerationType="class">
         <attribute name="favorite" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="pokedexNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="usageCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="Team_PokemonEntity" representedClassName="Team_PokemonEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="idEquipo" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="idPokemon" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="equipo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TeamEntity"/>
+        <relationship name="pokemon" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PokemonEntity"/>
+    </entity>
+    <entity name="TeamEntity" representedClassName="TeamEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="nombre" optional="YES" attributeType="String"/>
     </entity>
     <entity name="UserEntity" representedClassName="UserEntity" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="password" optional="YES" attributeType="String"/>
         <attribute name="profileImage" optional="YES" attributeType="Binary"/>
+        <relationship name="battles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BattleEntity"/>
         <relationship name="favoritePokemons" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PokemonEntity"/>
     </entity>
 </model>
