@@ -54,7 +54,6 @@ struct TeamsCombateView: View {
                                     let allTeams = pokemonTeam.getAllTeams()
                                     
                                     for team in allTeams {
-                                        
                                         for (index, pokemon) in team.pokemons.enumerated() {
                                             if let pokemon = pokemon {
                                                 print("Pokemon \(index + 1): \(pokemon.name) and \(pokemon.id)")

@@ -9,13 +9,20 @@ class ViewModel: ObservableObject {
 
     @Published var usersArray: [UserEntity] = []
     @Published var pokemonsArray: [PokemonEntity] = []
+    @Published var teamsArray: [TeamEntity] = []
+    @Published var battlesArray: [BattleEntity] = []
 
     func cargarDatos() {
         pokemonsArray.removeAll()
+        teamsArray.removeAll()
+        battlesArray.removeAll()
 
         let fetchUsers = NSFetchRequest<UserEntity>(entityName: "UserEntity")
         let fetchPokemons = NSFetchRequest<PokemonEntity>(
             entityName: "PokemonEntity")
+        let fetchTeams = NSFetchRequest<TeamEntity>(entityName: "TeamEntity")
+        let fetchBattles = NSFetchRequest<BattleEntity>(
+            entityName: "BattleEntity")
 
         do {
             self.usersArray = try gestorCoreData.contexto.fetch(fetchUsers)
@@ -100,6 +107,40 @@ class ViewModel: ObservableObject {
     }
 
     // Pokemon
+    func createPokemon(name: String, pokedexNumber: Int, usageCount: Int = 0)
+        -> PokemonEntity?
+    {
+        // 1) Revisar si ya existe un Pokémon con este nombre y número
+        let fetchRequest: NSFetchRequest<PokemonEntity> =
+            PokemonEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(
+            format: "name == %@ AND pokedexNumber == %d", name, pokedexNumber
+        )
+
+        do {
+            let results = try gestorCoreData.contexto.fetch(fetchRequest)
+
+            // 2) Si ya existe, retornarlo
+            if let existingPokemon = results.first {
+                return existingPokemon
+            }
+        } catch {
+            print("Error al buscar Pokémon existente: \(error)")
+        }
+
+        // 3) Si no existe, creamos uno nuevo
+        let newPokemon = PokemonEntity(context: gestorCoreData.contexto)
+        newPokemon.name = name
+        newPokemon.pokedexNumber = Int16(pokedexNumber)
+        newPokemon.usageCount = Int16(usageCount)  // 0 si no se pasa otro valor
+
+        // 4) Guardamos en Core Data y actualizamos arrays
+        saveChanges()
+        pokemonsArray.append(newPokemon)
+
+        return newPokemon
+    }
+
     func isFavorite(namePokemon: String, pokedexNumber: Int) -> Bool {
         guard let user = authenticatedUser else { return false }
         return user.favoritePokemons?.contains(where: {
@@ -170,6 +211,138 @@ class ViewModel: ObservableObject {
         }
     }
 
+    func createTeam(name: String, pokemons: [PokemonEntity]) -> TeamEntity? {
+        // 1) Crear la instancia de TeamEntity
+        let newTeam = TeamEntity(context: gestorCoreData.contexto)
+        newTeam.id = UUID()
+        newTeam.nombre = name
+
+        // 2) Por cada Pokémon, creamos un registro en la tabla intermedia Team_PokemonEntity
+        for pokemon in pokemons {
+            let newTeamPokemon = Team_PokemonEntity(
+                context: gestorCoreData.contexto)
+
+            // Asignar el UUID del equipo y del pokémon, si usas esos campos
+            newTeamPokemon.idEquipo = newTeam.id
+            newTeamPokemon.idPokemon = pokemon.id
+
+            // Establecer también las relaciones Core Data
+            newTeamPokemon.equipo = newTeam
+            newTeamPokemon.pokemon = pokemon
+
+            // (Si tu TeamEntity o PokemonEntity tuvieran relaciones inversas configuradas,
+            // Core Data se enteraría automáticamente de esta asociación.)
+        }
+
+        // 3) Guardar cambios
+        saveChanges()
+
+        return newTeam
+    }
+
+    func createBattle(
+        equipo1: TeamEntity,
+        equipo2: TeamEntity,
+        winner: Int? = nil
+    ) -> BattleEntity? {
+        // Verificar que haya un usuario autenticado
+        guard let user = authenticatedUser else {
+            print("No hay usuario autenticado para asociar a la batalla.")
+            return nil
+        }
+
+        // 1) Crear un nuevo objeto BattleEntity en el contexto
+        let newBattle = BattleEntity(context: gestorCoreData.contexto)
+
+        // 2) Asignar un UUID a idBatalla (si deseas controlarlo manualmente)
+        newBattle.idBatalla = UUID()
+
+        // 3) Relacionar la batalla con el usuario
+        newBattle.usuario = user
+
+        // 4) Asignar los equipos
+        newBattle.equipo1 = equipo1
+        newBattle.equipo2 = equipo2
+
+        // 5) Asignar si hay un ganador en el momento de crearlo
+        if let isWinner = winner {
+            newBattle.winner = Int16(isWinner)
+        }
+
+        // (Opcional) Si vas a usar idUsuario (UUID) como atributo,
+        // podrías asignarlo a partir de alguna propiedad en tu UserEntity:
+        // newBattle.idUsuario = user.id  // si tu UserEntity tiene un atributo 'id' (UUID)
+
+        // 6) Guardar cambios en Core Data
+        saveChanges()
+
+        return newBattle
+    }
+
+    func getBattleHistory() -> [(
+        battle: BattleEntity, team1Pokemons: [PokemonEntity],
+        team2Pokemons: [PokemonEntity]
+    )] {
+        // 1) Crear el fetch request para BattleEntity
+        let fetchRequest: NSFetchRequest<BattleEntity> =
+            BattleEntity.fetchRequest()
+
+        do {
+            // 2) Hacer el fetch de todas las batallas
+            let battles = try gestorCoreData.contexto.fetch(fetchRequest)
+
+            var battleHistory:
+                [(
+                    battle: BattleEntity, team1Pokemons: [PokemonEntity],
+                    team2Pokemons: [PokemonEntity]
+                )] = []
+
+            // 3) Iterar sobre cada batalla
+            for battle in battles {
+                // 4) Obtener los equipos asociados a la batalla
+                guard let team1 = battle.equipo1,
+                    let team2 = battle.equipo2
+                else {
+                    continue  // Si no hay equipos, saltar esta batalla
+                }
+
+                // 5) Obtener los pokémon de cada equipo usando Team_PokemonEntity
+                let team1Pokemons = getPokemonsForTeam(team: team1)
+                let team2Pokemons = getPokemonsForTeam(team: team2)
+
+                // 6) Añadir la batalla y sus equipos al historial
+                battleHistory.append(
+                    (
+                        battle: battle, team1Pokemons: team1Pokemons,
+                        team2Pokemons: team2Pokemons
+                    ))
+            }
+
+            return battleHistory
+        } catch {
+            print("Error al obtener el historial de batallas: \(error)")
+            return []
+        }
+    }
+
+    func getPokemonsForTeam(team: TeamEntity) -> [PokemonEntity] {
+        // 1) Crear un fetch request para Team_PokemonEntity
+        let fetchRequest: NSFetchRequest<Team_PokemonEntity> = Team_PokemonEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "equipo == %@", team)
+        
+        do {
+            // 2) Hacer el fetch de todas las asociaciones de ese equipo
+            let teamPokemons = try gestorCoreData.contexto.fetch(fetchRequest)
+            
+            // 3) Extraer los pokémon de las relaciones y devolverlos
+            return teamPokemons.compactMap { $0.pokemon }
+        } catch {
+            print("Error al obtener pokémon para el equipo \(team.nombre ?? "Desconocido"): \(error)")
+            return []
+        }
+    }
+
+    
     // Guardar cambios en el contexto
     func saveChanges() {
         do {
