@@ -2,7 +2,7 @@
 //  ImagePicker.swift
 //  CoreDataApp
 //
-//  Created by Francisco Guil on 15/10/21.
+//  Created by cMelman on 15/10/21.
 //
 
 import Foundation
