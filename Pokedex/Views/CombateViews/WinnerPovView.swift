@@ -16,8 +16,8 @@ struct WinnerPovView: View {
                 WinnerPokemonDisplay(team: team!, pos: pos[1], posMaxDmg: pos[0], color: Color(red: 0.203, green: 0.62, blue: 0.218), rankImg: "2Rank")
                 WinnerPokemonDisplay(team: team!, pos: pos[0], posMaxDmg: pos[0], color: Color(hue: 1.0, saturation: 0.724, brightness: 0.752), rankImg: "1Rank")
                 WinnerPokemonDisplay(team: team!, pos: pos[2], posMaxDmg: pos[0], color: Color(hue: 0.552, saturation: 0.744, brightness: 0.564), rankImg: "3Rank")
-            }.offset(y: -5)
-            DisplayCard(msg: "HP Restante: \(team!.health)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 350, height: 70).font(.system(size: 22)).offset(y: -5)
+            }.offset(y: -103)
+            DisplayCard(msg: "HP Restante: \(team!.health)", color: Color(red: 0.92, green: 0.92, blue: 0.92)).frame(width: 350, height: 70).font(.system(size: 22)).offset(y: -103)
             Text("") //empuja el footer
             Text("")
         }
@@ -88,7 +88,7 @@ struct WinnerPokemonDisplay: View {
                 if(dmg != 0){
                     DisplayCard(msg: "\(dmg)", color: Color.white.opacity(0.50)).frame(width: 50, height: 30).offset(x: -2, y: 2)
                 }
-            }.offset(y:CGFloat(-barHeight - 16 / 2) + CGFloat(95))
+            }.offset(y:CGFloat(-barHeight - 16 / 2) + CGFloat(143))
         }.frame(alignment: .bottomLeading)
     }
 }
