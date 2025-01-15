@@ -89,6 +89,23 @@ struct HeaderView: View {
                                 filterState.selectedFilters.remove("legendarios")
                             }
                         }
+                        if (filterState.showFavorites) {
+                            HStack(spacing: 8) {
+                                Text("Favoritos")
+                                
+                                Text("X")
+                                    .font(.caption)
+                             
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(.black)
+                            .cornerRadius(20)
+                            .foregroundColor(.white).onTapGesture {
+                                filterState.showFavorites = false;
+                                filterState.selectedFilters.remove("favorito")
+                            }
+                        }
                         if (filterState.showSingulares) {
                             HStack(spacing: 8) {
                                 Text("Singulares")
